@@ -1,0 +1,8 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 100
+    base_controller:
+      publish_rate: 50
+    arm_controller:
+      constraints:
+        goal_time: 0.5

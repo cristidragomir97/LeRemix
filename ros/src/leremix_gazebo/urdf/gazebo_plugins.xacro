@@ -1,0 +1,125 @@
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="LeRemix">
+
+    <gazebo>
+            <plugin filename="libgazebo_ros2_control.so" name="gazebo_ros2_control">
+                <robot_param>robot_description</robot_param>
+                <robot_param_node>robot_state_publisher</robot_param_node>
+                <parameters>$(find leremix_control)/config/controllers.sim.yaml</parameters>
+            </plugin>
+    </gazebo>
+
+   
+    <gazebo reference="camera_1">
+        <sensor type="camera" name="rgb_camera">
+            <update_rate>30</update_rate>
+            <camera name="head_rgb">
+            <horizontal_fov>1.0472</horizontal_fov> <!-- ~60 deg -->
+            <image>
+                <width>640</width>
+                <height>480</height>
+                <format>R8G8B8</format>
+            </image>
+            <clip>
+                <near>0.05</near>
+                <far>20.0</far>
+            </clip>
+            </camera>
+
+            <plugin name="gazebo_ros_camera" filename="libgazebo_ros_camera.so">
+                <namespace>/sensors/cam</namespace>
+                <frame_name>camera_1</frame_name>
+            </plugin>
+        </sensor>
+    </gazebo>
+
+    <gazebo reference="camera_1">
+        <sensor type="depth" name="rgbd_camera">
+            <update_rate>30</update_rate>
+
+            <camera name="head_rgbd">
+            <horizontal_fov>1.0472</horizontal_fov>
+            <image>
+                <width>640</width>
+                <height>480</height>
+                <format>R8G8B8</format>
+            </image>
+            <clip>
+                <near>0.05</near>
+                <far>10.0</far>
+            </clip>
+            </camera>
+
+            <plugin name="gazebo_ros_depth_camera" filename="libgazebo_ros_camera.so">
+                <namespace>/sensors/rgbd</namespace>
+                <frame_name>camera_1</frame_name>
+            </plugin>
+        </sensor>
+    </gazebo>
+
+    <gazebo reference="imu_1">
+        <sensor type="imu" name="imu">
+            <always_on>true</always_on>
+            <update_rate>200</update_rate>
+            <imu>
+            <noise>
+                <type>gaussian</type>
+                <rate>
+                <mean>0.0</mean>
+                <stddev>0.02</stddev>
+                <bias_mean>0.0001</bias_mean>
+                <bias_stddev>0.0001</bias_stddev>
+                </rate>
+                <accel>
+                <mean>0.0</mean>
+                <stddev>0.1</stddev>
+                <bias_mean>0.01</bias_mean>
+                <bias_stddev>0.01</bias_stddev>
+                </accel>
+            </noise>
+            </imu>
+
+            <plugin name="gazebo_ros_imu_sensor" filename="libgazebo_ros_imu_sensor.so">
+            <ros>
+                <namespace>/sensors/imu</namespace>
+            </ros>
+            <frame_name>imu_1</frame_name>
+            </plugin>
+        </sensor>
+    </gazebo>
+
+    <gazebo reference="camera_1">
+        <sensor name="lidar" type="ray">
+            <always_on>true</always_on>
+            <visualize>true</visualize>
+            <update_rate>30</update_rate>
+            <ray>
+            <scan>
+                <horizontal>
+                <samples>640</samples>
+                <resolution>1.000000</resolution>
+                <min_angle>-0.7955</min_angle>   <!-- -91.2/2 degrees -->
+                <max_angle>0.7955</max_angle>    <!-- +91.2/2 degrees -->
+                </horizontal>
+            </scan>
+            <range>
+                <min>0.120000</min>
+                <max>10</max>
+                <resolution>0.015000</resolution>
+            </range>
+            <noise>
+                <type>gaussian</type>
+                <mean>0.0</mean>
+                <stddev>0.01</stddev>
+            </noise>
+            </ray>
+            <plugin name="scan" filename="libgazebo_ros_ray_sensor.so">
+            <ros>
+                <remapping>~/out:=scan</remapping>
+            </ros>
+            <output_type>sensor_msgs/LaserScan</output_type>
+            <frame_name>lidar_link</frame_name>
+            </plugin>
+        </sensor>
+    </gazebo>
+
+</robot>

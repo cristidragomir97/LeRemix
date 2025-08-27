@@ -1,0 +1,17 @@
+# Claude Code artifacts
+.claude/
+
+# PlatformIO build artifacts
+firmware/.pio/
+
+# ROS2 build artifacts
+ros/build/
+ros/install/
+ros/log/
+
+# Ignore non-leremix packages in src
+ros/src/*/
+!ros/src/leremix_*/
+
+# Windows Zone Identifier files
+**/*:Zone.Identifier

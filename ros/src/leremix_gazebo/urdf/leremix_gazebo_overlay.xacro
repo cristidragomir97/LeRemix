@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<robot name="LeRemix" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <!-- Base model from description -->
+    <xacro:include filename="$(find leremix_description)/urdf/LeRemix.xacro"/>
+    <xacro:include filename="$(find leremix_gazebo)/urdf/gazebo_plugins.xacro"/>
+    <xacro:include filename="$(find leremix_gazebo)/urdf/gazebo_interfaces.xacro"/>
+    <xacro:include filename="$(find leremix_gazebo)/urdf/gazebo_configs.xacro"/>
+    
+    <!-- Joint limits and initial positions based on physical calibration -->
+
+</robot>

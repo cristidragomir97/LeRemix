@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- Joint Limits Override for Gazebo Simulation -->
+  <!-- Based on physical servo calibration with arm in fully erect position -->
+  
+  <!-- Joint 1: Pan/Base Rotation -->
+  <!-- Servo 4: Range 1024-3072, Center 2048, ±90° -->
+  <gazebo reference="1">
+    <joint>
+      <limit lower="-1.57" upper="1.57" effort="5.0" velocity="2.0"/>
+      <dynamics damping="0.1" friction="0.05"/>
+    </joint>
+  </gazebo>
+
+  <!-- Joint 2: Shoulder -->  
+  <!-- Servo 5: Range 880-3072, Relaxed 1024, ~180° range biased up -->
+  <gazebo reference="2">
+    <joint>
+      <limit lower="-0.22" upper="3.14" effort="5.0" velocity="2.0"/>
+      <dynamics damping="0.1" friction="0.05"/>
+    </joint>
+  </gazebo>
+
+  <!-- Joint 3: Elbow -->
+  <!-- Servo 6: Range 2024-3880, Relaxed 3880, elbow extension only -->
+  <gazebo reference="3">
+    <joint>
+      <limit lower="-2.84" upper="0.0" effort="5.0" velocity="2.0"/>
+      <dynamics damping="0.1" friction="0.05"/>
+    </joint>
+  </gazebo>
+
+  <!-- Joint 4: Wrist Tilt -->
+  <!-- Servo 7: Range 922-3072, Relaxed 909, tilts up from near-limit -->
+  <gazebo reference="4">
+    <joint>
+      <limit lower="0.02" upper="3.32" effort="5.0" velocity="2.0"/>
+      <dynamics damping="0.1" friction="0.05"/>
+    </joint>
+  </gazebo>
+
+  <!-- Joint 5: Wrist Rotation -->
+  <!-- Servo 8: Range 1372-4096, Center 2048, slightly off-center -->
+  <gazebo reference="5">
+    <joint>
+      <limit lower="-1.04" upper="3.14" effort="5.0" velocity="2.0"/>
+      <dynamics damping="0.1" friction="0.05"/>
+    </joint>
+  </gazebo>
+
+  <!-- Joint 6: Gripper -->
+  <!-- Servo 9: Range 2048-3446, Closed 2048, opens from closed position -->
+  <gazebo reference="6">
+    <joint>
+      <limit lower="0.0" upper="2.14" effort="5.0" velocity="2.0"/>
+      <dynamics damping="0.1" friction="0.05"/>
+    </joint>
+  </gazebo>
+
+  <!-- Camera Tilt -->
+  <!-- Servo 11: Range 1024-2611, Center 2048, tilts up/down from center -->
+  <gazebo reference="camera_tilt">
+    <joint>
+      <limit lower="-1.57" upper="0.86" effort="5.0" velocity="2.0"/>
+      <dynamics damping="0.1" friction="0.05"/>
+    </joint>
+  </gazebo>
+
+</robot>

@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- Initial Joint Positions for Gazebo Simulation -->
+  <!-- Set simulation to start in the physical relaxed state -->
+  <!-- Based on servo calibration: arm fully erect, servos at middle positions -->
+
+  <gazebo>
+    <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
+      <parameters>$(find leremix_control)/config/controllers.yaml</parameters>
+      <parameters>$(find leremix_control)/config/ros2_control.yaml</parameters>
+      
+      <!-- Initial Joint States - Relaxed Position -->
+      <!-- Based on physical servo calibration with arm fully erect -->
+      <initial_joint_position name="1">0.0</initial_joint_position>          <!-- Pan: servo 4, relaxed (2048 counts = center) -->
+      <initial_joint_position name="2">-2.92</initial_joint_position>        <!-- Shoulder: servo 5, relaxed (1024 counts = near down) -->
+      <initial_joint_position name="3">0.0</initial_joint_position>          <!-- Elbow: servo 6, relaxed (3880 counts = fully down) -->
+      <initial_joint_position name="4">3.30</initial_joint_position>        <!-- Wrist tilt: servo 7, relaxed (909 counts = near up) -->
+      <initial_joint_position name="5">0.0</initial_joint_position>          <!-- Wrist rotation: servo 8, relaxed (2048 counts = center) -->
+      <initial_joint_position name="6">0.0</initial_joint_position>          <!-- Gripper: servo 9, relaxed (2048 counts = center) -->
+      <initial_joint_position name="camera_tilt">0.0</initial_joint_position> <!-- Camera: servo 11, relaxed (2048 counts = center) -->
+      
+      <!-- Motor initial positions (for reference) -->
+      <initial_joint_position name="back_motor_rotation">0.0</initial_joint_position>
+      <initial_joint_position name="left_motor_rotation">0.0</initial_joint_position>
+      <initial_joint_position name="right_motor_rotation">0.0</initial_joint_position>
+    </plugin>
+  </gazebo>
+
+</robot>

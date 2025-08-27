@@ -1,0 +1,54 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 1000  # Hz
+    use_sim_time: true
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+    omnidirectional_controller:
+      type: omnidirectional_controllers/OmnidirectionalController
+
+    arm_controller:
+      type: position_controllers/JointGroupPositionController
+
+arm_controller:
+  ros__parameters:
+    joints: ["1","2","3","4","5","6","camera_tilt"]
+
+    command_interfaces:
+      - position
+
+    state_interfaces:
+      - position
+
+    open_loop_control: true
+
+
+omnidirectional_controller:
+  ros__parameters:
+    wheel_names: 
+     - back_motor_rotation
+     - left_motor_rotation
+     - right_motor_rotation
+
+
+
+    robot_radius: 0.105
+    wheel_radius: 0.05
+    gamma: 60.0 # angle between body fixed y axis and the normal of wheel3
+
+    publish_rate: 50.0
+    odom_frame_id: odom
+    base_frame_id: base_link
+    pose_covariance_diagonal : [0.001, 0.001, 0.001, 0.001, 0.001, 0.01]
+    twist_covariance_diagonal: [0.001, 0.001, 0.001, 0.001, 0.001, 0.01]
+    odom_numeric_integration_method: runge_kutta2
+
+    open_loop: false
+    enable_odom_tf: true
+
+    cmd_vel_timeout: 0.5
+    use_stamped_vel: false
+
+

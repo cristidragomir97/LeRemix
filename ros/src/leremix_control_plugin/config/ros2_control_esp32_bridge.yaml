@@ -1,0 +1,48 @@
+# ros2_control hardware config that loads the Esp32SystemTopic plugin
+ros2_control:
+  ros__parameters:
+    hardware:
+      plugin: leremix_control_plugin/Esp32SystemTopic
+
+      # Topics to use for micro-ROS bridge
+      base_cmd_topic: /esp32/base_cmd
+      arm_cmd_topic: /esp32/arm_cmd
+      state_topic: /esp32/joint_states
+
+      # optional
+      publish_if_unchanged: true
+
+    joints:
+      # Base joints — velocity command, position+velocity states
+      - name: back_motor_rotation
+        command_interfaces: [velocity]
+        state_interfaces: [position, velocity]
+      - name: left_motor_rotation
+        command_interfaces: [velocity]
+        state_interfaces: [position, velocity]
+      - name: right_motor_rotation
+        command_interfaces: [velocity]
+        state_interfaces: [position, velocity]
+
+      # Arm joints — position command, position state
+      - name: "1"
+        command_interfaces: [position]
+        state_interfaces: [position]
+      - name: "2"
+        command_interfaces: [position]
+        state_interfaces: [position]
+      - name: "3"
+        command_interfaces: [position]
+        state_interfaces: [position]
+      - name: "4"
+        command_interfaces: [position]
+        state_interfaces: [position]
+      - name: "5"
+        command_interfaces: [position]
+        state_interfaces: [position]
+      - name: "6"
+        command_interfaces: [position]
+        state_interfaces: [position]
+      - name: camera_tilt
+        command_interfaces: [position]
+        state_interfaces: [position]

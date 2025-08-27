@@ -1,0 +1,12 @@
+<package format="3">
+  <name>leremix_control</name>
+  <version>0.0.1</version>
+  <description>Controllers and parameters for LeRemix</description>
+  <maintainer email="you@example.com">you</maintainer>
+  <license>MIT</license>
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <exec_depend>controller_manager</exec_depend>
+  <exec_depend>ros2_controllers</exec_depend>
+  <exec_depend>omnidirectional_controllers</exec_depend>
+  <export><build_type>ament_cmake</build_type></export>
+</package>

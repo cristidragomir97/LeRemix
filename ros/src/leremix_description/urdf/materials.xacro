@@ -1,0 +1,22 @@
+<?xml version="1.0" ?>
+<robot name="LeRemix" xmlns:xacro="http://www.ros.org/wiki/xacro" >
+
+<material name="silver">
+  <color rgba="0.700 0.700 0.700 1.000"/>
+</material>
+
+<material name="black">
+  <color rgba="0.0 0.0 0.0 1.0"/>
+</material>
+
+<!-- Dark Grey -->
+<material name="darkgray">
+  <color rgba="0.2 0.2 0.2 1.0"/>
+</material>
+
+<!-- Brass (golden-yellow tone) -->
+<material name="brass">
+  <color rgba="0.80 0.58 0.20 1.0"/>
+</material>
+
+</robot>

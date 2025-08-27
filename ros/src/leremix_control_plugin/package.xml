@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>leremix_control_plugin</name>
+  <version>0.0.1</version>
+  <description>ESP32 (micro-ROS) topic-bridge SystemInterface for ros2_control.</description>
+
+  <maintainer email="you@example.com">You</maintainer>
+  <license>Apache-2.0</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <depend>hardware_interface</depend>
+  <depend>pluginlib</depend>
+  <depend>rclcpp</depend>
+  <depend>rclcpp_lifecycle</depend>
+  <depend>std_msgs</depend>
+  <depend>sensor_msgs</depend>
+
+  <export>
+    <hardware_interface plugin="${prefix}/plugin_description.xml"/>
+  </export>
+</package>
