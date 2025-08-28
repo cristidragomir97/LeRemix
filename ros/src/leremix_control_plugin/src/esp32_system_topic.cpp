@@ -81,14 +81,14 @@ CallbackReturn Esp32SystemTopic::on_configure(const rclcpp_lifecycle::State &)
   // Create our internal node and pubs/subs
   node_ = std::make_shared<rclcpp::Node>("esp32_hw_bridge");
 
-  // Publishers (best-effort, depth 1)
+  // Publishers (best-effort for micro-ROS compatibility)
   base_pub_ = node_->create_publisher<std_msgs::msg::Float64MultiArray>(
-    base_cmd_topic_, rclcpp::QoS(rclcpp::KeepLast(1)).reliable());
+    base_cmd_topic_, rclcpp::QoS(rclcpp::KeepLast(1)).best_effort());
   arm_pub_ = node_->create_publisher<std_msgs::msg::Float64MultiArray>(
-    arm_cmd_topic_, rclcpp::QoS(rclcpp::KeepLast(1)).reliable());
+    arm_cmd_topic_, rclcpp::QoS(rclcpp::KeepLast(1)).best_effort());
 
-  // Subscriber (reliable, depth 5 – adjust to BEST_EFFORT if needed)
-  auto qos = rclcpp::QoS(rclcpp::KeepLast(5)).reliable();
+  // Subscriber (best-effort for micro-ROS compatibility)
+  auto qos = rclcpp::QoS(rclcpp::KeepLast(5)).best_effort();
   state_sub_ = node_->create_subscription<sensor_msgs::msg::JointState>(
     state_topic_, qos,
     std::bind(&Esp32SystemTopic::state_callback, this, std::placeholders::_1));

@@ -70,10 +70,15 @@ void base_cmd_callback(const void *msgin) {
   const std_msgs__msg__Float64MultiArray *msg = (std_msgs__msg__Float64MultiArray *)msgin;
   base_msg_count++;
   
-  String logMsg = "BASE_CMD: size=" + String(msg->data.size) + " [";
-  for (size_t i = 0; i < msg->data.size && i < BASE_SERVO_COUNT; i++) {
-    logMsg += String(msg->data.data[i], 4);
-    if (i < msg->data.size - 1) logMsg += ", ";
+  String logMsg = "BASE_CMD: size=" + String(msg->data.size) + " capacity=" + String(msg->data.capacity) + " [";
+  
+  if (msg->data.data == NULL) {
+    logMsg += "NULL_DATA";
+  } else {
+    for (size_t i = 0; i < msg->data.size && i < BASE_SERVO_COUNT; i++) {
+      logMsg += String(msg->data.data[i], 6);  // More precision
+      if (i < msg->data.size - 1) logMsg += ", ";
+    }
   }
   logMsg += "]";
   
@@ -85,10 +90,15 @@ void arm_cmd_callback(const void *msgin) {
   const std_msgs__msg__Float64MultiArray *msg = (std_msgs__msg__Float64MultiArray *)msgin;
   arm_msg_count++;
   
-  String logMsg = "ARM_CMD: size=" + String(msg->data.size) + " [";
-  for (size_t i = 0; i < msg->data.size && i < ARM_SERVO_COUNT; i++) {
-    logMsg += String(msg->data.data[i], 4);
-    if (i < msg->data.size - 1) logMsg += ", ";
+  String logMsg = "ARM_CMD: size=" + String(msg->data.size) + " capacity=" + String(msg->data.capacity) + " [";
+  
+  if (msg->data.data == NULL) {
+    logMsg += "NULL_DATA";
+  } else {
+    for (size_t i = 0; i < msg->data.size && i < ARM_SERVO_COUNT; i++) {
+      logMsg += String(msg->data.data[i], 6);  // More precision
+      if (i < msg->data.size - 1) logMsg += ", ";
+    }
   }
   logMsg += "]";
   
@@ -193,8 +203,8 @@ bool initMicroROS() {
   // Create executor with 2 subscribers
   rclc_executor_init(&executor, &support.context, 2, &allocator);
 
-  // Initialize Base Command Subscriber
-  rclc_subscription_init_default(
+  // Initialize Base Command Subscriber with best-effort QoS
+  rclc_subscription_init_best_effort(
     &base_cmd_sub,
     &node,
     ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Float64MultiArray),
@@ -215,8 +225,8 @@ bool initMicroROS() {
   }
   addLog("Added base command subscription: " + String(BASE_CMD_TOPIC));
 
-  // Initialize Arm Command Subscriber
-  rclc_subscription_init_default(
+  // Initialize Arm Command Subscriber with best-effort QoS
+  rclc_subscription_init_best_effort(
     &arm_cmd_sub,
     &node,
     ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Float64MultiArray),
@@ -237,8 +247,8 @@ bool initMicroROS() {
   }
   addLog("Added arm command subscription: " + String(ARM_CMD_TOPIC));
 
-  // Initialize Joint State Publisher
-  rc = rclc_publisher_init_default(
+  // Initialize Joint State Publisher with best-effort QoS
+  rc = rclc_publisher_init_best_effort(
     &joint_state_pub, 
     &node,
     ROSIDL_GET_MSG_TYPE_SUPPORT(sensor_msgs, msg, JointState),
@@ -261,10 +271,19 @@ void publishJointStates() {
   joint_state_msg.header.stamp.sec = timestamp / 1000000000ULL;
   joint_state_msg.header.stamp.nanosec = timestamp % 1000000000ULL;
   
+  // Set frame_id
+  joint_state_msg.header.frame_id = micro_ros_string_utilities_set(joint_state_msg.header.frame_id, "");
+  
   // Set sizes
   joint_state_msg.position.size = BASE_SERVO_COUNT + ARM_SERVO_COUNT;
   joint_state_msg.velocity.size = BASE_SERVO_COUNT + ARM_SERVO_COUNT;
   joint_state_msg.effort.size = 0;
+  
+  // Check if arrays are properly allocated
+  if (joint_state_msg.position.data == NULL || joint_state_msg.velocity.data == NULL) {
+    addLog("ERROR: Joint state message arrays not allocated!");
+    return;
+  }
   
   // Generate some test data (simulated joint positions)
   for (int i = 0; i < BASE_SERVO_COUNT + ARM_SERVO_COUNT; i++) {
@@ -277,10 +296,23 @@ void publishJointStates() {
   if (rc == RCL_RET_OK) {
     joint_state_msg_count++;
     if (joint_state_msg_count % 20 == 0) {  // Log every 20th message (once per second)
-      addLog("Published joint state #" + String(joint_state_msg_count));
+      addLog("Published joint state #" + String(joint_state_msg_count) + " (pos[0]=" + String(joint_state_msg.position.data[0], 3) + ")");
     }
   } else {
-    addLog("ERROR: Failed to publish joint state, rc=" + String(rc));
+    addLog("ERROR: Failed to publish joint state, rc=" + String(rc) + " (" + getErrorMessage(rc) + ")");
+  }
+}
+
+String getErrorMessage(rcl_ret_t rc) {
+  switch (rc) {
+    case RCL_RET_OK: return "OK";
+    case RCL_RET_ERROR: return "GENERIC_ERROR";
+    case RCL_RET_BAD_ALLOC: return "BAD_ALLOC";
+    case RCL_RET_INVALID_ARGUMENT: return "INVALID_ARGUMENT";
+    case RCL_RET_NOT_INIT: return "NOT_INIT";
+    case RCL_RET_PUBLISHER_INVALID: return "PUBLISHER_INVALID";
+    case RCL_RET_TIMEOUT: return "TIMEOUT";
+    default: return "UNKNOWN_" + String(rc);
   }
 }
 
