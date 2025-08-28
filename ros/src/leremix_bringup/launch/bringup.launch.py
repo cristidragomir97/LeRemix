@@ -21,6 +21,12 @@ def generate_launch_description():
         description='Enable IMU (leremix_imu)'
     )
     
+    use_xbox_arg = DeclareLaunchArgument(
+        'use_xbox',
+        default_value='true',
+        description='Enable Xbox controller (leremix_teleop_xbox)'
+    )
+    
     microros_transport_arg = DeclareLaunchArgument(
         'microros_transport',
         default_value='serial',
@@ -42,6 +48,7 @@ def generate_launch_description():
     # Launch configurations
     use_camera = LaunchConfiguration('use_camera')
     use_imu = LaunchConfiguration('use_imu')
+    use_xbox = LaunchConfiguration('use_xbox')
     microros_transport = LaunchConfiguration('microros_transport')
     microros_device = LaunchConfiguration('microros_device')
     microros_baudrate = LaunchConfiguration('microros_baudrate')
@@ -69,6 +76,16 @@ def generate_launch_description():
             'imu.launch.py'
         ]),
         condition=IfCondition(use_imu)
+    )
+
+    # Include leremix_teleop_xbox launch file
+    xbox_launch = IncludeLaunchDescription(
+        PathJoinSubstitution([
+            FindPackageShare('leremix_teleop_xbox'),
+            'launch',
+            'teleop_xbox.launch.py'
+        ]),
+        condition=IfCondition(use_xbox)
     )
 
     # ros2_control node (controller_manager)
@@ -113,6 +130,7 @@ def generate_launch_description():
         # Launch arguments
         use_camera_arg,
         use_imu_arg,
+        use_xbox_arg,
         microros_transport_arg,
         microros_device_arg,
         microros_baudrate_arg,
@@ -120,6 +138,7 @@ def generate_launch_description():
         # Launch includes and nodes
         camera_launch,
         imu_launch,
+        xbox_launch,
         controller_manager,
         spawner_joint_state_broadcaster,
         spawner_omnidirectional_controller,

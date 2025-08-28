@@ -16,6 +16,7 @@
   <!-- Component package dependencies -->
   <exec_depend>leremix_camera</exec_depend>
   <exec_depend>leremix_imu</exec_depend>
+  <exec_depend>leremix_teleop_xbox</exec_depend>
   <exec_depend>leremix_control_plugin</exec_depend>
   
   <!-- Controller manager and micro-ROS -->
