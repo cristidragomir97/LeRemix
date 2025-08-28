@@ -83,9 +83,9 @@ CallbackReturn Esp32SystemTopic::on_configure(const rclcpp_lifecycle::State &)
 
   // Publishers (best-effort, depth 1)
   base_pub_ = node_->create_publisher<std_msgs::msg::Float64MultiArray>(
-    base_cmd_topic_, rclcpp::QoS(rclcpp::KeepLast(1)).best_effort());
+    base_cmd_topic_, rclcpp::QoS(rclcpp::KeepLast(1)).reliable());
   arm_pub_ = node_->create_publisher<std_msgs::msg::Float64MultiArray>(
-    arm_cmd_topic_, rclcpp::QoS(rclcpp::KeepLast(1)).best_effort());
+    arm_cmd_topic_, rclcpp::QoS(rclcpp::KeepLast(1)).reliable());
 
   // Subscriber (reliable, depth 5 – adjust to BEST_EFFORT if needed)
   auto qos = rclcpp::QoS(rclcpp::KeepLast(5)).reliable();

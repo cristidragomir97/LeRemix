@@ -118,7 +118,7 @@ def generate_launch_description():
         package='controller_manager',
         executable='ros2_control_node',
         output='screen',
-        parameters=[controllers_cfg, hw_cfg]
+        parameters=[{'robot_description': robot_description_content}, controllers_cfg, hw_cfg]
     )
 
     # Controller spawners - delayed to wait for controller_manager
@@ -176,11 +176,11 @@ def generate_launch_description():
         microros_baudrate_arg,
         
         # Launch includes and nodes
+        robot_state_publisher,
+        controller_manager,
         camera_launch,
         imu_launch,
         xbox_launch,
-        robot_state_publisher,
-        controller_manager,
         spawner_joint_state_broadcaster,
         spawner_omnidirectional_controller,
         spawner_arm_controller,
