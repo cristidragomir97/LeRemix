@@ -54,9 +54,16 @@ def generate_launch_description():
     microros_baudrate = LaunchConfiguration('microros_baudrate')
 
     # Get package share directories
-    control_plugin_pkg_share = get_package_share_directory('leremix_control_plugin')
-    controllers_cfg = os.path.join(control_plugin_pkg_share, 'config', 'controllers.yaml')
-    hw_cfg = os.path.join(control_plugin_pkg_share, 'config', 'ros2_control_esp32_bridge.yaml')
+    controllers_cfg = PathJoinSubstitution([
+        FindPackageShare('leremix_control_plugin'),
+        'config',
+        'controllers.yaml'
+    ])
+    hw_cfg = PathJoinSubstitution([
+        FindPackageShare('leremix_control_plugin'),
+        'config',
+        'ros2_control_esp32_bridge.yaml'
+    ])
 
     # Include leremix_camera launch file
     camera_launch = IncludeLaunchDescription(
