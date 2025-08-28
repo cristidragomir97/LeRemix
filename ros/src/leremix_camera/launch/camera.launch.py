@@ -23,10 +23,11 @@ def generate_launch_description():
     laser_scan_range_min = LaunchConfiguration('laser_scan_range_min')
     laser_scan_range_max = LaunchConfiguration('laser_scan_range_max')
 
+
     # Declare launch arguments
     declare_camera_name = DeclareLaunchArgument(
         'camera_name',
-        default_value='camera',
+        default_value='front_camera',
         description='RealSense camera name'
     )
     
@@ -100,6 +101,7 @@ def generate_launch_description():
             ])
         ),
         launch_arguments={
+            'camera_namespace': '', 
             'camera_name': camera_name,
             'device_type': device_type,
             'enable_depth': 'true',
@@ -123,25 +125,12 @@ def generate_launch_description():
         arguments=[
             'raw', 'compressed',
             '--ros-args',
-            '--remap', 'in:=camera/color/image_raw',
-            '--remap', 'out:=camera/color/image_raw',
+            '--remap', 'in:=front_camera/color/image_raw',
+            '--remap', 'out:=front_camera/color/image_compressed',
         ],
         condition=IfCondition(enable_compressed)
     )
     
-    # Depth image compression
-    compressed_depth_node = Node(
-        package='image_transport',
-        executable='republish',
-        name='compressed_depth_republisher',
-        arguments=[
-            'raw', 'compressedDepth',
-            '--ros-args',
-            '--remap', 'in:=camera/aligned_depth_to_color/image_raw',
-            '--remap', 'out:=camera/aligned_depth_to_color/image_raw',
-        ],
-        condition=IfCondition(enable_compressed)
-    )
 
     # Depth image to laser scan conversion
     depthimage_to_laserscan_node = Node(
@@ -150,31 +139,19 @@ def generate_launch_description():
         name='depthimage_to_laserscan',
         parameters=[{
             'scan_height': 10,
-            'scan_time': 0.033,  # 30Hz
+            'scan_time': 0.020,  # 30Hz
             'range_min': laser_scan_range_min,
             'range_max': laser_scan_range_max,
-            'output_frame_id': 'camera_depth_frame',
+            'output_frame_id': 'lidar',
         }],
         remappings=[
-            ('depth', 'camera/aligned_depth_to_color/image_raw'),
-            ('depth_camera_info', 'camera/aligned_depth_to_color/camera_info'),
-            ('scan', 'camera/scan'),
+            ('depth', 'front_camera/depth/image_rect_raw'),
+            ('depth_camera_info', 'front_camera/depth/camera_info'),
+            ('scan', '/scan'),
         ],
         condition=IfCondition(enable_laser_scan)
     )
 
-    # Optional: TF2 static transform for camera mounting
-    camera_tf_node = Node(
-        package='tf2_ros',
-        executable='static_transform_publisher',
-        name='camera_tf',
-        arguments=[
-            '0.15', '0', '0.3',  # x, y, z translation (15cm forward, 30cm up)
-            '0', '0', '0', '1',  # quaternion rotation (no rotation)
-            'base_link',         # parent frame
-            'camera_link'        # child frame
-        ]
-    )
 
     return LaunchDescription([
         # Launch arguments
@@ -193,7 +170,5 @@ def generate_launch_description():
         # Nodes
         realsense_launch,
         compressed_color_node,
-        compressed_depth_node,
         depthimage_to_laserscan_node,
-        camera_tf_node,
     ])

@@ -3,7 +3,7 @@ depthimage_to_laserscan:
   ros__parameters:
     # Scanning parameters
     scan_height: 10                    # Number of pixel rows to use when creating laser scan
-    scan_time: 0.033                   # Time between scans (30Hz)
+    scan_time: 0.020                  # Time between scans (30Hz)
     
     # Range parameters
     range_min: 0.2                     # Minimum range value (meters)

@@ -24,7 +24,7 @@
 #define S_TXD 19
 
 SMS_STS base_servo;  // For base wheels (continuous rotation)
-SCSCL arm_servo;     // For arm joints (position control)
+SMS_STS arm_servo;     // For arm joints (position control)
 
 
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
@@ -88,6 +88,38 @@ void initScreen(){
   display.setCursor(0,0);
   // Row1.
 }
+
+// Convert servo encoder position to radians using calibration data
+float servoPositionToRadians(uint8_t servo_id, int32_t position) {
+  // Find calibration data for this servo
+  for (int i = 0; i < ARM_CALIBRATION_COUNT; i++) {
+    if (ARM_CALIBRATION[i].servo_id == servo_id) {
+      const ServoCalibration& cal = ARM_CALIBRATION[i];
+      // Map position from [min_pos, max_pos] to [-PI, PI] range
+      float normalized = (float)(position - cal.min_position) / (float)(cal.max_position - cal.min_position);
+      return (normalized * 2.0 * PI) - PI; // Convert to -PI to PI range
+    }
+  }
+  // Fallback to old calculation if calibration not found
+  return ((position - 2048) * 2.0 * PI) / 4096.0;
+}
+
+// Convert radians to servo encoder position using calibration data
+int16_t radiansToServoPosition(uint8_t servo_id, float radians) {
+  // Find calibration data for this servo
+  for (int i = 0; i < ARM_CALIBRATION_COUNT; i++) {
+    if (ARM_CALIBRATION[i].servo_id == servo_id) {
+      const ServoCalibration& cal = ARM_CALIBRATION[i];
+      // Map radians from [-PI, PI] to [min_pos, max_pos] range
+      float normalized = (radians + PI) / (2.0 * PI); // Convert to 0-1 range
+      int16_t position = cal.min_position + (int16_t)(normalized * (cal.max_position - cal.min_position));
+      return constrain(position, cal.min_position, cal.max_position);
+    }
+  }
+  // Fallback to old calculation if calibration not found
+  return constrain(2048 + (radians * 651.74), 0, 4095);
+}
+
 
 // Base command callback - expects Float64MultiArray with 3 values (rad/s)
 void base_cmd_callback(const void *msgin) {
@@ -339,36 +371,6 @@ void moveToRelaxedPositions() {
   delay(1000);
 }
 
-// Convert servo encoder position to radians using calibration data
-float servoPositionToRadians(uint8_t servo_id, int32_t position) {
-  // Find calibration data for this servo
-  for (int i = 0; i < ARM_CALIBRATION_COUNT; i++) {
-    if (ARM_CALIBRATION[i].servo_id == servo_id) {
-      const ServoCalibration& cal = ARM_CALIBRATION[i];
-      // Map position from [min_pos, max_pos] to [-PI, PI] range
-      float normalized = (float)(position - cal.min_position) / (float)(cal.max_position - cal.min_position);
-      return (normalized * 2.0 * PI) - PI; // Convert to -PI to PI range
-    }
-  }
-  // Fallback to old calculation if calibration not found
-  return ((position - 2048) * 2.0 * PI) / 4096.0;
-}
-
-// Convert radians to servo encoder position using calibration data
-int16_t radiansToServoPosition(uint8_t servo_id, float radians) {
-  // Find calibration data for this servo
-  for (int i = 0; i < ARM_CALIBRATION_COUNT; i++) {
-    if (ARM_CALIBRATION[i].servo_id == servo_id) {
-      const ServoCalibration& cal = ARM_CALIBRATION[i];
-      // Map radians from [-PI, PI] to [min_pos, max_pos] range
-      float normalized = (radians + PI) / (2.0 * PI); // Convert to 0-1 range
-      int16_t position = cal.min_position + (int16_t)(normalized * (cal.max_position - cal.min_position));
-      return constrain(position, cal.min_position, cal.max_position);
-    }
-  }
-  // Fallback to old calculation if calibration not found
-  return constrain(2048 + (radians * 651.74), 0, 4095);
-}
 
 void publishJointStates() {
   // Read current positions from all servos
@@ -482,9 +484,8 @@ void setup() {
 
   // Initialize serial communication for servos
   Serial2.begin(1000000, SERIAL_8N1, S_RXD, S_TXD);
-  base_servo.pSerial = &Serial2;  // Base servos use SMS_STS (continuous rotation)
-  arm_servo.pSerial = &Serial2;   // Arm servos use SCSCL (position control)
-
+  base_servo.pSerial = &Serial2; 
+  arm_servo.pSerial = &Serial2;   
   checkServos();
   
   // Move arm to relaxed positions after servo check
@@ -493,8 +494,17 @@ void setup() {
   // Initialize micro-ROS serial communication
   Serial.begin(115200);
   set_microros_serial_transports(Serial);
+  
+  bool ros_initialized = initMicroROS();
+
+  while (!ros_initialized) {
+    displayMessage("micro-ROS init failed, retrying...");
+    delay(2000);
+    ros_initialized = initMicroROS();
+  }
 
   if (!initMicroROS()) {
+    
     displayMessage("micro-ROS initialization failed!");
   } else {
     // Enable watchdog after successful ROS connection
