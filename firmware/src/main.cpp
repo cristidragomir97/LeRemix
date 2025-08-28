@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include <Wire.h>
 #include <Adafruit_SSD1306.h>
+#include <Adafruit_NeoPixel.h>
 #include <micro_ros_platformio.h>
 #include <rcl/rcl.h>
 #include <rclc/rclc.h>
@@ -15,6 +16,10 @@
 #include <rmw_microros/rmw_microros.h>
 #include <std_msgs/msg/int32.h>
 
+// Debug and control defines
+#define ENABLE_SERVO_CONTROL 1  // Set to 0 to disable servo functionality
+#define ENABLE_DEBUG_PRINTS 1   // Set to 0 to disable debug prints
+
 // Topic names matching leremix_control_plugin
 #define BASE_CMD_TOPIC   "/esp32/base_cmd"
 #define ARM_CMD_TOPIC    "/esp32/arm_cmd"
@@ -23,11 +28,15 @@
 #define S_RXD 18
 #define S_TXD 19
 
+// EN button (boot button) for servo enable/disable
+#define EN_BUTTON_PIN 0
+#define LONG_PRESS_TIME 3000  // 3 seconds for long press
+
 SMS_STS base_servo;  // For base wheels (continuous rotation)
 SMS_STS arm_servo;     // For arm joints (position control)
 
-
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+Adafruit_NeoPixel pixels(NUMPIXELS, RGB_LED, NEO_GRB + NEO_KHZ800);
 
 // Hardware configuration
 const float VEL_TO_SERVO_UNIT = 13037; // Conversion factor from rad/s to servo speed units
@@ -60,6 +69,22 @@ sensor_msgs__msg__JointState joint_state_msg;
 unsigned long last_joint_state_time = 0;
 const unsigned long CONTROL_PERIOD_MS = 5;  // 200Hz = 5ms period
 
+// System state
+enum SystemState {
+  STATE_DISCONNECTED,    // Red - Not connected to ROS
+  STATE_CONNECTED_SAFE,  // Yellow - Connected but servos disabled
+  STATE_READY           // Green - All systems ready
+};
+
+SystemState current_state = STATE_DISCONNECTED;
+bool servos_enabled = false;  // Global servo enable/disable flag - DEFAULT DISABLED
+bool ros_connected = false;   // ROS connection status
+
+// Button state tracking
+unsigned long button_press_start = 0;
+bool button_was_pressed = false;
+bool button_long_press_detected = false;
+
 // Watchdog mechanism
 unsigned long last_base_cmd_time = 0;
 unsigned long last_arm_cmd_time = 0;
@@ -73,6 +98,60 @@ void displayMessage(const char* msg) {
   display.setCursor(0, 0);
   display.print(msg);
   display.display();
+  
+  #if ENABLE_DEBUG_PRINTS
+  Serial.print("[DISPLAY] ");
+  Serial.println(msg);
+  #endif
+}
+
+void debugPrint(const char* msg) {
+  #if ENABLE_DEBUG_PRINTS
+  Serial.print("[DEBUG] ");
+  Serial.println(msg);
+  #endif
+}
+
+void updateNeoPixelStatus() {
+  uint32_t color;
+  
+  switch (current_state) {
+    case STATE_DISCONNECTED:
+      color = pixels.Color(255, 0, 0);  // Red
+      break;
+    case STATE_CONNECTED_SAFE:
+      color = pixels.Color(255, 255, 0);  // Yellow
+      break;
+    case STATE_READY:
+      color = pixels.Color(0, 255, 0);  // Green
+      break;
+  }
+  
+  // Set all pixels to the same color
+  for (int i = 0; i < NUMPIXELS; i++) {
+    pixels.setPixelColor(i, color);
+  }
+  pixels.show();
+}
+
+void updateSystemState() {
+  SystemState new_state;
+  
+  if (!ros_connected) {
+    new_state = STATE_DISCONNECTED;
+  } else if (!servos_enabled) {
+    new_state = STATE_CONNECTED_SAFE;
+  } else {
+    new_state = STATE_READY;
+  }
+  
+  if (new_state != current_state) {
+    current_state = new_state;
+    updateNeoPixelStatus();
+    
+    const char* state_names[] = {"DISCONNECTED", "CONNECTED_SAFE", "READY"};
+    debugPrint(("State changed to: " + String(state_names[current_state])).c_str());
+  }
 }
 
 void initScreen(){
@@ -125,29 +204,72 @@ int16_t radiansToServoPosition(uint8_t servo_id, float radians) {
 void base_cmd_callback(const void *msgin) {
   const std_msgs__msg__Float64MultiArray *msg = (std_msgs__msg__Float64MultiArray *)msgin;
   
+  #if ENABLE_DEBUG_PRINTS
+  Serial.println("=== BASE COMMAND CALLBACK ===");
+  Serial.printf("Message data size: %d\n", msg->data.size);
+  Serial.printf("Servos enabled: %s\n", servos_enabled ? "YES" : "NO");
+  #endif
+  
   // Update watchdog timestamp
   last_base_cmd_time = millis();
   base_emergency_stop = false;  // Clear emergency stop when receiving commands
   
+  // Mark ROS as connected when receiving commands
+  if (!ros_connected) {
+    ros_connected = true;
+    debugPrint("ROS connection established via base command");
+    updateSystemState();
+  }
+  
   if (msg->data.size >= BASE_SERVO_COUNT) {
+    #if ENABLE_DEBUG_PRINTS
+    Serial.printf("Raw values: [%.4f, %.4f, %.4f]\n", 
+                  msg->data.data[0], msg->data.data[1], msg->data.data[2]);
+    #endif
+    
     // Convert rad/s to servo speed units and send to base servos
     for (int i = 0; i < BASE_SERVO_COUNT; i++) {
       float rad_per_sec = msg->data.data[i];
       
-      if (abs(rad_per_sec) < 0.01) {  // Dead zone - apply brake
-        // Stop the motor with high acceleration (immediate stop)
-        base_servo.WriteSpe(BASE_SERVO_IDS[i], 0, 255);  // Max acceleration for braking
+      #if ENABLE_DEBUG_PRINTS
+      Serial.printf("Servo %d (ID=%d): %.4f rad/s", i, BASE_SERVO_IDS[i], rad_per_sec);
+      #endif
+      
+      #if ENABLE_SERVO_CONTROL
+      if (servos_enabled) {
+        if (abs(rad_per_sec) < 0.01) {  // Dead zone - apply brake
+          base_servo.WriteSpe(BASE_SERVO_IDS[i], 0, 255);  // Max acceleration for braking
+          #if ENABLE_DEBUG_PRINTS
+          Serial.printf(" -> BRAKE\n");
+          #endif
+        } else {
+          // Normal speed command
+          int16_t speed = constrain(rad_per_sec * VEL_TO_SERVO_UNIT, -4096, 4096);
+          base_servo.WriteSpe(BASE_SERVO_IDS[i], speed, 0);  // 0 = default acceleration
+          #if ENABLE_DEBUG_PRINTS
+          Serial.printf(" -> SPEED: %d\n", speed);
+          #endif
+        }
       } else {
-        // Normal speed command
-        int16_t speed = constrain(rad_per_sec * VEL_TO_SERVO_UNIT, -4096, 4096);
-        base_servo.WriteSpe(BASE_SERVO_IDS[i], speed, 0);  // 0 = default acceleration
+        #if ENABLE_DEBUG_PRINTS
+        Serial.printf(" -> DISABLED\n");
+        #endif
       }
+      #else
+      #if ENABLE_DEBUG_PRINTS
+      Serial.printf(" -> SERVO_CONTROL_DISABLED\n");
+      #endif
+      #endif
     }
     
     char buf[128];
     sprintf(buf, "Base: %.2f %.2f %.2f", 
             msg->data.data[0], msg->data.data[1], msg->data.data[2]);
     displayMessage(buf);
+  } else {
+    #if ENABLE_DEBUG_PRINTS
+    Serial.printf("ERROR: Insufficient data size (%d < %d)\n", msg->data.size, BASE_SERVO_COUNT);
+    #endif
   }
 }
 
@@ -155,11 +277,27 @@ void base_cmd_callback(const void *msgin) {
 void arm_cmd_callback(const void *msgin) {
   const std_msgs__msg__Float64MultiArray *msg = (std_msgs__msg__Float64MultiArray *)msgin;
   
+  #if ENABLE_DEBUG_PRINTS
+  Serial.println("=== ARM COMMAND CALLBACK ===");
+  Serial.printf("Message data size: %d\n", msg->data.size);
+  Serial.printf("Servos enabled: %s\n", servos_enabled ? "YES" : "NO");
+  #endif
+  
   // Update watchdog timestamp
   last_arm_cmd_time = millis();
   
+  // Mark ROS as connected when receiving commands
+  if (!ros_connected) {
+    ros_connected = true;
+    debugPrint("ROS connection established via arm command");
+    updateSystemState();
+  }
+  
   // Re-enable torque if recovering from emergency stop
   if (arm_emergency_stop) {
+    #if ENABLE_DEBUG_PRINTS
+    Serial.println("Recovering from arm emergency stop - re-enabling torque");
+    #endif
     for (int i = 0; i < ARM_SERVO_COUNT; i++) {
       arm_servo.EnableTorque(ARM_SERVO_IDS[i], 1);  // Re-enable torque
     }
@@ -167,18 +305,51 @@ void arm_cmd_callback(const void *msgin) {
   }
   
   if (msg->data.size >= ARM_SERVO_COUNT) {
+    #if ENABLE_DEBUG_PRINTS
+    Serial.print("Raw values: [");
+    for (int i = 0; i < ARM_SERVO_COUNT; i++) {
+      Serial.printf("%.4f", msg->data.data[i]);
+      if (i < ARM_SERVO_COUNT - 1) Serial.print(", ");
+    }
+    Serial.println("]");
+    #endif
+    
     // Convert radians to servo position units and send to arm servos
     for (int i = 0; i < ARM_SERVO_COUNT; i++) {
       float radians = msg->data.data[i];
-      // Use calibrated conversion function
-      int16_t position = radiansToServoPosition(ARM_SERVO_IDS[i], radians);
-      arm_servo.WritePosEx(ARM_SERVO_IDS[i], position, 0, 0);
+      
+      #if ENABLE_DEBUG_PRINTS
+      Serial.printf("Servo %d (ID=%d): %.4f rad", i, ARM_SERVO_IDS[i], radians);
+      #endif
+      
+      #if ENABLE_SERVO_CONTROL
+      if (servos_enabled) {
+        // Use calibrated conversion function
+        int16_t position = radiansToServoPosition(ARM_SERVO_IDS[i], radians);
+        arm_servo.WritePosEx(ARM_SERVO_IDS[i], position, 0, 0);
+        #if ENABLE_DEBUG_PRINTS
+        Serial.printf(" -> POS: %d\n", position);
+        #endif
+      } else {
+        #if ENABLE_DEBUG_PRINTS
+        Serial.printf(" -> DISABLED\n");
+        #endif
+      }
+      #else
+      #if ENABLE_DEBUG_PRINTS
+      Serial.printf(" -> SERVO_CONTROL_DISABLED\n");
+      #endif
+      #endif
     }
     
     char buf[128];
     sprintf(buf, "Arm: %.2f %.2f %.2f %.2f", 
             msg->data.data[0], msg->data.data[1], msg->data.data[2], msg->data.data[3]);
     displayMessage(buf);
+  } else {
+    #if ENABLE_DEBUG_PRINTS
+    Serial.printf("ERROR: Insufficient data size (%d < %d)\n", msg->data.size, ARM_SERVO_COUNT);
+    #endif
   }
 }
 
@@ -213,6 +384,64 @@ void enableWatchdog() {
   last_base_cmd_time = millis();
   last_arm_cmd_time = millis();
   displayMessage("Watchdog enabled");
+}
+
+void toggleServoControl() {
+  servos_enabled = !servos_enabled;
+  
+  if (!servos_enabled) {
+    // Disable all servos
+    #if ENABLE_SERVO_CONTROL
+    for (int i = 0; i < BASE_SERVO_COUNT; i++) {
+      base_servo.WriteSpe(BASE_SERVO_IDS[i], 0, 255);  // Stop base servos
+    }
+    for (int i = 0; i < ARM_SERVO_COUNT; i++) {
+      arm_servo.EnableTorque(ARM_SERVO_IDS[i], 0);  // Disable arm servo torque
+    }
+    #endif
+    displayMessage("SERVOS DISABLED");
+    debugPrint("Servo control disabled by user");
+  } else {
+    // Re-enable all servos
+    #if ENABLE_SERVO_CONTROL
+    for (int i = 0; i < ARM_SERVO_COUNT; i++) {
+      arm_servo.EnableTorque(ARM_SERVO_IDS[i], 1);  // Re-enable arm servo torque
+    }
+    #endif
+    displayMessage("SERVOS ENABLED");
+    debugPrint("Servo control enabled by user");
+  }
+  
+  // Update system state and NeoPixel
+  updateSystemState();
+}
+
+void checkButtonPress() {
+  bool button_pressed = !digitalRead(EN_BUTTON_PIN);  // Button is active LOW
+  
+  if (button_pressed && !button_was_pressed) {
+    // Button just pressed
+    button_press_start = millis();
+    button_was_pressed = true;
+    button_long_press_detected = false;
+    debugPrint("Button press started");
+  }
+  else if (button_pressed && button_was_pressed && !button_long_press_detected) {
+    // Button held down - check for long press
+    if (millis() - button_press_start >= LONG_PRESS_TIME) {
+      button_long_press_detected = true;
+      debugPrint("Long press detected - toggling servo control");
+      toggleServoControl();
+    }
+  }
+  else if (!button_pressed && button_was_pressed) {
+    // Button just released
+    if (!button_long_press_detected) {
+      debugPrint("Short button press (ignored)");
+    }
+    button_was_pressed = false;
+    button_long_press_detected = false;
+  }
 }
 
 bool initMicroROS(){
@@ -344,6 +573,7 @@ bool initMicroROS(){
     }
 
     displayMessage("microROS initialized!");
+    debugPrint("micro-ROS node and subscriptions ready");
     return true;
 }
 
@@ -478,21 +708,41 @@ bool checkServos() {
 }
 
 void setup() {
+  // Initialize serial for debug output first
+  Serial.begin(115200);
+  
+  // Initialize NeoPixel
+  pixels.begin();
+  pixels.clear();
+  pixels.show();
+  debugPrint("NeoPixel initialized");
+  
+  // Set initial state (disconnected)
+  updateSystemState();
+  
   initScreen();
   displayMessage("Board started");
   delay(1000);
+
+  // Initialize button pin
+  pinMode(EN_BUTTON_PIN, INPUT_PULLUP);
+  debugPrint("Button initialized (long press to toggle servos)");
 
   // Initialize serial communication for servos
   Serial2.begin(1000000, SERIAL_8N1, S_RXD, S_TXD);
   base_servo.pSerial = &Serial2; 
   arm_servo.pSerial = &Serial2;   
+  
+  debugPrint("Starting servo check...");
   checkServos();
   
   // Move arm to relaxed positions after servo check
+  #if ENABLE_SERVO_CONTROL
   moveToRelaxedPositions();
+  #endif
 
   // Initialize micro-ROS serial communication
-  Serial.begin(115200);
+  debugPrint("Initializing micro-ROS...");
   set_microros_serial_transports(Serial);
   
   bool ros_initialized = initMicroROS();
@@ -514,17 +764,31 @@ void setup() {
 }
 
 void loop() {
+  // Check button for servo enable/disable
+  checkButtonPress();
+  
   // Run micro-ROS executor to handle incoming commands
   spinMicroRos();
 
   // Check watchdog for safety
   checkWatchdog();
+  
+  // Check for ROS disconnection (if no commands for extended period)
+  if (ros_connected && (millis() - last_base_cmd_time > WATCHDOG_TIMEOUT_MS * 2) && 
+      (millis() - last_arm_cmd_time > WATCHDOG_TIMEOUT_MS * 2)) {
+    ros_connected = false;
+    debugPrint("ROS connection lost - no commands received");
+    updateSystemState();
+  }
 
   // Publish joint states at 200Hz (every 5ms)
   if(millis() - last_joint_state_time >= CONTROL_PERIOD_MS){
     publishJointStates();
     last_joint_state_time = millis();
   }
+  
+  // Update system state periodically
+  updateSystemState();
   
   // Small delay to prevent overwhelming the system
   delayMicroseconds(100);
