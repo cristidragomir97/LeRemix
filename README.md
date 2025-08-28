@@ -2,6 +2,8 @@
 # LeRemix 
 ![](https://i.ibb.co/5JQqhN0/front.png)
 
+This project is a fully 3D-printed mobile manipulator designed to be affordable, easy to build, flexible and ready for simulation.
+Building on top of open-source projects like LeKiwi and LeRobot, it focuses on ROS support and extensibility, making it a solid foundation for AI/VLM experimentation, research, prototyping, and education.
 
 # Getting Started
 
