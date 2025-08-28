@@ -1324,4 +1324,62 @@
   <child link="upper_floor_1"/>
 </joint>
 
+<!-- ros2_control hardware interface -->
+<ros2_control name="leremix_hardware" type="system">
+  <hardware>
+    <plugin>leremix_control_plugin/Esp32SystemTopic</plugin>
+    <param name="base_cmd_topic">/esp32/base_cmd</param>
+    <param name="arm_cmd_topic">/esp32/arm_cmd</param>
+    <param name="state_topic">/esp32/joint_states</param>
+    <param name="publish_if_unchanged">true</param>
+  </hardware>
+  
+  <!-- Base joints - velocity command, position+velocity states -->
+  <joint name="back_motor_rotation">
+    <command_interface name="velocity"/>
+    <state_interface name="position"/>
+    <state_interface name="velocity"/>
+  </joint>
+  <joint name="left_motor_rotation">
+    <command_interface name="velocity"/>
+    <state_interface name="position"/>
+    <state_interface name="velocity"/>
+  </joint>
+  <joint name="right_motor_rotation">
+    <command_interface name="velocity"/>
+    <state_interface name="position"/>
+    <state_interface name="velocity"/>
+  </joint>
+  
+  <!-- Arm joints - position command, position state -->
+  <joint name="1">
+    <command_interface name="position"/>
+    <state_interface name="position"/>
+  </joint>
+  <joint name="2">
+    <command_interface name="position"/>
+    <state_interface name="position"/>
+  </joint>
+  <joint name="3">
+    <command_interface name="position"/>
+    <state_interface name="position"/>
+  </joint>
+  <joint name="4">
+    <command_interface name="position"/>
+    <state_interface name="position"/>
+  </joint>
+  <joint name="5">
+    <command_interface name="position"/>
+    <state_interface name="position"/>
+  </joint>
+  <joint name="6">
+    <command_interface name="position"/>
+    <state_interface name="position"/>
+  </joint>
+  <joint name="camera_tilt">
+    <command_interface name="position"/>
+    <state_interface name="position"/>
+  </joint>
+</ros2_control>
+
 </robot>
