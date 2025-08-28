@@ -1,7 +1,7 @@
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, TimerAction
 from launch.conditions import IfCondition
-from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
+from launch.substitutions import LaunchConfiguration, PathJoinSubstitution, Command
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
 from ament_index_python.packages import get_package_share_directory
@@ -64,7 +64,7 @@ def generate_launch_description():
         'config',
         'ros2_control_esp32_bridge.yaml'
     ])
-
+    
     # Include leremix_camera launch file
     camera_launch = IncludeLaunchDescription(
         PathJoinSubstitution([
@@ -95,7 +95,25 @@ def generate_launch_description():
         condition=IfCondition(use_xbox)
     )
 
-    # ros2_control node (controller_manager)
+    # Robot description
+    robot_description_content = Command([
+        'xacro ', 
+        PathJoinSubstitution([
+            FindPackageShare('leremix_description'),
+            'urdf',
+            'LeRemix.xacro'
+        ])
+    ])
+
+    # Robot state publisher - publishes robot_description topic
+    robot_state_publisher = Node(
+        package='robot_state_publisher',
+        executable='robot_state_publisher',
+        output='screen',
+        parameters=[{'robot_description': robot_description_content}]
+    )
+
+    # ros2_control node (controller_manager) - will use robot_description topic
     controller_manager = Node(
         package='controller_manager',
         executable='ros2_control_node',
@@ -161,6 +179,7 @@ def generate_launch_description():
         camera_launch,
         imu_launch,
         xbox_launch,
+        robot_state_publisher,
         controller_manager,
         spawner_joint_state_broadcaster,
         spawner_omnidirectional_controller,
