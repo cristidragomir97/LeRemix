@@ -1,5 +1,5 @@
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
+from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, TimerAction
 from launch.conditions import IfCondition
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 from launch_ros.actions import Node
@@ -103,26 +103,41 @@ def generate_launch_description():
         parameters=[controllers_cfg, hw_cfg]
     )
 
-    # Controller spawners
-    spawner_joint_state_broadcaster = Node(
-        package='controller_manager',
-        executable='spawner',
-        arguments=['joint_state_broadcaster'],
-        output='screen'
+    # Controller spawners - delayed to wait for controller_manager
+    spawner_joint_state_broadcaster = TimerAction(
+        period=5.0,
+        actions=[
+            Node(
+                package='controller_manager',
+                executable='spawner',
+                arguments=['joint_state_broadcaster', '--controller-manager', '/controller_manager'],
+                output='screen'
+            )
+        ]
     )
     
-    spawner_omnidirectional_controller = Node(
-        package='controller_manager',
-        executable='spawner',
-        arguments=['omnidirectional_controller'],
-        output='screen'
+    spawner_omnidirectional_controller = TimerAction(
+        period=7.0,
+        actions=[
+            Node(
+                package='controller_manager',
+                executable='spawner',
+                arguments=['omnidirectional_controller', '--controller-manager', '/controller_manager'],
+                output='screen'
+            )
+        ]
     )
     
-    spawner_arm_controller = Node(
-        package='controller_manager',
-        executable='spawner',
-        arguments=['arm_controller'],
-        output='screen'
+    spawner_arm_controller = TimerAction(
+        period=9.0,
+        actions=[
+            Node(
+                package='controller_manager',
+                executable='spawner',
+                arguments=['arm_controller', '--controller-manager', '/controller_manager'],
+                output='screen'
+            )
+        ]
     )
 
     # micro-ROS agent node
