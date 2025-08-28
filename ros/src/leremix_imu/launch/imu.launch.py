@@ -9,7 +9,7 @@ def generate_launch_description():
     # Declare launch arguments
     publish_rate_arg = DeclareLaunchArgument(
         'publish_rate',
-        default_value='50.0',
+        default_value='200.0',
         description='Publishing rate for IMU data in Hz'
     )
     
