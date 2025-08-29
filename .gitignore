@@ -2,7 +2,7 @@
 .claude/
 
 # PlatformIO build artifacts
-firmware/.pio/
+firmware/*/.pio/
 
 # ROS2 build artifacts
 ros/build/

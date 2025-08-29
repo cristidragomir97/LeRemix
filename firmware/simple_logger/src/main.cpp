@@ -1,6 +1,4 @@
 #include <Arduino.h>
-#include <WiFi.h>
-#include <WebServer.h>
 #include <micro_ros_platformio.h>
 #include <rcl/rcl.h>
 #include <rclc/rclc.h>
@@ -10,13 +8,6 @@
 #include <micro_ros_utilities/type_utilities.h>
 #include <micro_ros_utilities/string_utilities.h>
 #include <rmw_microros/rmw_microros.h>
-
-// WiFi credentials - CHANGE THESE TO YOUR NETWORK
-const char* ssid = "your_wifi_ssid";        // Replace with your WiFi network name
-const char* password = "your_wifi_password"; // Replace with your WiFi password
-
-// Web server
-WebServer server(80);
 
 // Topic names matching leremix_control_plugin
 #define BASE_CMD_TOPIC   "/esp32/base_cmd"
@@ -44,25 +35,48 @@ rcl_publisher_t joint_state_pub;
 sensor_msgs__msg__JointState joint_state_msg;
 
 // Logging
-String log_buffer = "";
 unsigned long last_joint_state_time = 0;
+unsigned long last_status_print = 0;
 const unsigned long CONTROL_PERIOD_MS = 50;  // 20Hz for testing
+const unsigned long STATUS_PERIOD_MS = 500;  // 5 second status reports
 
 // Statistics
 unsigned long base_msg_count = 0;
 unsigned long arm_msg_count = 0;
 unsigned long joint_state_msg_count = 0;
 
-void addLog(String message) {
-  String timestamp = String(millis());
-  String logEntry = "[" + timestamp + "] " + message + "\n";
-  Serial.print(logEntry);
-  
-  // Keep only last 2000 characters to prevent memory issues
-  log_buffer += logEntry;
-  if (log_buffer.length() > 2000) {
-    log_buffer = log_buffer.substring(log_buffer.length() - 1500);
+
+
+bool ros_ok = false;
+
+String getErrorMessage(rcl_ret_t rc) {
+  switch (rc) {
+    case RCL_RET_OK: return "OK";
+    case RCL_RET_ERROR: return "GENERIC_ERROR";
+    case RCL_RET_BAD_ALLOC: return "BAD_ALLOC";
+    case RCL_RET_INVALID_ARGUMENT: return "INVALID_ARGUMENT";
+    case RCL_RET_NOT_INIT: return "NOT_INIT";
+    case RCL_RET_PUBLISHER_INVALID: return "PUBLISHER_INVALID";
+    case RCL_RET_TIMEOUT: return "TIMEOUT";
+    default: return "UNKNOWN_" + String(rc);
   }
+}
+
+void addLog(String message) {
+  String timestamp = String(millis() / 1000.0, 1);
+  String logEntry = "[" + timestamp + "s] " + message;
+  
+  // Print to logging serial port (Serial1)
+  Serial1.println(logEntry);
+}
+
+void printStatus() {
+  Serial1.println("=== STATUS REPORT ===");
+  Serial1.printf("Uptime: %lu seconds\n", millis() / 1000);
+  Serial1.printf("ROS Transport: Serial (USB)\n");
+  Serial1.printf("Message Stats - Base: %lu, Arm: %lu, JointStates: %lu\n", base_msg_count, arm_msg_count, joint_state_msg_count);
+  Serial1.printf("Free Heap: %lu bytes\n", ESP.getFreeHeap());
+  Serial1.println("=====================");
 }
 
 // Base command callback
@@ -105,48 +119,20 @@ void arm_cmd_callback(const void *msgin) {
   addLog(logMsg);
 }
 
-void handleRoot() {
-  String html = "<!DOCTYPE html><html><head>";
-  html += "<title>ESP32 ROS Debug Monitor</title>";
-  html += "<meta http-equiv='refresh' content='2'>";
-  html += "</head><body>";
-  html += "<h1>ESP32 ROS Communication Test</h1>";
-  html += "<h2>Statistics</h2>";
-  html += "<p>Uptime: " + String(millis()/1000) + " seconds</p>";
-  html += "<p>Base Commands Received: " + String(base_msg_count) + "</p>";
-  html += "<p>Arm Commands Received: " + String(arm_msg_count) + "</p>";
-  html += "<p>Joint States Published: " + String(joint_state_msg_count) + "</p>";
-  html += "<p>WiFi RSSI: " + String(WiFi.RSSI()) + " dBm</p>";
-  html += "<h2>Recent Messages</h2>";
-  html += "<pre style='background-color: #f0f0f0; padding: 10px; font-family: monospace; white-space: pre-wrap; word-wrap: break-word;'>";
-  html += log_buffer;
-  html += "</pre>";
-  html += "</body></html>";
-  
-  server.send(200, "text/html", html);
-}
-
-void handleClear() {
-  log_buffer = "";
+void clearStats() {
   base_msg_count = 0;
   arm_msg_count = 0;
   joint_state_msg_count = 0;
-  addLog("Log cleared via web interface");
-  server.send(200, "text/plain", "Log cleared. Go back to main page.");
+  addLog("Statistics cleared");
 }
 
 bool initMicroROS() {
-  addLog("Initializing micro-ROS...");
+  addLog("Initializing micro-ROS with Serial transport...");
   
-  IPAddress agent_ip(192, 168, 1, 100);  // CHANGE THIS TO YOUR ROS2 MACHINE IP
-  size_t agent_port = 8888;               // Default micro-ROS agent port
+  // Set micro-ROS serial transport (uses Serial port for ROS communication)
+  set_microros_serial_transports(Serial);
   
-  char agent_ip_str[16];
-  sprintf(agent_ip_str, "%d.%d.%d.%d", agent_ip[0], agent_ip[1], agent_ip[2], agent_ip[3]);
-  
-  set_microros_wifi_transports((char*)ssid, (char*)password, agent_ip_str, agent_port);
-  
-  addLog("Connecting to micro-ROS agent at " + String(agent_ip_str) + ":" + String(agent_port));
+  addLog("Using Serial (USB) transport for micro-ROS communication");
   
   allocator = rcl_get_default_allocator();
   rclc_support_init(&support, 0, NULL, &allocator);
@@ -193,7 +179,7 @@ bool initMicroROS() {
   joint_state_msg.name.size = BASE_SERVO_COUNT + ARM_SERVO_COUNT;
 
   // Create node
-  rcl_ret_t rc = rclc_node_init_default(&node, "esp32_debug_node", "", &support);
+  rcl_ret_t rc = rclc_node_init_default(&node, "esp32_simple_logger", "", &support);
   if (rc != RCL_RET_OK) {
     addLog("ERROR: Failed to create micro-ROS node");
     return false;
@@ -303,60 +289,55 @@ void publishJointStates() {
   }
 }
 
-String getErrorMessage(rcl_ret_t rc) {
-  switch (rc) {
-    case RCL_RET_OK: return "OK";
-    case RCL_RET_ERROR: return "GENERIC_ERROR";
-    case RCL_RET_BAD_ALLOC: return "BAD_ALLOC";
-    case RCL_RET_INVALID_ARGUMENT: return "INVALID_ARGUMENT";
-    case RCL_RET_NOT_INIT: return "NOT_INIT";
-    case RCL_RET_PUBLISHER_INVALID: return "PUBLISHER_INVALID";
-    case RCL_RET_TIMEOUT: return "TIMEOUT";
-    default: return "UNKNOWN_" + String(rc);
-  }
-}
+
 
 void setup() {
-  Serial.begin(115200);
-  Serial.println("ESP32 ROS Debug Monitor Starting...");
+  // Initialize logging serial port first
   
-  // Connect to WiFi
-  addLog("Connecting to WiFi: " + String(ssid));
-  WiFi.begin(ssid, password);
+  Serial1.begin(115200, SERIAL_8N1, 35, 37);  // RX=32, TX=33
+  Serial1.println("=== ESP32 Simple Logger Started ===");
   
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(1000);
-    Serial.print(".");
+  // Initialize main serial for micro-ROS communication
+
+  delay(2000);  // Give time for serial connection
+  
+  addLog("ESP32 Simple Logger Starting...");
+  addLog("Serial: micro-ROS communication");
+  addLog("Serial1 (RX=32, TX=33): Logging output");
+  
+  ros_ok = initMicroROS();
+
+  while (!ros_ok) {
+    addLog("micro-ROS init failed, retrying...");
+    delay(2000);
+    ros_ok = initMicroROS();
+  }
+
+  if (ros_ok) {
+    addLog("micro-ROS init succesful");
   }
   
-  addLog("WiFi connected! IP: " + WiFi.localIP().toString());
-  
-  // Setup web server
-  server.on("/", handleRoot);
-  server.on("/clear", handleClear);
-  server.begin();
-  addLog("Web server started on port 80");
-  
-  // Initialize micro-ROS
-  bool ros_ok = initMicroROS();
-  if (!ros_ok) {
-    addLog("micro-ROS initialization failed! Check agent connection.");
-  }
-  
-  addLog("Setup complete. Open http://" + WiFi.localIP().toString() + " in your browser");
+  addLog("Setup complete. Connect micro-ROS agent to Serial (USB)");
+  addLog("Monitor Serial1 (pins 32/33) for logging output");
 }
 
 void loop() {
-  // Handle web server
-  server.handleClient();
-  
   // Run micro-ROS executor
-  rclc_executor_spin_some(&executor, RCL_MS_TO_NS(10));
-  
-  // Publish joint states periodically
-  if (millis() - last_joint_state_time >= CONTROL_PERIOD_MS) {
-    publishJointStates();
-    last_joint_state_time = millis();
+
+  if(ros_ok){
+      rclc_executor_spin_some(&executor, RCL_MS_TO_NS(10));
+    
+      // Print status periodically
+      if (millis() - last_status_print >= STATUS_PERIOD_MS) {
+        printStatus();
+        last_status_print = millis();
+      }
+      
+      // Publish joint states periodically
+      if (millis() - last_joint_state_time >= CONTROL_PERIOD_MS) {
+        publishJointStates();
+        last_joint_state_time = millis();
+      }
   }
   
   delay(1);
