@@ -15,7 +15,7 @@ def generate_launch_description():
              parameters=[{'device_id': joy_dev, 'deadzone': 0.15, 'autorepeat_rate': 25.0}],
              output='screen'),
 
-        Node(package='leremix_teleop_xbox', executable='teleop_xbox.py', name='teleop_xbox',
+        Node(package='leremix_teleop_xbox', executable='teleop_xbox', name='teleop_xbox',
              parameters=[{
                  'cmd_vel_topic': '/omnidirectional_controller/cmd_vel_unstamped',
                  'arm_cmd_topic': '/arm_controller/commands',

@@ -166,6 +166,13 @@ def generate_launch_description():
         output='screen'
     )
 
+    # rosboard node for web dashboard
+    rosboard = Node(
+        package='rosboard',
+        executable='rosboard_node',
+        output='screen'
+    )
+
     return LaunchDescription([
         # Launch arguments
         use_camera_arg,
@@ -185,4 +192,5 @@ def generate_launch_description():
         spawner_omnidirectional_controller,
         spawner_arm_controller,
         microros_agent,
+        rosboard,
     ])
