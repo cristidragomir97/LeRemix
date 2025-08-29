@@ -12,10 +12,8 @@
 #define S_SCL 22
 #define S_SDA 21
 
-// the GPIO used to control RGB LEDs.
-// GPIO 23, as default.
-#define RGB_LED   23
-#define NUMPIXELS 10
+// EN button (boot button) for servo enable/disable
+#define EN_BUTTON_PIN 0
 
 // Servo calibration data based on physical measurements
 // Each servo has physical limits and relaxed positions measured in encoder counts (0-4095)

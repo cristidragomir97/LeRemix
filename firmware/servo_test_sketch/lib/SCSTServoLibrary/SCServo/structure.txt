@@ -1,0 +1,21 @@
+﻿communication layer: SCS
+----------------------------
+hardware interface layer: SCSerial
+----------------------------
+application layer: SMS_STS SCSCL -> ST/SC
+
+
+
+SMS_STS sms_sts;//ST Servos
+SCSCL sc;//定义SC Servos
+
+
+
+INST.h---directive definition header file
+SCS.h/SCS.cpp---communication layer program
+SCSerial.h/SCSerial.cpp---hardware interface program
+SMS_STS.h/SMS_STS.cpp---application layer for ST Servos
+SCSCL.h/SCSCL.cpp---application layer for SC Servos
+
+
+SCS<---SCSerial<---SMS_STS/SCSCL
