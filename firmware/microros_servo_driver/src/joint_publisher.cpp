@@ -40,7 +40,7 @@ bool initJointPublisher(rcl_node_t* node, Adafruit_SSD1306* display) {
     joint_state_msg.name.size = BASE_SERVO_COUNT + ARM_SERVO_COUNT;
 
     // Initialize Joint State Publisher with best effort QoS for ros2_control compatibility
-    rcl_ret_t rc = rclc_publisher_init_best_effort(
+    rcl_ret_t rc = rclc_publisher_init_default(
       &joint_state_pub, 
       node,
       ROSIDL_GET_MSG_TYPE_SUPPORT(sensor_msgs, msg, JointState),
@@ -74,7 +74,7 @@ void publishJointStates() {
     
     // Read base servo positions (convert to radians)
     for (int i = 0; i < BASE_SERVO_COUNT; i++) {
-        int32_t pos = base_servo.ReadPos(BASE_SERVO_IDS[i]);
+        int16_t pos = baseMotors[i].getCurrentPosition();
         if (pos != -1) {
             // Convert servo position to radians (for wheels, this is cumulative rotation)
             joint_state_msg.position.data[i] = (pos * 2.0 * PI) / 4096.0;
@@ -82,10 +82,10 @@ void publishJointStates() {
             joint_state_msg.position.data[i] = 0.0;  // Default if read fails
         }
         
-        int16_t speed = base_servo.ReadSpeed(BASE_SERVO_IDS[i]);
+        int16_t speed = baseMotors[i].getCurrentVelocity();
         if (speed != -1) {
             // Convert servo speed to rad/s
-            joint_state_msg.velocity.data[i] = speed / VEL_TO_SERVO_UNIT;
+            joint_state_msg.velocity.data[i] = (speed * 2.0 * PI) / 4096.0;
         } else {
             joint_state_msg.velocity.data[i] = 0.0;
         }
@@ -93,7 +93,7 @@ void publishJointStates() {
     
     // Read arm servo positions (convert to radians using calibration)
     for (int i = 0; i < ARM_SERVO_COUNT; i++) {
-        int32_t pos = arm_servo.ReadPos(ARM_SERVO_IDS[i]);
+        int16_t pos = armMotors[i].getCurrentPosition();
         if (pos != -1) {
             // Use calibrated conversion function
             joint_state_msg.position.data[BASE_SERVO_COUNT + i] = servoPositionToRadians(ARM_SERVO_IDS[i], pos);
@@ -101,10 +101,10 @@ void publishJointStates() {
             joint_state_msg.position.data[BASE_SERVO_COUNT + i] = 0.0;  // Default if read fails
         }
         
-        int16_t speed = arm_servo.ReadSpeed(ARM_SERVO_IDS[i]);
+        int16_t speed = armMotors[i].getCurrentVelocity();
         if (speed != -1) {
             // Convert servo speed to rad/s  
-            joint_state_msg.velocity.data[BASE_SERVO_COUNT + i] = (speed * 2.0 * PI) / (4096.0 * 60.0);  // Assuming speed in RPM
+            joint_state_msg.velocity.data[BASE_SERVO_COUNT + i] = (speed * 2.0 * PI) / (4096.0 * 60.0);
         } else {
             joint_state_msg.velocity.data[BASE_SERVO_COUNT + i] = 0.0;
         }

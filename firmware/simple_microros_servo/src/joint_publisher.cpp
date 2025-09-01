@@ -48,10 +48,10 @@ bool initJointPublisher(rcl_node_t* node, void* display) {
     );
 
     if(rc != RCL_RET_OK) {
-        Serial.println("Joint state publisher failed");
+        Serial1.println("Joint state publisher failed");
         return false;
     } else {
-        Serial.println("Successfully added joint state publisher");
+        Serial1.println("Successfully added joint state publisher");
     }
 
     return true;
@@ -74,7 +74,7 @@ void publishJointStates() {
     
     // Read base servo positions (convert to radians)
     for (int i = 0; i < BASE_SERVO_COUNT; i++) {
-        int32_t pos = base_servo.ReadPos(BASE_SERVO_IDS[i]);
+        int16_t pos = base_servos.getCurrentPosition(BASE_SERVO_IDS[i]);
         if (pos != -1) {
             // Convert servo position to radians (for wheels, this is cumulative rotation)
             joint_state_msg.position.data[i] = (pos * 2.0 * PI) / 4096.0;
@@ -82,7 +82,7 @@ void publishJointStates() {
             joint_state_msg.position.data[i] = 0.0;  // Default if read fails
         }
         
-        int16_t speed = base_servo.ReadSpeed(BASE_SERVO_IDS[i]);
+        int16_t speed = base_servos.getCurrentVelocity(BASE_SERVO_IDS[i]);
         if (speed != -1) {
             // Convert servo speed to rad/s
             joint_state_msg.velocity.data[i] = speed / VEL_TO_SERVO_UNIT;
@@ -93,7 +93,7 @@ void publishJointStates() {
     
     // Read arm servo positions (convert to radians using calibration)
     for (int i = 0; i < ARM_SERVO_COUNT; i++) {
-        int32_t pos = arm_servo.ReadPos(ARM_SERVO_IDS[i]);
+        int16_t pos = arm_servos.getCurrentPosition(ARM_SERVO_IDS[i]);
         if (pos != -1) {
             // Use calibrated conversion function
             joint_state_msg.position.data[BASE_SERVO_COUNT + i] = servoPositionToRadians(ARM_SERVO_IDS[i], pos);
@@ -101,7 +101,7 @@ void publishJointStates() {
             joint_state_msg.position.data[BASE_SERVO_COUNT + i] = 0.0;  // Default if read fails
         }
         
-        int16_t speed = arm_servo.ReadSpeed(ARM_SERVO_IDS[i]);
+        int16_t speed = arm_servos.getCurrentVelocity(ARM_SERVO_IDS[i]);
         if (speed != -1) {
             // Convert servo speed to rad/s  
             joint_state_msg.velocity.data[BASE_SERVO_COUNT + i] = (speed * 2.0 * PI) / (4096.0 * 60.0);  // Assuming speed in RPM

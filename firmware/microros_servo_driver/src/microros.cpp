@@ -36,5 +36,5 @@ bool initMicroROS(Adafruit_SSD1306* display) {
 }
 
 void spinMicroRos() {
-  rclc_executor_spin_some(&executor, RCL_MS_TO_NS(10));
+  rclc_executor_spin_some(&executor, RCL_MS_TO_NS(1));
 }

@@ -12,6 +12,13 @@ std_msgs__msg__Float64MultiArray arm_cmd_msg;
 // Pointers to external variables
 static bool* servos_enabled_ptr = nullptr;
 static Adafruit_SSD1306* display_ptr = nullptr;
+static QueueHandle_t arm_command_queue_handle = nullptr;
+
+// Arm command message structure
+struct ArmCommandMsg {
+  float joint_positions[7];  // 6 arm joints + 1 camera
+  int joint_count;
+};
 
 bool initArmSubscriber(rcl_node_t* node, rclc_executor_t* executor, Adafruit_SSD1306* display) {
     // Create message memory for dynamic arrays
@@ -25,7 +32,7 @@ bool initArmSubscriber(rcl_node_t* node, rclc_executor_t* executor, Adafruit_SSD
       });
 
     // Initialize Arm Command Subscriber with best effort QoS for ros2_control compatibility
-    rcl_ret_t rc = rclc_subscription_init_best_effort(
+    rcl_ret_t rc = rclc_subscription_init_default(
       &arm_cmd_sub,
       node,
       ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Float64MultiArray),
@@ -62,57 +69,32 @@ void setArmDisplayPtr(Adafruit_SSD1306* display_ptr_arg) {
     display_ptr = display_ptr_arg;
 }
 
+void setArmCommandQueue(QueueHandle_t queue_handle) {
+    arm_command_queue_handle = queue_handle;
+}
+
 // Arm command callback - expects Float64MultiArray with 7 values (radians)
 void arm_cmd_callback(const void *msgin) {
     const std_msgs__msg__Float64MultiArray *msg = (std_msgs__msg__Float64MultiArray *)msgin;
     
-    if (display_ptr) {
-        displayMessage("Arm command received!", display_ptr);
-    }
-    
-    // Display callback info on screen
-    if (display_ptr) {
-        char debug_buf[128];
-        sprintf(debug_buf, "ARM CB: size=%d", msg->data.size);
-        displayMessage(debug_buf, display_ptr);
-        delay(500); // Brief display of callback info
-    }
-    
-    #if ENABLE_DEBUG_PRINTS
-    Serial.println("=== ARM COMMAND CALLBACK ===");
-    Serial.printf("Message data size: %d\n", msg->data.size);
-    if (servos_enabled_ptr) {
-        Serial.printf("Servos enabled: %s\n", *servos_enabled_ptr ? "YES" : "NO");
-    }
-    #endif
-    
-    if (msg->data.size >= ARM_SERVO_COUNT) {
-        #if ENABLE_DEBUG_PRINTS
-        Serial.print("Raw values: [");
-        for (int i = 0; i < ARM_SERVO_COUNT; i++) {
-            Serial.printf("%.4f", msg->data.data[i]);
-            if (i < ARM_SERVO_COUNT - 1) Serial.print(", ");
-        }
-        Serial.println("]");
-        #endif
+    if (msg->data.size >= ARM_SERVO_COUNT && arm_command_queue_handle != nullptr) {
+        ArmCommandMsg arm_cmd;
+        arm_cmd.joint_count = min((int)msg->data.size, 7);
         
-        // Convert radians to servo position units and send to arm servos
-        for (int i = 0; i < ARM_SERVO_COUNT; i++) {
-            float radians = msg->data.data[i];
-            bool enabled = servos_enabled_ptr ? *servos_enabled_ptr : false;
-            controlArmServo(i, radians, enabled);
+        // Copy joint positions
+        for (int i = 0; i < arm_cmd.joint_count; i++) {
+            arm_cmd.joint_positions[i] = msg->data.data[i];
         }
+        
+        // Send command to servo control task via queue
+        // Non-blocking send - if queue is full, drop the message
+        xQueueSend(arm_command_queue_handle, &arm_cmd, 0);
         
         // Update display if available
         if (display_ptr) {
-            char buf[128];
-            sprintf(buf, "Arm: %.2f %.2f %.2f %.2f", 
-                    msg->data.data[0], msg->data.data[1], msg->data.data[2], msg->data.data[3]);
-            displayMessage(buf, display_ptr);
+            char buffer[64];
+            snprintf(buffer, sizeof(buffer), "Arm: %d joints", arm_cmd.joint_count);
+            // displayMessage(buffer, display_ptr);  // Commented out to avoid flooding display
         }
-    } else {
-        #if ENABLE_DEBUG_PRINTS
-        Serial.printf("ERROR: Insufficient data size (%d < %d)\n", msg->data.size, ARM_SERVO_COUNT);
-        #endif
     }
 }

@@ -1,7 +1,7 @@
 # Controllers (your original settings), kept separate from the ros2_control hardware config.
 controller_manager:
   ros__parameters:
-    update_rate: 100  # Hz (reduced for non-RT)
+    update_rate: 50  # Hz (reduced for non-RT)
     use_sim_time: false
 
     joint_state_broadcaster:

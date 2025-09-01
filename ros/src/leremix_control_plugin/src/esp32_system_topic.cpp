@@ -83,12 +83,12 @@ CallbackReturn Esp32SystemTopic::on_configure(const rclcpp_lifecycle::State &)
 
   // Publishers (best-effort for micro-ROS compatibility)
   base_pub_ = node_->create_publisher<std_msgs::msg::Float64MultiArray>(
-    base_cmd_topic_, rclcpp::QoS(rclcpp::KeepLast(1)).best_effort());
+    base_cmd_topic_, rclcpp::QoS(rclcpp::KeepLast(1)).reliable());
   arm_pub_ = node_->create_publisher<std_msgs::msg::Float64MultiArray>(
-    arm_cmd_topic_, rclcpp::QoS(rclcpp::KeepLast(1)).best_effort());
+    arm_cmd_topic_, rclcpp::QoS(rclcpp::KeepLast(1)).reliable());
 
   // Subscriber (best-effort for micro-ROS compatibility)
-  auto qos = rclcpp::QoS(rclcpp::KeepLast(5)).best_effort();
+  auto qos = rclcpp::QoS(rclcpp::KeepLast(5)).reliable();
   state_sub_ = node_->create_subscription<sensor_msgs::msg::JointState>(
     state_topic_, qos,
     std::bind(&Esp32SystemTopic::state_callback, this, std::placeholders::_1));

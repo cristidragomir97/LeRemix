@@ -3,6 +3,7 @@
 #include "motor_controller.h"
 #include "utils.h"
 #include "config.h"
+#include "debug_serial.h"
 #include <micro_ros_utilities/type_utilities.h>
 
 // Arm subscriber objects
@@ -11,6 +12,10 @@ std_msgs__msg__Float64MultiArray arm_cmd_msg;
 
 // Pointers to external variables
 static bool* servos_enabled_ptr = nullptr;
+
+// Message deduplication - store last received values
+static float last_arm_values[ARM_SERVO_COUNT] = {0};
+static bool first_arm_message = true;
 
 bool initArmSubscriber(rcl_node_t* node, rclc_executor_t* executor, void* display) {
     // Create message memory for dynamic arrays
@@ -32,7 +37,7 @@ bool initArmSubscriber(rcl_node_t* node, rclc_executor_t* executor, void* displa
     );
 
     if (rc != RCL_RET_OK) {
-        Serial.println("Error creating arm cmd subscription!");
+        Serial1.println("Error creating arm cmd subscription!");
         return false;
     }
 
@@ -45,11 +50,11 @@ bool initArmSubscriber(rcl_node_t* node, rclc_executor_t* executor, void* displa
     );
 
     if (rc != RCL_RET_OK) {
-        Serial.println("Error adding arm cmd subscription!");
+        Serial1.println("Error adding arm cmd subscription!");
         return false;
     }
 
-    Serial.println("Successfully added arm cmd subscription");
+    Serial1.println("Successfully added arm cmd subscription");
     return true;
 }
 
@@ -63,10 +68,11 @@ void setArmDisplayPtr(void* display_ptr_arg) {
 
 // Arm command callback - expects Float64MultiArray with 7 values (radians)
 void arm_cmd_callback(const void *msgin) {
+    //DEBUG_CALLBACK_START("ARM");
     const std_msgs__msg__Float64MultiArray *msg = (std_msgs__msg__Float64MultiArray *)msgin;
     
     #if ENABLE_DEBUG_PRINTS
-    Serial.println("=== ARM COMMAND CALLBACK ===");
+    Serial1.println("=== ARM COMMAND CALLBACK ===");
     Serial.printf("Message data size: %d\n", msg->data.size);
     if (servos_enabled_ptr) {
         Serial.printf("Servos enabled: %s\n", *servos_enabled_ptr ? "YES" : "NO");
@@ -74,21 +80,42 @@ void arm_cmd_callback(const void *msgin) {
     #endif
     
     if (msg->data.size >= ARM_SERVO_COUNT) {
-        #if ENABLE_DEBUG_PRINTS
-        Serial.print("Raw values: [");
-        for (int i = 0; i < ARM_SERVO_COUNT; i++) {
-            Serial.printf("%.4f", msg->data.data[i]);
-            if (i < ARM_SERVO_COUNT - 1) Serial.print(", ");
+        // Check if values have changed (skip processing if identical)
+        bool values_changed = first_arm_message;
+        if (!first_arm_message) {
+            for (int i = 0; i < ARM_SERVO_COUNT; i++) {
+                if (abs(msg->data.data[i] - last_arm_values[i]) > 0.001) { // 1mrad tolerance
+                    values_changed = true;
+                    break;
+                }
+            }
         }
-        Serial.println("]");
-        #endif
         
-        // Convert radians to servo position units and send to arm servos
-        for (int i = 0; i < ARM_SERVO_COUNT; i++) {
-            float radians = msg->data.data[i];
+        if (values_changed) {
+            #if ENABLE_DEBUG_PRINTS
+            Serial.print("Raw values: [");
+            for (int i = 0; i < ARM_SERVO_COUNT; i++) {
+                Serial.printf("%.4f", msg->data.data[i]);
+                if (i < ARM_SERVO_COUNT - 1) Serial.print(", ");
+            }
+            Serial1.println("]");
+            #endif
+            
+            // Store new values and send commands using batched write
+            for (int i = 0; i < ARM_SERVO_COUNT; i++) {
+                last_arm_values[i] = msg->data.data[i];
+            }
+            
             bool enabled = servos_enabled_ptr ? *servos_enabled_ptr : false;
-            controlArmServo(i, radians, enabled);
+            controlMultipleArmServos(last_arm_values, enabled);
+            
+            first_arm_message = false;
         }
+        #if ENABLE_DEBUG_PRINTS
+        else {
+            Serial1.println("ARM: Identical message, skipping servo commands");
+        }
+        #endif
         
         // Simplified - no display output
     } else {
@@ -96,4 +123,5 @@ void arm_cmd_callback(const void *msgin) {
         Serial.printf("ERROR: Insufficient data size (%d < %d)\n", msg->data.size, ARM_SERVO_COUNT);
         #endif
     }
+    //DEBUG_CALLBACK_END("ARM");
 }

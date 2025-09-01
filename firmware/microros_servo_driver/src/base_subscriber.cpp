@@ -12,6 +12,13 @@ std_msgs__msg__Float64MultiArray base_cmd_msg;
 // Pointers to external variables
 static bool* servos_enabled_ptr = nullptr;
 static Adafruit_SSD1306* display_ptr = nullptr;
+static QueueHandle_t base_command_queue_handle = nullptr;
+
+// Base command message structure
+struct BaseCommandMsg {
+  float linear_x;
+  float angular_z;
+};
 
 bool initBaseSubscriber(rcl_node_t* node, rclc_executor_t* executor, Adafruit_SSD1306* display) {
     // Create message memory for dynamic arrays
@@ -62,53 +69,28 @@ void setBaseDisplayPtr(Adafruit_SSD1306* display_ptr_arg) {
     display_ptr = display_ptr_arg;
 }
 
-// Base command callback - expects Float64MultiArray with 3 values (rad/s)
+void setBaseCommandQueue(QueueHandle_t queue_handle) {
+    base_command_queue_handle = queue_handle;
+}
+
+// Base command callback - expects Float64MultiArray with 2 values (linear_x, angular_z)
 void base_cmd_callback(const void *msgin) {
     const std_msgs__msg__Float64MultiArray *msg = (std_msgs__msg__Float64MultiArray *)msgin;
     
-    if (display_ptr) {
-        displayMessage("Base command received!", display_ptr);
-    }
-    
-    // Display callback info on screen
-    if (display_ptr) {
-        char debug_buf[128];
-        sprintf(debug_buf, "BASE CB: size=%d", msg->data.size);
-        displayMessage(debug_buf, display_ptr);
-        delay(500); // Brief display of callback info
-    }
-    
-    #if ENABLE_DEBUG_PRINTS
-    Serial.println("=== BASE COMMAND CALLBACK ===");
-    Serial.printf("Message data size: %d\n", msg->data.size);
-    if (servos_enabled_ptr) {
-        Serial.printf("Servos enabled: %s\n", *servos_enabled_ptr ? "YES" : "NO");
-    }
-    #endif
-    
-    if (msg->data.size >= BASE_SERVO_COUNT) {
-        #if ENABLE_DEBUG_PRINTS
-        Serial.printf("Raw values: [%.4f, %.4f, %.4f]\n", 
-                      msg->data.data[0], msg->data.data[1], msg->data.data[2]);
-        #endif
+    if (msg->data.size >= 2 && base_command_queue_handle != nullptr) {
+        BaseCommandMsg base_cmd;
+        base_cmd.linear_x = msg->data.data[0];
+        base_cmd.angular_z = msg->data.data[1];
         
-        // Convert rad/s to servo speed units and send to base servos
-        for (int i = 0; i < BASE_SERVO_COUNT; i++) {
-            float rad_per_sec = msg->data.data[i];
-            bool enabled = servos_enabled_ptr ? *servos_enabled_ptr : false;
-            controlBaseServo(i, rad_per_sec, enabled);
-        }
+        // Send command to servo control task via queue
+        // Non-blocking send - if queue is full, drop the message
+        xQueueSend(base_command_queue_handle, &base_cmd, 0);
         
         // Update display if available
         if (display_ptr) {
-            char buf[128];
-            sprintf(buf, "Base: %.2f %.2f %.2f", 
-                    msg->data.data[0], msg->data.data[1], msg->data.data[2]);
-            displayMessage(buf, display_ptr);
+            char buffer[64];
+            snprintf(buffer, sizeof(buffer), "Base: %.2f, %.2f", base_cmd.linear_x, base_cmd.angular_z);
+            // displayMessage(buffer, display_ptr);  // Commented out to avoid flooding display
         }
-    } else {
-        #if ENABLE_DEBUG_PRINTS
-        Serial.printf("ERROR: Insufficient data size (%d < %d)\n", msg->data.size, BASE_SERVO_COUNT);
-        #endif
     }
 }

@@ -2,12 +2,9 @@
 #define MOTOR_CONTROLLER_H
 
 #include <Arduino.h>
-#include <SCServo.h>
 #include <Adafruit_SSD1306.h>
-
-// Hardware configuration
-extern const float VEL_TO_SERVO_UNIT; // Conversion factor from rad/s to servo speed units
-extern const float COUNTS_PER_REV;     // Encoder counts per revolution
+#include <SCServo.h>
+#include "Motor.h"
 
 // Servo ID configuration
 #define BASE_SERVO_COUNT 3
@@ -16,12 +13,19 @@ extern const float COUNTS_PER_REV;     // Encoder counts per revolution
 extern const uint8_t BASE_SERVO_IDS[BASE_SERVO_COUNT];
 extern const uint8_t ARM_SERVO_IDS[ARM_SERVO_COUNT];
 
-// Global servo objects
+// Global servo objects (using SMS_STS library)
 extern SMS_STS base_servo;
 extern SMS_STS arm_servo;
 
+// Global motor objects (using Motor wrapper)
+extern Motor baseMotors[BASE_SERVO_COUNT];
+extern Motor armMotors[ARM_SERVO_COUNT];
+
 // Initialize servo communication
 bool initServos(uint8_t rx_pin, uint8_t tx_pin);
+
+// Initialize motor display (call after display is ready)
+void initMotorDisplay(Adafruit_SSD1306* display);
 
 // Check servo connectivity and configure
 bool checkServos(Adafruit_SSD1306* display);
@@ -39,5 +43,8 @@ void controlArmServo(uint8_t servo_index, float radians, bool servos_enabled);
 // Emergency stop functions
 void emergencyStopBase(Adafruit_SSD1306* display);
 void emergencyStopArm(Adafruit_SSD1306* display);
+
+// Update all motor states (call regularly in main loop)
+void updateAllMotors();
 
 #endif

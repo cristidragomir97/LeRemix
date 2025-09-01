@@ -9,11 +9,6 @@ void displayMessage(const char* msg, Adafruit_SSD1306* display) {
   display->setCursor(0, 0);
   display->print(msg);
   display->display();
-  
-  #if ENABLE_DEBUG_PRINTS
-  Serial.print("[DISPLAY] ");
-  Serial.println(msg);
-  #endif
 }
 
 // Deprecated function - use displayMessage instead
@@ -27,7 +22,8 @@ void displayMessage(const char* msg, Adafruit_SSD1306* display) {
 void initScreen(Adafruit_SSD1306* display, uint8_t sda_pin, uint8_t scl_pin) {
   Wire.begin(sda_pin, scl_pin);
   if(!display->begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS)) {
-    Serial.println(F("SSD1306 allocation failed"));
+    // Display failure - but can't display the error!
+    // Just continue and hope for the best
   }
   display->clearDisplay();
   display->display();

@@ -2,7 +2,7 @@
 #define MOTOR_CONTROLLER_H
 
 #include <Arduino.h>
-#include <SCServo.h>
+#include "STSServoDriver.h"
 
 // Hardware configuration
 extern const float VEL_TO_SERVO_UNIT; // Conversion factor from rad/s to servo speed units
@@ -16,8 +16,8 @@ extern const uint8_t BASE_SERVO_IDS[BASE_SERVO_COUNT];
 extern const uint8_t ARM_SERVO_IDS[ARM_SERVO_COUNT];
 
 // Global servo objects
-extern SMS_STS base_servo;
-extern SMS_STS arm_servo;
+extern STSServoDriver base_servos;
+extern STSServoDriver arm_servos;
 
 // Initialize servo communication
 bool initServos(uint8_t rx_pin, uint8_t tx_pin);
@@ -31,6 +31,7 @@ void moveToRelaxedPositions(void* display);
 // Control functions
 void controlBaseServo(uint8_t servo_index, float rad_per_sec, bool servos_enabled);
 void controlArmServo(uint8_t servo_index, float radians, bool servos_enabled);
+void controlMultipleArmServos(float radians_array[ARM_SERVO_COUNT], bool servos_enabled);  // Batch arm servo control
 
 // Emergency stop functions
 void emergencyStopBase(void* display);

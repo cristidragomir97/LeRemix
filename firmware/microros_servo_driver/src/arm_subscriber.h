@@ -6,6 +6,8 @@
 #include <rclc/executor.h>
 #include <std_msgs/msg/float64_multi_array.h>
 #include <Adafruit_SSD1306.h>
+#include "freertos/FreeRTOS.h"
+#include "freertos/queue.h"
 
 // Arm subscriber objects
 extern rcl_subscription_t arm_cmd_sub;
@@ -22,5 +24,8 @@ void setArmServosEnabledPtr(bool* servos_enabled_ptr);
 
 // Set display pointer for callback use
 void setArmDisplayPtr(Adafruit_SSD1306* display_ptr);
+
+// Set queue handle for inter-task communication
+void setArmCommandQueue(QueueHandle_t queue_handle);
 
 #endif

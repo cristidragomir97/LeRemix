@@ -22,19 +22,19 @@ bool initMicroROS(void* display) {
     );
 
     if (rc != RCL_RET_OK) {
-        Serial.println("Error creating micro-ROS node!");
+        Serial1.println("Error creating micro-ROS node!");
         return false;
     } else {
-        Serial.println("Successfully created micro-ROS node");
+        Serial1.println("Successfully created micro-ROS node");
     }
 
     // Create executor with 2 subscribers
     rclc_executor_init(&executor, &support.context, 2, &allocator);
 
-    Serial.println("micro-ROS node and basic setup ready");
+    Serial1.println("micro-ROS node and basic setup ready");
     return true;
 }
 
 void spinMicroRos() {
-  rclc_executor_spin_some(&executor, RCL_MS_TO_NS(10));
+  rclc_executor_spin_some(&executor, RCL_MS_TO_NS(1));
 }

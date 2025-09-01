@@ -46,7 +46,7 @@ public:
         if (currentPos != -1) {
           // Switch to position mode and lock at current position
           servos.setMode(id, STSMode::POSITION);
-          delay(50);
+          delayMicroseconds(100); // 50ms delay for mode switch
           servos.setTargetPosition(id, currentPos);
           
           Serial.printf("Motor %d: STOPPED and locked at position %d\n", id, currentPos);
