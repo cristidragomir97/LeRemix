@@ -27,6 +27,7 @@ omnidirectional_controller:
       - left_motor_rotation
       - right_motor_rotation
     robot_radius: 0.105
+    
     wheel_radius: 0.05
     gamma: 60.0
     publish_rate: 50.0
@@ -34,8 +35,14 @@ omnidirectional_controller:
     base_frame_id: base_link
     pose_covariance_diagonal : [0.001, 0.001, 0.001, 0.001, 0.001, 0.01]
     twist_covariance_diagonal: [0.001, 0.001, 0.001, 0.001, 0.001, 0.01]
-    odom_numeric_integration_method: runge_kutta2
     open_loop: false
     enable_odom_tf: true
     cmd_vel_timeout: 0.5
     use_stamped_vel: false
+    # Velocity scaling to reduce speed to 3.0 rad/s (50% of 6.0 rad/s)
+    linear_velocity_scale: 0.5
+    angular_velocity_scale: 0.5
+    # Acceleration limits for smoother motion
+    max_linear_acceleration: 1.0   # m/s²
+    max_angular_acceleration: 2.0  # rad/s²
+    acceleration_time: 0.5         # seconds to reach max velocity

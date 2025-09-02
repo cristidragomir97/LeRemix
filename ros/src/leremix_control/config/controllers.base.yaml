@@ -32,8 +32,6 @@ omnidirectional_controller:
      - left_motor_rotation
      - right_motor_rotation
 
-
-
     robot_radius: 0.105
     wheel_radius: 0.05
     gamma: 60.0 # angle between body fixed y axis and the normal of wheel3
@@ -50,5 +48,9 @@ omnidirectional_controller:
 
     cmd_vel_timeout: 0.5
     use_stamped_vel: false
+    # Velocity scaling to reduce speed to 25%
+    linear_velocity_scale: 0.25
+    angular_velocity_scale: 0.25
+    
 
 
