@@ -6,1022 +6,1134 @@
 
 <link name="base_link">
   <inertial>
-    <origin xyz="-0.0062553486303642105 3.340802284881761e-05 0.0025000000000011367" rpy="0 0 0"/>
-    <mass value="0.6"/>
-    <inertia ixx="0.002" iyy="0.0019" izz="0.004" ixy="-2e-06" iyz="0.0" ixz="0.0"/>
+    <origin xyz="-0.006995872672132321 0.00016351719531705557 -0.0020614117608215563" rpy="0 0 0"/>
+    <mass value="1.5793453539076083"/>
+    <inertia ixx="0.00541" iyy="0.005179" izz="0.010582" ixy="-3e-06" iyz="0.0" ixz="0.0"/>
   </inertial>
   <visual>
     <origin xyz="0 0 0" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/base_link.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="file://$(find LeRemix_description)/meshes/base_link.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="darkgray"/>
+    <material name="silver"/>
   </visual>
   <collision>
     <origin xyz="0 0 0" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/base_link.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="file://$(find LeRemix_description)/meshes/base_link.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
-
-<link name="back_wheel_1">
-  <inertial>
-    <origin xyz="-0.015374630356382424 -4.805049047319634e-07 4.6137978126914447e-07" rpy="0 0 0"/>
-    <mass value="0.32"/>
-    <inertia ixx="0.00045" iyy="0.00026" izz="0.00026" ixy="0.0" iyz="0.0" ixz="0.0"/>
-  </inertial>
-  <visual>
-    <origin xyz="0.11523 -7e-06 -0.015198" rpy="0 0 0"/>
-    <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/back_wheel_1.stl" scale="0.001 0.001 0.001"/>
-    </geometry>
-    <material name="darkgray"/>
-  </visual>
-<collision>
-  <!-- roll=0, pitch=+90°, yaw=180° -->
-  <origin xyz="0 0 0" rpy="0 1.57079632679 3.14159265359"/>
-  <geometry>
-      <cylinder radius="0.05" length="0.04"/>
-  </geometry>
-</collision>
-</link>
-
-<link name="right_wheel_1">
-  <inertial>
-    <origin xyz="0.007687514715893053 -0.01331534843579213 3.7606430000614033e-07" rpy="0 0 0"/>
-    <mass value="0.32"/>
-    <inertia ixx="0.00031" iyy="0.0004" izz="0.00026" ixy="-8e-05" iyz="0.0" ixz="0.0"/>
-  </inertial>
-  <visual>
-    <origin xyz="-0.057621 0.099788 -0.015217" rpy="0 0 0"/>
-    <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/right_wheel_1.stl" scale="0.001 0.001 0.001"/>
-    </geometry>
-    <material name="darkgray"/>
-  </visual>
- <collision>
-  <!-- roll=0, pitch=+90°, yaw=120° -->
-  <origin xyz="0 0 0" rpy="0 1.57079632679 2.09439510239"/>
-  <geometry>
-      <cylinder radius="0.05" length="0.04"/>
-  </geometry>
-</collision>
-</link>
-
-<link name="left_wheel_1">
-  <inertial>
-    <origin xyz="0.007687890146983539 0.013314999193957927 1.1659539730229929e-07" rpy="0 0 0"/>
-    <mass value="0.32"/>
-    <inertia ixx="0.00031" iyy="0.0004" izz="0.00026" ixy="8e-05" iyz="0.0" ixz="0.0"/>
-  </inertial>
-  <visual>
-    <origin xyz="-0.057571 -0.099817 -0.015181" rpy="0 0 0"/>
-    <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/left_wheel_1.stl" scale="0.001 0.001 0.001"/>
-    </geometry>
-    <material name="darkgray"/>
-  </visual>
-  <!--<collision>
-    <origin xyz="-0.057571 -0.099817 -0.015181" rpy="0 0 0"/>
-    <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/left_wheel_1.stl" scale="0.001 0.001 0.001"/>
-    </geometry>
-  </collision>-->
-  <collision>
-    <origin xyz="0 0 0" rpy="0 1.57079632679 -2.09439510239"/>
-    <geometry>
-      <cylinder radius="0.05" length="0.04"/>
-    </geometry>
-  </collision>
-</link>
-
-
 
 <link name="arm_base_rotation_servo_1">
   <inertial>
-    <origin xyz="0.019999032189425586 0.010249751352693647 0.01602706492472336" rpy="0 0 0"/>
-    <mass value="0.025"/>
-    <inertia ixx="3.6e-06" iyy="6.8e-06" izz="5.4e-06" ixy="0.0" iyz="0.0" ixz="0.0"/>
+    <origin xyz="0.019999508147657045 0.010249860525163957 0.01602665316389948" rpy="0 0 0"/>
+    <mass value="0.2843033831904074"/>
+    <inertia ixx="4e-05" iyy="7.3e-05" izz="6.2e-05" ixy="0.0" iyz="0.0" ixz="-1e-06"/>
   </inertial>
   <visual>
-    <origin xyz="-0.044348 0.01025 -0.0853" rpy="0 0 0"/>
+    <origin xyz="-0.043607 0.01012 -0.080739" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/arm_base_rotation_servo_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="file://$(find LeRemix_description)/meshes/arm_base_rotation_servo_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="darkgray"/>
+    <material name="silver"/>
   </visual>
   <collision>
-    <origin xyz="-0.044348 0.01025 -0.0853" rpy="0 0 0"/>
+    <origin xyz="-0.043607 0.01012 -0.080739" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/arm_base_rotation_servo_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="file://$(find LeRemix_description)/meshes/arm_base_rotation_servo_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
 <link name="arm_shoulder_link_1">
   <inertial>
-    <origin xyz="-0.05594320151702218 0.019699275433957473 -0.015368254886761495" rpy="0 0 0"/>
-    <mass value="0.09"/>
-    <inertia ixx="5.1e-05" iyy="0.000113" izz="0.00014" ixy="-8e-07" iyz="0.0" ixz="-2.7e-05"/>
+    <origin xyz="-0.05439041310030922 0.019699384606440277 -0.020185957481023337" rpy="0 0 0"/>
+    <mass value="0.9906249126045027"/>
+    <inertia ixx="0.000624" iyy="0.001251" izz="0.001489" ixy="-7e-06" iyz="-3e-06" ixz="-0.000385"/>
   </inertial>
   <visual>
-    <origin xyz="-0.107748 0.0183 -0.1741" rpy="0 0 0"/>
+    <origin xyz="-0.107007 0.01817 -0.169539" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/arm_shoulder_link_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="file://$(find LeRemix_description)/meshes/arm_shoulder_link_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="darkgray"/>
+    <material name="silver"/>
   </visual>
   <collision>
-    <origin xyz="-0.107748 0.0183 -0.1741" rpy="0 0 0"/>
+    <origin xyz="-0.107007 0.01817 -0.169539" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/arm_shoulder_link_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="file://$(find LeRemix_description)/meshes/arm_shoulder_link_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
 <link name="arm_elbow_servo_1">
   <inertial>
-    <origin xyz="-0.015077042423432949 -0.016027313578791422 0.016664878981827835" rpy="0 0 0"/>
-    <mass value="0.025"/>
-    <inertia ixx="6.3e-06" iyy="5.4e-06" izz="3.6e-06" ixy="0.0" iyz="0.0" ixz="1e-06"/>
+    <origin xyz="-0.016472070877660654 -0.016027204406308133 0.015286802190772275" rpy="0 0 0"/>
+    <mass value="0.2843033831904074"/>
+    <inertia ixx="7e-05" iyy="6.2e-05" izz="4.4e-05" ixy="-0.0" iyz="1e-06" ixz="1.1e-05"/>
   </inertial>
   <visual>
-    <origin xyz="-0.010157 -0.0178 -0.142981" rpy="0 0 0"/>
+    <origin xyz="-0.0125 -0.01793 -0.130033" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/arm_elbow_servo_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="file://$(find LeRemix_description)/meshes/arm_elbow_servo_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="darkgray"/>
+    <material name="silver"/>
   </visual>
   <collision>
-    <origin xyz="-0.010157 -0.0178 -0.142981" rpy="0 0 0"/>
+    <origin xyz="-0.0125 -0.01793 -0.130033" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/arm_elbow_servo_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="file://$(find LeRemix_description)/meshes/arm_elbow_servo_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
 <link name="arm_elbow_link_1">
   <inertial>
-    <origin xyz="-0.010924420778980003 0.015214630153971578 0.06115198501523547" rpy="0 0 0"/>
-    <mass value="0.075"/>
-    <inertia ixx="0.0001" iyy="8.2e-05" izz="3.2e-05" ixy="1.5e-06" iyz="-1e-05" ixz="1.3e-05"/>
+    <origin xyz="0.05832603889171534 0.015214739326452977 0.021377048894272332" rpy="0 0 0"/>
+    <mass value="0.8772447501056027"/>
+    <inertia ixx="0.000473" iyy="0.000993" izz="0.001135" ixy="-0.000109" iyz="-4.1e-05" ixz="-0.000289"/>
   </inertial>
   <visual>
-    <origin xyz="0.008233 0.0168 -0.172011" rpy="0 0 0"/>
+    <origin xyz="0.00835 0.01667 -0.157349" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/arm_elbow_link_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="file://$(find LeRemix_description)/meshes/arm_elbow_link_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="darkgray"/>
+    <material name="silver"/>
   </visual>
   <collision>
-    <origin xyz="0.008233 0.0168 -0.172011" rpy="0 0 0"/>
+    <origin xyz="0.00835 0.01667 -0.157349" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/arm_elbow_link_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="file://$(find LeRemix_description)/meshes/arm_elbow_link_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
 <link name="arm_wrist_tilt_servo_1">
   <inertial>
-    <origin xyz="0.008468412947984283 -0.0160273135787885 0.020816572929282573" rpy="0 0 0"/>
-    <mass value="0.025"/>
-    <inertia ixx="7.3e-05" iyy="6.2e-05" izz="4e-05" ixy="-0.0" iyz="1e-06" ixz="3e-06"/>
+    <origin xyz="0.02197013497411679 -0.016027204406307824 -0.004724364582700924" rpy="0 0 0"/>
+    <mass value="0.2843033831904074"/>
+    <inertia ixx="4.2e-05" iyy="6.2e-05" izz="7.1e-05" ixy="1e-06" iyz="0.0" ixz="-8e-06"/>
   </inertial>
   <visual>
-    <origin xyz="0.041352 -0.0193 -0.270861" rpy="0 0 0"/>
+    <origin xyz="-0.083248 -0.01943 -0.207129" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/arm_wrist_tilt_servo_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="file://$(find LeRemix_description)/meshes/arm_wrist_tilt_servo_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="darkgray"/>
+    <material name="silver"/>
   </visual>
   <collision>
-    <origin xyz="0.041352 -0.0193 -0.270861" rpy="0 0 0"/>
+    <origin xyz="-0.083248 -0.01943 -0.207129" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/arm_wrist_tilt_servo_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="file://$(find LeRemix_description)/meshes/arm_wrist_tilt_servo_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
 <link name="arm_wrist_link_1">
   <inertial>
-    <origin xyz="0.020365813342817646 0.016809532618007075 0.01676666541103805" rpy="0 0 0"/>
-    <mass value="0.045"/>
-    <inertia ixx="2.9e-05" iyy="2.2e-05" izz="3.2e-05" ixy="8e-07" iyz="8e-07" ixz="-7e-06"/>
+    <origin xyz="0.02004856305995592 0.01680964179048719 -0.017145371524283942" rpy="0 0 0"/>
+    <mass value="0.2392168278135931"/>
+    <inertia ixx="0.000157" iyy="0.000115" izz="0.000169" ixy="5e-06" iyz="-4e-06" ixz="3.6e-05"/>
   </inertial>
   <visual>
-    <origin xyz="0.033999 0.0153 -0.30443" rpy="0 0 0"/>
+    <origin xyz="-0.117583 0.01517 -0.205718" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/arm_wrist_link_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="file://$(find LeRemix_description)/meshes/arm_wrist_link_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="darkgray"/>
+    <material name="silver"/>
   </visual>
   <collision>
-    <origin xyz="0.033999 0.0153 -0.30443" rpy="0 0 0"/>
+    <origin xyz="-0.117583 0.01517 -0.205718" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/arm_wrist_link_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="file://$(find LeRemix_description)/meshes/arm_wrist_link_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
 <link name="arm_wrist_roll_servo_1">
   <inertial>
-    <origin xyz="-0.00542485104955742 0.01599805621315295 -0.017781280256448873" rpy="0 0 0"/>
-    <mass value="0.025"/>
-    <inertia ixx="6.5e-05" iyy="3.8e-05" izz="6.7e-05" ixy="-1e-06" iyz="-1e-06" ixz="-5e-06"/>
+    <origin xyz="-0.018454007185755128 0.01599816538563275 0.002254236765901807" rpy="0 0 0"/>
+    <mass value="0.2799142523131049"/>
+    <inertia ixx="6.5e-05" iyy="3.8e-05" izz="6.7e-05" ixy="-1e-06" iyz="1e-06" ixz="5e-06"/>
   </inertial>
   <visual>
-    <origin xyz="-0.004408 0.0242 -0.349472" rpy="0 0 0"/>
+    <origin xyz="-0.168611 0.02407 -0.175716" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/arm_wrist_roll_servo_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="file://$(find LeRemix_description)/meshes/arm_wrist_roll_servo_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="darkgray"/>
+    <material name="silver"/>
   </visual>
   <collision>
-    <origin xyz="-0.004408 0.0242 -0.349472" rpy="0 0 0"/>
+    <origin xyz="-0.168611 0.02407 -0.175716" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/arm_wrist_roll_servo_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="file://$(find LeRemix_description)/meshes/arm_wrist_roll_servo_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
 <link name="arm_gripper_1">
   <inertial>
-    <origin xyz="0.025535001111388626 0.012976471440615246 0.015105596654687414" rpy="0 0 0"/>
-    <mass value="0.06"/>
-    <inertia ixx="2.9e-05" iyy="4.1e-05" izz="3.8e-05" ixy="-7e-06" iyz="-3e-06" ixz="-1e-05"/>
+    <origin xyz="0.01931093722742444 0.012976580613095201 -0.02252356144231421" rpy="0 0 0"/>
+    <mass value="0.44698022927880193"/>
+    <inertia ixx="0.000255" iyy="0.000308" izz="0.000237" ixy="-3e-05" iyz="4.4e-05" ixz="8.2e-05"/>
   </inertial>
   <visual>
-    <origin xyz="-0.013096 -0.0048 -0.343356" rpy="0 0 0"/>
+    <origin xyz="-0.164095 -0.00493 -0.166097" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/arm_gripper_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="file://$(find LeRemix_description)/meshes/arm_gripper_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="darkgray"/>
+    <material name="silver"/>
   </visual>
   <collision>
-    <origin xyz="-0.013096 -0.0048 -0.343356" rpy="0 0 0"/>
+    <origin xyz="-0.164095 -0.00493 -0.166097" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/arm_gripper_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="file://$(find LeRemix_description)/meshes/arm_gripper_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
 <link name="arm_gripper_servo_1">
   <inertial>
-    <origin xyz="-0.006350148409992207 -0.012507811253031454 0.023772399666475375" rpy="0 0 0"/>
-    <mass value="0.025"/>
-    <inertia ixx="6.7e-05" iyy="4.3e-05" izz="6.4e-05" ixy="-5e-06" iyz="6e-06" ixz="8e-06"/>
+    <origin xyz="0.02230864527990775 -0.012507702080551863 0.010382401144092585" rpy="0 0 0"/>
+    <mass value="0.2843033831904074"/>
+    <inertia ixx="6.7e-05" iyy="4.3e-05" izz="6.5e-05" ixy="5e-06" iyz="6e-06" ixz="-8e-06"/>
   </inertial>
   <visual>
-    <origin xyz="-0.035579 -0.010832 -0.336363" rpy="0 0 0"/>
+    <origin xyz="-0.161113 -0.010962 -0.142741" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/arm_gripper_servo_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="file://$(find LeRemix_description)/meshes/arm_gripper_servo_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="darkgray"/>
+    <material name="silver"/>
   </visual>
   <collision>
-    <origin xyz="-0.035579 -0.010832 -0.336363" rpy="0 0 0"/>
+    <origin xyz="-0.161113 -0.010962 -0.142741" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/arm_gripper_servo_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="file://$(find LeRemix_description)/meshes/arm_gripper_servo_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
 <link name="arm_jaw_1">
   <inertial>
-    <origin xyz="0.03627019481610147 -0.005398366006797672 0.0037214259664418714" rpy="0 0 0"/>
-    <mass value="0.02"/>
-    <inertia ixx="3.4e-05" iyy="6.7e-05" izz="4.3e-05" ixy="-8e-07" iyz="-6e-06" ixz="-1.9e-05"/>
+    <origin xyz="0.009963247508557482 -0.005399256834318277 -0.0350732340426807" rpy="0 0 0"/>
+    <mass value="0.1586808414280307"/>
+    <inertia ixx="4.5e-05" iyy="8.4e-05" izz="5.1e-05" ixy="-9e-06" iyz="-0.0" ixz="2.4e-05"/>
   </inertial>
   <visual>
-    <origin xyz="-0.015199 0.006557 -0.37711" rpy="0 0 0"/>
+    <origin xyz="-0.197702 0.006426 -0.169888" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/arm_jaw_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="file://$(find LeRemix_description)/meshes/arm_jaw_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="darkgray"/>
+    <material name="silver"/>
   </visual>
   <collision>
-    <origin xyz="-0.015199 0.006557 -0.37711" rpy="0 0 0"/>
+    <origin xyz="-0.197702 0.006426 -0.169888" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/arm_jaw_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="file://$(find LeRemix_description)/meshes/arm_jaw_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
-<link name="right_servo_mount_1">
+<link name="wheel_2_servo_mount_1">
   <inertial>
-    <origin xyz="0.020087731126785798 0.005194056332437316 0.023611597249297345" rpy="0 0 0"/>
-    <mass value="0.02"/>
+    <origin xyz="0.02008720708501506 0.005194165504908602 0.023611185488475222" rpy="0 0 0"/>
+    <mass value="0.14423806644766202"/>
     <inertia ixx="5.5e-05" iyy="6.4e-05" izz="5.3e-05" ixy="-8e-06" iyz="-1e-06" ixz="1e-06"/>
   </inertial>
   <visual>
-    <origin xyz="-0.022679 0.079282 -0.005" rpy="0 0 0"/>
+    <origin xyz="-0.021939 0.079152 -0.000439" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/right_servo_mount_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="file://$(find LeRemix_description)/meshes/wheel_2_servo_mount_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="darkgray"/>
+    <material name="silver"/>
   </visual>
   <collision>
-    <origin xyz="-0.022679 0.079282 -0.005" rpy="0 0 0"/>
+    <origin xyz="-0.021939 0.079152 -0.000439" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/right_servo_mount_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="file://$(find LeRemix_description)/meshes/wheel_2_servo_mount_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
-<link name="right_servo_1">
+<link name="wheel_2_servo_1">
   <inertial>
-    <origin xyz="0.016946021194867083 -0.008868375307322277 0.0048189227637142965" rpy="0 0 0"/>
-    <mass value="0.025"/>
-    <inertia ixx="1.4e-05" iyy="1.3e-05" izz="8e-06" ixy="1e-06" iyz="0.0" ixz="0.0"/>
+    <origin xyz="0.01694649715310338 -0.008868266134855404 0.004818511002890873" rpy="0 0 0"/>
+    <mass value="0.27778201352216375"/>
+    <inertia ixx="6.8e-05" iyy="6.3e-05" izz="3.8e-05" ixy="4e-06" iyz="-1e-06" ixz="1e-06"/>
   </inertial>
   <visual>
-    <origin xyz="-0.028345 0.069608 -0.0235" rpy="0 0 0"/>
+    <origin xyz="-0.027604 0.069478 -0.018939" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/right_servo_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="file://$(find LeRemix_description)/meshes/wheel_2_servo_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="darkgray"/>
+    <material name="silver"/>
   </visual>
   <collision>
-    <origin xyz="-0.028345 0.069608 -0.0235" rpy="0 0 0"/>
+    <origin xyz="-0.027604 0.069478 -0.018939" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/right_servo_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="file://$(find LeRemix_description)/meshes/wheel_2_servo_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
-<link name="right_wheel_mount_1">
+<link name="wheel_2_mount_1">
   <inertial>
-    <origin xyz="0.0027610611196951726 -0.004783376671283146 4.4100333254984414e-07" rpy="0 0 0"/>
-    <mass value="0.015"/>
+    <origin xyz="0.002761537077926729 -0.004783267498813332 2.924250909301651e-08" rpy="0 0 0"/>
+    <mass value="0.1235708646349694"/>
     <inertia ixx="2.2e-05" iyy="2.9e-05" izz="1.8e-05" ixy="-6e-06" iyz="0.0" ixz="0.0"/>
   </inertial>
   <visual>
-    <origin xyz="-0.054034 0.093574 -0.015217" rpy="0 0 0"/>
+    <origin xyz="-0.053293 0.093444 -0.010656" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/right_wheel_mount_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="file://$(find LeRemix_description)/meshes/wheel_2_mount_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="darkgray"/>
+    <material name="silver"/>
   </visual>
   <collision>
-    <origin xyz="-0.054034 0.093574 -0.015217" rpy="0 0 0"/>
+    <origin xyz="-0.053293 0.093444 -0.010656" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/right_wheel_mount_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="file://$(find LeRemix_description)/meshes/wheel_2_mount_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
-<link name="back_servo_mount_1">
+<link name="wheel_1_servo_mount_1">
   <inertial>
-    <origin xyz="0.015077228306127496 0.020006898339937608 0.023640084058170183" rpy="0 0 0"/>
-    <mass value="0.02"/>
+    <origin xyz="0.015077704264357256 0.020007007512406055 0.023639672297346263" rpy="0 0 0"/>
+    <mass value="0.13962178083501173"/>
     <inertia ixx="6.6e-05" iyy="4.7e-05" izz="5e-05" ixy="-0.0" iyz="0.0" ixz="-2e-06"/>
   </inertial>
   <visual>
-    <origin xyz="0.1 0.02 -0.005" rpy="0 0 0"/>
+    <origin xyz="0.100741 0.01987 -0.000439" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/back_servo_mount_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="file://$(find LeRemix_description)/meshes/wheel_1_servo_mount_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="darkgray"/>
+    <material name="silver"/>
   </visual>
   <collision>
-    <origin xyz="0.1 0.02 -0.005" rpy="0 0 0"/>
+    <origin xyz="0.100741 0.01987 -0.000439" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/back_servo_mount_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="file://$(find LeRemix_description)/meshes/wheel_1_servo_mount_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
-<link name="left_servo_mount_1">
+<link name="wheel_3_servo_mount_1">
   <inertial>
-    <origin xyz="0.00978699982381099 -0.0230603862277598 0.02364008406636866" rpy="0 0 0"/>
-    <mass value="0.02"/>
+    <origin xyz="0.009786475782040463 -0.023060277055295897 0.023639672305545072" rpy="0 0 0"/>
+    <mass value="0.13962178077674334"/>
     <inertia ixx="5.2e-05" iyy="6.2e-05" izz="5e-05" ixy="8e-06" iyz="1e-06" ixz="1e-06"/>
   </inertial>
   <visual>
-    <origin xyz="-0.032679 -0.096603 -0.005" rpy="0 0 0"/>
+    <origin xyz="-0.031939 -0.096733 -0.000439" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/left_servo_mount_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="file://$(find LeRemix_description)/meshes/wheel_3_servo_mount_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="darkgray"/>
+    <material name="silver"/>
   </visual>
   <collision>
-    <origin xyz="-0.032679 -0.096603 -0.005" rpy="0 0 0"/>
+    <origin xyz="-0.031939 -0.096733 -0.000439" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/left_servo_mount_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="file://$(find LeRemix_description)/meshes/wheel_3_servo_mount_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
-<link name="back_servo_1">
+<link name="wheel_1_servo_1">
   <inertial>
-    <origin xyz="-0.016153045210510114 -0.01025036665374841 -0.019698114931772044" rpy="0 0 0"/>
-    <mass value="0.025"/>
-    <inertia ixx="1.2e-05" iyy="1.4e-05" izz="8e-06" ixy="0.0" iyz="0.0" ixz="0.0"/>
+    <origin xyz="-0.01615356925227894 -0.010250257481275697 -0.0196985266925957" rpy="0 0 0"/>
+    <mass value="0.2777820135235829"/>
+    <inertia ixx="6e-05" iyy="7e-05" izz="3.8e-05" ixy="-0.0" iyz="-0.0" ixz="-1e-06"/>
   </inertial>
   <visual>
-    <origin xyz="0.074455 -0.010257 -0.047998" rpy="0 0 0"/>
+    <origin xyz="0.075195 -0.010387 -0.043437" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/back_servo_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="file://$(find LeRemix_description)/meshes/wheel_1_servo_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="darkgray"/>
+    <material name="silver"/>
   </visual>
   <collision>
-    <origin xyz="0.074455 -0.010257 -0.047998" rpy="0 0 0"/>
+    <origin xyz="0.075195 -0.010387 -0.043437" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/back_servo_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="file://$(find LeRemix_description)/meshes/wheel_1_servo_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
-
-
-<link name="back_wheel_mount_1">
+<link name="wheel_2_1">
   <inertial>
-    <origin xyz="-0.005522517406730612 -3.7182053043850654e-07 3.8436082783199765e-07" rpy="0 0 0"/>
-    <mass value="0.015"/>
+    <origin xyz="0.0076869906741244415 -0.013315239263322176 -3.569652341078866e-08" rpy="0 0 0"/>
+    <mass value="1.3542854082324305"/>
+    <inertia ixx="0.00129" iyy="0.001683" izz="0.001094" ixy="-0.00034" iyz="-0.0" ixz="-0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.056881 0.099658 -0.010656" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find LeRemix_description)/meshes/wheel_2_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="-0.056881 0.099658 -0.010656" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find LeRemix_description)/meshes/wheel_2_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="wheel_1_mount_1">
+  <inertial>
+    <origin xyz="-0.005523041448499452 -2.6264806006536055e-07 -2.739999609667476e-08" rpy="0 0 0"/>
+    <mass value="0.1235708646349694"/>
     <inertia ixx="3.3e-05" iyy="1.8e-05" izz="1.8e-05" ixy="-0.0" iyz="-0.0" ixz="-0.0"/>
   </inertial>
   <visual>
-    <origin xyz="0.108055 -7e-06 -0.015198" rpy="0 0 0"/>
+    <origin xyz="0.108795 -0.000137 -0.010637" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/back_wheel_mount_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="file://$(find LeRemix_description)/meshes/wheel_1_mount_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="darkgray"/>
+    <material name="silver"/>
   </visual>
   <collision>
-    <origin xyz="0.108055 -7e-06 -0.015198" rpy="0 0 0"/>
+    <origin xyz="0.108795 -0.000137 -0.010637" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/back_wheel_mount_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="file://$(find LeRemix_description)/meshes/wheel_1_mount_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
-
-<link name="left_servo_1">
+<link name="wheel_1_1">
   <inertial>
-    <origin xyz="0.01692483565244909 0.008880833283191558 -0.019715521403811834" rpy="0 0 0"/>
-    <mass value="0.025"/>
-    <inertia ixx="1.4e-05" iyy="1.3e-05" izz="8e-06" ixy="-1e-06" iyz="0.0" ixz="0.0"/>
+    <origin xyz="-0.015375154398151722 -3.713324343444975e-07 4.96189572624095e-08" rpy="0 0 0"/>
+    <mass value="1.3542854082324305"/>
+    <inertia ixx="0.00188" iyy="0.001094" izz="0.001094" ixy="0.0" iyz="0.0" ixz="-0.0"/>
   </inertial>
   <visual>
-    <origin xyz="-0.028355 -0.069602 -0.047998" rpy="0 0 0"/>
+    <origin xyz="0.11597 -0.000137 -0.010637" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/left_servo_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="file://$(find LeRemix_description)/meshes/wheel_1_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="darkgray"/>
+    <material name="silver"/>
   </visual>
   <collision>
-    <origin xyz="-0.028355 -0.069602 -0.047998" rpy="0 0 0"/>
+    <origin xyz="0.11597 -0.000137 -0.010637" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/left_servo_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="file://$(find LeRemix_description)/meshes/wheel_1_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
-<link name="left_wheel_mount_1">
+<link name="wheel_3_servo_1">
   <inertial>
-    <origin xyz="0.0027612679239158514 0.004783124786217188 -3.164195154156668e-09" rpy="0 0 0"/>
-    <mass value="0.015"/>
+    <origin xyz="0.016924311610676576 0.008880942455673072 -0.019715933164635324" rpy="0 0 0"/>
+    <mass value="0.27778201352216375"/>
+    <inertia ixx="6.8e-05" iyy="6.3e-05" izz="3.8e-05" ixy="-4e-06" iyz="1e-06" ixz="0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.027615 -0.069732 -0.043437" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find LeRemix_description)/meshes/wheel_3_servo_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="-0.027615 -0.069732 -0.043437" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find LeRemix_description)/meshes/wheel_3_servo_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="wheel_3_mount_1">
+  <inertial>
+    <origin xyz="0.0027617438821473106 0.004783233958687821 -4.149250187150677e-07" rpy="0 0 0"/>
+    <mass value="0.1235708646349694"/>
     <inertia ixx="2.2e-05" iyy="2.9e-05" izz="1.8e-05" ixy="6e-06" iyz="0.0" ixz="-0.0"/>
   </inertial>
   <visual>
-    <origin xyz="-0.053984 -0.093603 -0.015181" rpy="0 0 0"/>
+    <origin xyz="-0.053243 -0.093733 -0.01062" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/left_wheel_mount_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="file://$(find LeRemix_description)/meshes/wheel_3_mount_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="darkgray"/>
+    <material name="silver"/>
   </visual>
   <collision>
-    <origin xyz="-0.053984 -0.093603 -0.015181" rpy="0 0 0"/>
+    <origin xyz="-0.053243 -0.093733 -0.01062" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/left_wheel_mount_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="file://$(find LeRemix_description)/meshes/wheel_3_mount_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
+<link name="wheel_3_1">
+  <inertial>
+    <origin xyz="0.007687366105215164 0.013315108366428866 -2.9516542626555065e-07" rpy="0 0 0"/>
+    <mass value="1.3542854082324305"/>
+    <inertia ixx="0.00129" iyy="0.001683" izz="0.001094" ixy="0.00034" iyz="0.0" ixz="-0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.056831 -0.099947 -0.01062" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find LeRemix_description)/meshes/wheel_3_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="-0.056831 -0.099947 -0.01062" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find LeRemix_description)/meshes/wheel_3_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
 
 <link name="orin_1">
   <inertial>
-    <origin xyz="-0.029980966316493406 0.04640281123348495 0.010403847837754707" rpy="0 0 0"/>
-    <mass value="0.2"/>
-    <inertia ixx="0.000112" iyy="0.000113" izz="0.0002" ixy="-4e-06" iyz="-1e-06" ixz="-1.3e-05"/>
+    <origin xyz="-0.029980490358262297 0.0464029204059553 0.010403436076930409" rpy="0 0 0"/>
+    <mass value="0.4488469641841115"/>
+    <inertia ixx="0.000252" iyy="0.000254" izz="0.000445" ixy="-1e-05" iyz="-3e-06" ixz="-3e-05"/>
   </inertial>
   <visual>
-    <origin xyz="0.022 0.046136 -0.0695" rpy="0 0 0"/>
+    <origin xyz="0.022741 0.046006 -0.064939" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/orin_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="file://$(find LeRemix_description)/meshes/orin_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="darkgray"/>
+    <material name="silver"/>
   </visual>
   <collision>
-    <origin xyz="0.022 0.046136 -0.0695" rpy="0 0 0"/>
+    <origin xyz="0.022741 0.046006 -0.064939" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/orin_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="file://$(find LeRemix_description)/meshes/orin_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
 <link name="hex_2_1">
   <inertial>
-    <origin xyz="9.797718192317006e-15 -3.4390545966545005e-13 0.023749999999998026" rpy="0 0 0"/>
-    <mass value="0.005"/>
-    <inertia ixx="1e-06" iyy="1e-06" izz="0.0" ixy="0.0" iyz="0.0" ixz="0.0"/>
+    <origin xyz="4.7595823970958406e-07 1.0917212767830309e-07 0.023749588239174533" rpy="0 0 0"/>
+    <mass value="0.010542792246366119"/>
+    <inertia ixx="2e-06" iyy="2e-06" izz="0.0" ixy="0.0" iyz="0.0" ixz="0.0"/>
   </inertial>
   <visual>
-    <origin xyz="-0.1 -0.04 -0.005" rpy="0 0 0"/>
+    <origin xyz="-0.099259 -0.04013 -0.000439" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/hex_2_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="file://$(find LeRemix_description)/meshes/hex_2_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="brass"/>
+    <material name="silver"/>
   </visual>
   <collision>
-    <origin xyz="-0.1 -0.04 -0.005" rpy="0 0 0"/>
+    <origin xyz="-0.099259 -0.04013 -0.000439" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/hex_2_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="file://$(find LeRemix_description)/meshes/hex_2_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
 <link name="hex_1_1">
   <inertial>
-    <origin xyz="8.090750291955828e-15 -3.440442375435282e-13 0.02374999999999913" rpy="0 0 0"/>
-    <mass value="0.005"/>
-    <inertia ixx="1e-06" iyy="1e-06" izz="0.0" ixy="0.0" iyz="0.0" ixz="0.0"/>
+    <origin xyz="4.7595823871038334e-07 1.091721259643963e-07 0.02374958823917567" rpy="0 0 0"/>
+    <mass value="0.010542792246366608"/>
+    <inertia ixx="2e-06" iyy="2e-06" izz="0.0" ixy="0.0" iyz="0.0" ixz="0.0"/>
   </inertial>
   <visual>
-    <origin xyz="-0.1 0.04 -0.005" rpy="0 0 0"/>
+    <origin xyz="-0.099259 0.03987 -0.000439" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/hex_1_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="file://$(find LeRemix_description)/meshes/hex_1_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="brass"/>
+    <material name="silver"/>
   </visual>
   <collision>
-    <origin xyz="-0.1 0.04 -0.005" rpy="0 0 0"/>
+    <origin xyz="-0.099259 0.03987 -0.000439" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/hex_1_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="file://$(find LeRemix_description)/meshes/hex_1_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
 <link name="hex_3_1">
   <inertial>
-    <origin xyz="6.8209327075408055e-15 -3.366473766419631e-13 0.023749999999999494" rpy="0 0 0"/>
-    <mass value="0.005"/>
-    <inertia ixx="1e-06" iyy="1e-06" izz="0.0" ixy="0.0" iyz="0.0" ixz="0.0"/>
+    <origin xyz="4.75958236510754e-07 1.0917213436045792e-07 0.02374958823917557" rpy="0 0 0"/>
+    <mass value="0.010542792246365427"/>
+    <inertia ixx="2e-06" iyy="2e-06" izz="0.0" ixy="0.0" iyz="0.0" ixz="0.0"/>
   </inertial>
   <visual>
-    <origin xyz="0.06 0.1 -0.005" rpy="0 0 0"/>
+    <origin xyz="0.060741 0.09987 -0.000439" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/hex_3_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="file://$(find LeRemix_description)/meshes/hex_3_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="darkgray"/>
+    <material name="silver"/>
   </visual>
   <collision>
-    <origin xyz="0.06 0.1 -0.005" rpy="0 0 0"/>
+    <origin xyz="0.060741 0.09987 -0.000439" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/hex_3_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="file://$(find LeRemix_description)/meshes/hex_3_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
 <link name="usb_pd_mount_1">
   <inertial>
-    <origin xyz="0.009999999999978682 0.00043254749040613663 0.0019460203214852357" rpy="0 0 0"/>
-    <mass value="0.01"/>
-    <inertia ixx="1.1e-05" iyy="9e-06" izz="2e-05" ixy="0.0" iyz="-0.0" ixz="-0.0"/>
+    <origin xyz="0.010000475958207022 0.0004326566628734508 0.0019456085606616186" rpy="0 0 0"/>
+    <mass value="0.0531436807920926"/>
+    <inertia ixx="1.1e-05" iyy="9e-06" izz="2e-05" ixy="0.0" iyz="-0.0" ixz="0.0"/>
   </inertial>
   <visual>
-    <origin xyz="-0.02 0.0 -0.005" rpy="0 0 0"/>
+    <origin xyz="-0.019259 -0.00013 -0.000439" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/usb_pd_mount_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="file://$(find LeRemix_description)/meshes/usb_pd_mount_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="darkgray"/>
+    <material name="silver"/>
   </visual>
   <collision>
-    <origin xyz="-0.02 0.0 -0.005" rpy="0 0 0"/>
+    <origin xyz="-0.019259 -0.00013 -0.000439" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/usb_pd_mount_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="file://$(find LeRemix_description)/meshes/usb_pd_mount_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
 <link name="imu_1">
   <inertial>
-    <origin xyz="0.06794000000002033 -0.1859400000000181 -0.060383333333332956" rpy="0 0 0"/>
+    <origin xyz="0.06781047595825142 -0.18667989082754813 -0.05582174509415696" rpy="0 0 0"/>
     <mass value="0.007606013634323334"/>
-    <inertia ixx="0.0" iyy="0.0" izz="1e-06" ixy="0.0" iyz="0.0" ixz="-0.0"/>
+    <inertia ixx="0.0" iyy="0.0" izz="1e-06" ixy="0.0" iyz="0.0" ixz="0.0"/>
   </inertial>
   <visual>
-    <origin xyz="0.06792 -0.186055 -0.123" rpy="0 0 0"/>
+    <origin xyz="0.068531 -0.186925 -0.113877" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/imu_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="file://$(find LeRemix_description)/meshes/imu_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="darkgray"/>
+    <material name="silver"/>
   </visual>
   <collision>
-    <origin xyz="0.06792 -0.186055 -0.123" rpy="0 0 0"/>
+    <origin xyz="0.068531 -0.186925 -0.113877" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/imu_1.stl" scale="0.001 0.001 0.001"/>
-    </geometry>
-  </collision>
-</link>
-
-<link name="panny_v1_1">
-  <inertial>
-    <origin xyz="-0.029838226530963255 -0.00030759263307324143 -0.07358290865620476" rpy="0 0 0"/>
-    <mass value="0.1"/>
-    <inertia ixx="5.8e-05" iyy="6.8e-05" izz="3.2e-05" ixy="0.0" iyz="0.0" ixz="-3e-06"/>
-  </inertial>
-  <visual>
-    <origin xyz="-0.141796 0.0 -0.1847" rpy="0 0 0"/>
-    <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/panny_v1_1.stl" scale="0.001 0.001 0.001"/>
-    </geometry>
-    <material name="darkgray"/>
-  </visual>
-  <collision>
-    <origin xyz="-0.141796 0.0 -0.1847" rpy="0 0 0"/>
-    <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/panny_v1_1.stl" scale="0.001 0.001 0.001"/>
-    </geometry>
-  </collision>
-</link>
-
-<link name="pan_servo_1">
-  <inertial>
-    <origin xyz="-0.010250085972520723 -0.015646940321814108 0.01589819131539945" rpy="0 0 0"/>
-    <mass value="0.025"/>
-    <inertia ixx="1.4e-05" iyy="1.2e-05" izz="8e-06" ixy="0.0" iyz="0.0" ixz="0.0"/>
-  </inertial>
-  <visual>
-    <origin xyz="-0.156844 -0.015945 -0.092636" rpy="0 0 0"/>
-    <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/pan_servo_1.stl" scale="0.001 0.001 0.001"/>
-    </geometry>
-    <material name="darkgray"/>
-  </visual>
-  <collision>
-    <origin xyz="-0.156844 -0.015945 -0.092636" rpy="0 0 0"/>
-    <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/pan_servo_1.stl" scale="0.001 0.001 0.001"/>
-    </geometry>
-  </collision>
-</link>
-
-<link name="camera_tilt_mount_v1_1">
-  <inertial>
-    <origin xyz="0.007020054253888602 -0.017699312895564093 0.010201661739214607" rpy="0 0 0"/>
-    <mass value="0.015"/>
-    <inertia ixx="3e-05" iyy="1e-05" izz="2.5e-05" ixy="0.0" iyz="0.0" ixz="-2e-06"/>
-  </inertial>
-  <visual>
-    <origin xyz="-0.146594 -0.017745 -0.121636" rpy="0 0 0"/>
-    <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/camera_tilt_mount_v1_1.stl" scale="0.001 0.001 0.001"/>
-    </geometry>
-    <material name="darkgray"/>
-  </visual>
-  <collision>
-    <origin xyz="-0.146594 -0.017745 -0.121636" rpy="0 0 0"/>
-    <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/camera_tilt_mount_v1_1.stl" scale="0.001 0.001 0.001"/>
-    </geometry>
-  </collision>
-</link>
-
-<link name="camera_1">
-  <inertial>
-    <origin xyz="0.01245074657094078 0.023612001681698254 -2.8338587003629012e-05" rpy="0 0 0"/>
-    <mass value="0.08"/>
-    <inertia ixx="4.8e-05" iyy="7e-06" izz="4.9e-05" ixy="1e-06" iyz="0.0" ixz="0.0"/>
-  </inertial>
-  <visual>
-    <origin xyz="-0.161093 0.022455 -0.146062" rpy="0 0 0"/>
-    <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/camera_1.stl" scale="0.001 0.001 0.001"/>
-    </geometry>
-    <material name="darkgray"/>
-  </visual>
-  <collision>
-    <origin xyz="-0.161093 0.022455 -0.146062" rpy="0 0 0"/>
-    <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/camera_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="file://$(find LeRemix_description)/meshes/imu_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
 <link name="right_baseus_mount_v1_1">
   <inertial>
-    <origin xyz="0.03000000000000421 -0.0016153246664892401 0.02250000000000609" rpy="0 0 0"/>
-    <mass value="0.03"/>
-    <inertia ixx="1.4e-05" iyy="6.2e-05" izz="4.9e-05" ixy="0.0" iyz="-0.0" ixz="-0.0"/>
+    <origin xyz="0.030000475958235424 -0.001615215494018607 0.02249958823918214" rpy="0 0 0"/>
+    <mass value="0.08330068022697495"/>
+    <inertia ixx="1.4e-05" iyy="6.2e-05" izz="4.9e-05" ixy="-0.0" iyz="-0.0" ixz="-0.0"/>
   </inertial>
   <visual>
-    <origin xyz="0.06 -0.08 -0.005" rpy="0 0 0"/>
+    <origin xyz="0.060741 -0.08013 -0.000439" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/right_baseus_mount_v1_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="file://$(find LeRemix_description)/meshes/right_baseus_mount_v1_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="darkgray"/>
+    <material name="silver"/>
   </visual>
   <collision>
-    <origin xyz="0.06 -0.08 -0.005" rpy="0 0 0"/>
+    <origin xyz="0.060741 -0.08013 -0.000439" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/right_baseus_mount_v1_1.stl" scale="0.001 0.001 0.001"/>
-    </geometry>
-  </collision>
-</link>
-
-<link name="arm_shoulder_servo_1">
-  <inertial>
-    <origin xyz="-0.010249995380541027 -0.016027313578781247 0.019999027563213922" rpy="0 0 0"/>
-    <mass value="0.025"/>
-    <inertia ixx="6.8e-06" iyy="5.4e-06" izz="3.6e-06" ixy="0.0" iyz="0.0" ixz="0.0"/>
-  </inertial>
-  <visual>
-    <origin xyz="-0.117998 -0.0163 -0.1413" rpy="0 0 0"/>
-    <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/arm_shoulder_servo_1.stl" scale="0.001 0.001 0.001"/>
-    </geometry>
-    <material name="darkgray"/>
-  </visual>
-  <collision>
-    <origin xyz="-0.117998 -0.0163 -0.1413" rpy="0 0 0"/>
-    <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/arm_shoulder_servo_1.stl" scale="0.001 0.001 0.001"/>
-    </geometry>
-  </collision>
-</link>
-
-<link name="arm_base_rotation_link_cover_1">
-  <inertial>
-    <origin xyz="-0.009494226602028935 -0.023150455418697806 0.0011417901620817683" rpy="0 0 0"/>
-    <mass value="0.015"/>
-    <inertia ixx="3.5e-05" iyy="2e-05" izz="4.4e-05" ixy="0.0" iyz="0.0" ixz="0.0"/>
-  </inertial>
-  <visual>
-    <origin xyz="-0.117998 -0.023 -0.1413" rpy="0 0 0"/>
-    <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/arm_base_rotation_link_cover_1.stl" scale="0.001 0.001 0.001"/>
-    </geometry>
-    <material name="darkgray"/>
-  </visual>
-  <collision>
-    <origin xyz="-0.117998 -0.023 -0.1413" rpy="0 0 0"/>
-    <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/arm_base_rotation_link_cover_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="file://$(find LeRemix_description)/meshes/right_baseus_mount_v1_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
 <link name="orin_mount_1">
   <inertial>
-    <origin xyz="2.0498804815527962 -2.2969625422641693 -0.05082989669243419" rpy="0 0 0"/>
-    <mass value="0.02"/>
+    <origin xyz="2.0497499575110276 -2.2977024330916964 -0.046268308453258196" rpy="0 0 0"/>
+    <mass value="0.0924663763130813"/>
     <inertia ixx="0.00014" iyy="8.1e-05" izz="0.000221" ixy="1e-06" iyz="-0.0" ixz="-0.0"/>
   </inertial>
   <visual>
-    <origin xyz="2.103494 -2.296648 -0.11" rpy="0 0 0"/>
+    <origin xyz="2.104104 -2.297518 -0.100877" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/orin_mount_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="file://$(find LeRemix_description)/meshes/orin_mount_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="darkgray"/>
+    <material name="silver"/>
   </visual>
   <collision>
-    <origin xyz="2.103494 -2.296648 -0.11" rpy="0 0 0"/>
+    <origin xyz="2.104104 -2.297518 -0.100877" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/orin_mount_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="file://$(find LeRemix_description)/meshes/orin_mount_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
 <link name="arm_base_1">
   <inertial>
-    <origin xyz="-0.03974905964267374 0.03999680127150881 0.021865523723534182" rpy="0 0 0"/>
-    <mass value="0.015"/>
-    <inertia ixx="1.9e-05" iyy="1.6e-05" izz="2.1e-05" ixy="0.0" iyz="0.0" ixz="2.6e-06"/>
+    <origin xyz="-0.03974858368444226 0.039996910443979204 0.02186511196271025" rpy="0 0 0"/>
+    <mass value="1.2829039880853146"/>
+    <inertia ixx="0.001557" iyy="0.00136" izz="0.001775" ixy="0.0" iyz="0.0" ixz="0.000249"/>
   </inertial>
   <visual>
-    <origin xyz="-0.09 0.04 -0.0575" rpy="0 0 0"/>
+    <origin xyz="-0.089259 0.03987 -0.052939" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/arm_base_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="file://$(find LeRemix_description)/meshes/arm_base_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="darkgray"/>
+    <material name="silver"/>
   </visual>
   <collision>
-    <origin xyz="-0.09 0.04 -0.0575" rpy="0 0 0"/>
+    <origin xyz="-0.089259 0.03987 -0.052939" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/arm_base_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="file://$(find LeRemix_description)/meshes/arm_base_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
 <link name="imu_mount_1">
   <inertial>
-    <origin xyz="1.0205170042354439e-14 -0.02000000000002018 0.0011228233092140175" rpy="0 0 0"/>
-    <mass value="0.01"/>
-    <inertia ixx="1e-06" iyy="0.0" izz="2e-06" ixy="0.0" iyz="0.0" ixz="-0.0"/>
+    <origin xyz="4.75958241134551e-07 -0.019999890827550094 0.001122411548390087" rpy="0 0 0"/>
+    <mass value="0.011661793388699252"/>
+    <inertia ixx="1e-06" iyy="0.0" izz="2e-06" ixy="0.0" iyz="0.0" ixz="0.0"/>
   </inertial>
   <visual>
-    <origin xyz="-0.0 -0.02 -0.0575" rpy="0 0 0"/>
+    <origin xyz="0.000741 -0.02013 -0.052939" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/imu_mount_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="file://$(find LeRemix_description)/meshes/imu_mount_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="darkgray"/>
+    <material name="silver"/>
   </visual>
   <collision>
-    <origin xyz="-0.0 -0.02 -0.0575" rpy="0 0 0"/>
+    <origin xyz="0.000741 -0.02013 -0.052939" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/imu_mount_1.stl" scale="0.001 0.001 0.001"/>
-    </geometry>
-  </collision>
-</link>
-
-<link name="hex_5_1">
-  <inertial>
-    <origin xyz="8.534839501805891e-15 -3.316791286067655e-13 0.022749999999998195" rpy="0 0 0"/>
-    <mass value="0.005"/>
-    <inertia ixx="1e-06" iyy="1e-06" izz="0.0" ixy="0.0" iyz="0.0" ixz="0.0"/>
-  </inertial>
-  <visual>
-    <origin xyz="0.1 0.08 -0.0575" rpy="0 0 0"/>
-    <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/hex_5_1.stl" scale="0.001 0.001 0.001"/>
-    </geometry>
-    <material name="brass"/>
-  </visual>
-  <collision>
-    <origin xyz="0.1 0.08 -0.0575" rpy="0 0 0"/>
-    <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/hex_5_1.stl" scale="0.001 0.001 0.001"/>
-    </geometry>
-  </collision>
-</link>
-
-<link name="last_floor_v1_1">
-  <inertial>
-    <origin xyz="0.04424083204691768 0.07999999999995472 0.0024999999999980593" rpy="0 0 0"/>
-    <mass value="0.15"/>
-    <inertia ixx="0.0006" iyy="0.00012" izz="0.0007" ixy="0.0" iyz="0.0" ixz="0.0"/>
-  </inertial>
-  <visual>
-    <origin xyz="0.1 0.08 -0.103" rpy="0 0 0"/>
-    <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/last_floor_v1_1.stl" scale="0.001 0.001 0.001"/>
-    </geometry>
-    <material name="darkgray"/>
-  </visual>
-  <collision>
-    <origin xyz="0.1 0.08 -0.103" rpy="0 0 0"/>
-    <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/last_floor_v1_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="file://$(find LeRemix_description)/meshes/imu_mount_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
 <link name="left_baseus_mount_v1_1">
   <inertial>
-    <origin xyz="0.029999999999329174 0.0023724737949488844 0.021844129002060564" rpy="0 0 0"/>
-    <mass value="0.03"/>
+    <origin xyz="0.03000047595756065 0.0023725829674189763 0.021843717241236973" rpy="0 0 0"/>
+    <mass value="0.060119830422065"/>
     <inertia ixx="1.2e-05" iyy="5.7e-05" izz="4.7e-05" ixy="-0.0" iyz="-0.0" ixz="0.0"/>
   </inertial>
   <visual>
-    <origin xyz="0.06 0.08 -0.005" rpy="0 0 0"/>
+    <origin xyz="0.060741 0.07987 -0.000439" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/left_baseus_mount_v1_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="file://$(find LeRemix_description)/meshes/left_baseus_mount_v1_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="darkgray"/>
+    <material name="silver"/>
   </visual>
   <collision>
-    <origin xyz="0.06 0.08 -0.005" rpy="0 0 0"/>
+    <origin xyz="0.060741 0.07987 -0.000439" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/left_baseus_mount_v1_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="file://$(find LeRemix_description)/meshes/left_baseus_mount_v1_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
 <link name="baseus_pack_v1_1">
   <inertial>
-    <origin xyz="-6.637052019087264e-15 0.07749999999999521 0.02250000000000135" rpy="0 0 0"/>
-    <mass value="1.2"/>
-    <inertia ixx="0.003" iyy="0.0005" izz="0.0032" ixy="0.0" iyz="0.0" ixz="0.0"/>
+    <origin xyz="4.759582244023841e-07 0.07750010917246258 0.022499588239177876" rpy="0 0 0"/>
+    <mass value="2.7975020361255445"/>
+    <inertia ixx="0.006047" iyy="0.001064" izz="0.006218" ixy="-0.0" iyz="-0.0" ixz="0.0"/>
   </inertial>
   <visual>
-    <origin xyz="0.03 0.077 -0.005" rpy="0 0 0"/>
+    <origin xyz="0.030741 0.07687 -0.000439" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/baseus_pack_v1_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="file://$(find LeRemix_description)/meshes/baseus_pack_v1_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="darkgray"/>
+    <material name="silver"/>
   </visual>
   <collision>
-    <origin xyz="0.03 0.077 -0.005" rpy="0 0 0"/>
+    <origin xyz="0.030741 0.07687 -0.000439" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/baseus_pack_v1_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="file://$(find LeRemix_description)/meshes/baseus_pack_v1_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
-<link name="hex_7_1">
+<link name="hex_8_1">
   <inertial>
-    <origin xyz="2.8449465006019636e-16 -3.2229774404868294e-13 0.022749999999998806" rpy="0 0 0"/>
-    <mass value="0.005"/>
-    <inertia ixx="1e-06" iyy="1e-06" izz="0.0" ixy="0.0" iyz="0.0" ixz="0.0"/>
+    <origin xyz="4.759582355809422e-07 1.0917214786354545e-07 0.022749588239176638" rpy="0 0 0"/>
+    <mass value="0.010098885204413197"/>
+    <inertia ixx="2e-06" iyy="2e-06" izz="0.0" ixy="0.0" iyz="0.0" ixz="0.0"/>
   </inertial>
   <visual>
-    <origin xyz="0.02 0.1 -0.0575" rpy="0 0 0"/>
+    <origin xyz="0.020741 -0.10013 -0.052939" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/hex_7_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="file://$(find LeRemix_description)/meshes/hex_8_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="brass"/>
+    <material name="silver"/>
   </visual>
   <collision>
-    <origin xyz="0.02 0.1 -0.0575" rpy="0 0 0"/>
+    <origin xyz="0.020741 -0.10013 -0.052939" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/hex_7_1.stl" scale="0.001 0.001 0.001"/>
-    </geometry>
-  </collision>
-</link>
-
-<link name="hex_7__1__1">
-  <inertial>
-    <origin xyz="3.6914915568786455e-15 -3.1903646391384655e-13 0.022750000000000332" rpy="0 0 0"/>
-    <mass value="0.005"/>
-    <inertia ixx="1e-06" iyy="1e-06" izz="0.0" ixy="0.0" iyz="0.0" ixz="0.0"/>
-  </inertial>
-  <visual>
-    <origin xyz="0.02 -0.1 -0.0575" rpy="0 0 0"/>
-    <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/hex_7__1__1.stl" scale="0.001 0.001 0.001"/>
-    </geometry>
-    <material name="brass"/>
-  </visual>
-  <collision>
-    <origin xyz="0.02 -0.1 -0.0575" rpy="0 0 0"/>
-    <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/hex_7__1__1.stl" scale="0.001 0.001 0.001"/>
-    </geometry>
-  </collision>
-</link>
-
-<link name="hex_6_1">
-  <inertial>
-    <origin xyz="1.5681900222830336e-15 -3.195915754261591e-13 0.022749999999999375" rpy="0 0 0"/>
-    <mass value="0.005"/>
-    <inertia ixx="1e-06" iyy="1e-06" izz="0.0" ixy="0.0" iyz="0.0" ixz="0.0"/>
-  </inertial>
-  <visual>
-    <origin xyz="0.1 -0.08 -0.0575" rpy="0 0 0"/>
-    <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/hex_6_1.stl" scale="0.001 0.001 0.001"/>
-    </geometry>
-    <material name="brass"/>
-  </visual>
-  <collision>
-    <origin xyz="0.1 -0.08 -0.0575" rpy="0 0 0"/>
-    <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/hex_6_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="file://$(find LeRemix_description)/meshes/hex_8_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
 <link name="hex_4_1">
   <inertial>
-    <origin xyz="1.915134717478395e-15 -3.1434577163480526e-13 0.02375000000000005" rpy="0 0 0"/>
-    <mass value="0.005"/>
-    <inertia ixx="1e-06" iyy="1e-06" izz="0.0" ixy="0.0" iyz="0.0" ixz="0.0"/>
+    <origin xyz="4.7595823132046133e-07 1.0917215581551787e-07 0.02374958823917601" rpy="0 0 0"/>
+    <mass value="0.010542792246365427"/>
+    <inertia ixx="2e-06" iyy="2e-06" izz="0.0" ixy="0.0" iyz="0.0" ixz="0.0"/>
   </inertial>
   <visual>
-    <origin xyz="0.06 -0.1 -0.005" rpy="0 0 0"/>
+    <origin xyz="0.060741 -0.10013 -0.000439" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/hex_4_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="file://$(find LeRemix_description)/meshes/hex_4_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="brass"/>
+    <material name="silver"/>
   </visual>
   <collision>
-    <origin xyz="0.06 -0.1 -0.005" rpy="0 0 0"/>
+    <origin xyz="0.060741 -0.10013 -0.000439" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/hex_4_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="file://$(find LeRemix_description)/meshes/hex_4_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
 <link name="upper_floor_1">
   <inertial>
-    <origin xyz="0.053943038334941205 -0.09996896829294315 0.0024999999999999467" rpy="0 0 0"/>
-    <mass value="0.25"/>
-    <inertia ixx="0.0009" iyy="0.00085" izz="0.0017" ixy="0.0" iyz="0.0" ixz="0.0"/>
+    <origin xyz="0.05394351429316954 -0.09996885912046417 0.0024995882391761065" rpy="0 0 0"/>
+    <mass value="1.5373763767670563"/>
+    <inertia ixx="0.005253" iyy="0.005051" izz="0.010298" ixy="-3e-06" iyz="0.0" ixz="0.0"/>
   </inertial>
   <visual>
-    <origin xyz="0.06 -0.1 -0.0525" rpy="0 0 0"/>
+    <origin xyz="0.060741 -0.10013 -0.047939" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/upper_floor_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="file://$(find LeRemix_description)/meshes/upper_floor_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="darkgray"/>
+    <material name="silver"/>
   </visual>
   <collision>
-    <origin xyz="0.06 -0.1 -0.0525" rpy="0 0 0"/>
+    <origin xyz="0.060741 -0.10013 -0.047939" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find leremix_description)/meshes/upper_floor_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="file://$(find LeRemix_description)/meshes/upper_floor_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="arm_base_rotation_1">
+  <inertial>
+    <origin xyz="0.031556347010785885 -0.0002717090475727862 -0.007540861410754135" rpy="0 0 0"/>
+    <mass value="0.5385469320676795"/>
+    <inertia ixx="0.000341" iyy="0.000375" izz="0.000154" ixy="-1e-06" iyz="3e-06" ixz="-3.6e-05"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.076407 -0.00013 -0.115339" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find LeRemix_description)/meshes/arm_base_rotation_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="-0.076407 -0.00013 -0.115339" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find LeRemix_description)/meshes/arm_base_rotation_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="arm_shoulder_servo_1">
+  <inertial>
+    <origin xyz="-0.010249519422308118 -0.016027204406312764 0.01999861580239054" rpy="0 0 0"/>
+    <mass value="0.2843033831904074"/>
+    <inertia ixx="7.3e-05" iyy="6.2e-05" izz="4e-05" ixy="0.0" iyz="1e-06" ixz="-0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.117257 -0.01643 -0.136739" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find LeRemix_description)/meshes/arm_shoulder_servo_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="-0.117257 -0.01643 -0.136739" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find LeRemix_description)/meshes/arm_shoulder_servo_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="arm_base_rotation_link_cover_1">
+  <inertial>
+    <origin xyz="-0.009493750643796359 -0.023150346246228314 0.0011413784012586081" rpy="0 0 0"/>
+    <mass value="0.10853073755546007"/>
+    <inertia ixx="4.6e-05" iyy="2.7e-05" izz="5.8e-05" ixy="-0.0" iyz="-0.0" ixz="-0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.117257 -0.02313 -0.136739" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find LeRemix_description)/meshes/arm_base_rotation_link_cover_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="-0.117257 -0.02313 -0.136739" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find LeRemix_description)/meshes/arm_base_rotation_link_cover_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="camera_1">
+  <inertial>
+    <origin xyz="0.012449782227247557 -0.021387979670929154 8.174726281934275e-05" rpy="0 0 0"/>
+    <mass value="0.35928853728306875"/>
+    <inertia ixx="0.000217" iyy="3.3e-05" izz="0.000219" ixy="3e-06" iyz="0.0" ixz="0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.016973 -0.023762 -0.410113" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find LeRemix_description)/meshes/camera_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="0.016973 -0.023762 -0.410113" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find LeRemix_description)/meshes/camera_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="hex_5_1">
+  <inertial>
+    <origin xyz="4.7595822776080876e-07 1.0917215693961868e-07 0.022749588239173973" rpy="0 0 0"/>
+    <mass value="0.010098885204413197"/>
+    <inertia ixx="2e-06" iyy="2e-06" izz="0.0" ixy="0.0" iyz="0.0" ixz="0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.100741 0.07987 -0.052939" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find LeRemix_description)/meshes/hex_5_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="0.100741 0.07987 -0.052939" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find LeRemix_description)/meshes/hex_5_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="just_the_tower_v1_1">
+  <inertial>
+    <origin xyz="-0.04049560504324072 0.04043653338542859 0.08467142731564267" rpy="0 0 0"/>
+    <mass value="1.0410314460711032"/>
+    <inertia ixx="0.004373" iyy="0.004248" izz="0.00092" ixy="1e-06" iyz="-2.3e-05" ixz="0.000197"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.040741 0.03987 -0.103439" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find LeRemix_description)/meshes/just_the_tower_v1_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="0.040741 0.03987 -0.103439" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find LeRemix_description)/meshes/just_the_tower_v1_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="last_floor_1">
+  <inertial>
+    <origin xyz="0.04424130800513803 0.0800001091724466 0.002499588239174011" rpy="0 0 0"/>
+    <mass value="0.7574741481613873"/>
+    <inertia ixx="0.00284" iyy="0.000555" izz="0.003391" ixy="-0.0" iyz="0.0" ixz="0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.100741 0.07987 -0.098439" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find LeRemix_description)/meshes/last_floor_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="0.100741 0.07987 -0.098439" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find LeRemix_description)/meshes/last_floor_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="support_v1_1">
+  <inertial>
+    <origin xyz="-0.06831058774559065 -0.5863019630111325 -0.15994376448491093" rpy="0 0 0"/>
+    <mass value="0.23418875218924964"/>
+    <inertia ixx="0.000143" iyy="0.000113" izz="0.000105" ixy="0.0" iyz="-0.0" ixz="1.9e-05"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.022294 -0.587428 -0.454701" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find LeRemix_description)/meshes/support_v1_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="0.022294 -0.587428 -0.454701" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find LeRemix_description)/meshes/support_v1_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="camera_pan_1">
+  <inertial>
+    <origin xyz="2.5558470875279977 -1.3667223470808023 0.7696236443926033" rpy="0 0 0"/>
+    <mass value="0.2843033831904074"/>
+    <inertia ixx="4e-05" iyy="7.3e-05" izz="6.2e-05" ixy="0.0" iyz="0.0" ixz="-1e-06"/>
+  </inertial>
+  <visual>
+    <origin xyz="2.62799 -1.367984 0.458852" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find LeRemix_description)/meshes/camera_pan_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="2.62799 -1.367984 0.458852" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find LeRemix_description)/meshes/camera_pan_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="camera_pan_support_back_1">
+  <inertial>
+    <origin xyz="2.55463970259001 -1.3745224195841734 0.7881977115446548" rpy="0 0 0"/>
+    <mass value="0.1633019310819185"/>
+    <inertia ixx="5e-05" iyy="9.2e-05" izz="0.000121" ixy="-0.0" iyz="-0.0" ixz="9e-06"/>
+  </inertial>
+  <visual>
+    <origin xyz="2.639838 -1.375549 0.472752" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find LeRemix_description)/meshes/camera_pan_support_back_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="2.639838 -1.375549 0.472752" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find LeRemix_description)/meshes/camera_pan_support_back_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="hex_6_1">
+  <inertial>
+    <origin xyz="4.7595822946777666e-07 1.0917278975286493e-07 0.022749588239175125" rpy="0 0 0"/>
+    <mass value="0.010098885204413197"/>
+    <inertia ixx="2e-06" iyy="2e-06" izz="0.0" ixy="0.0" iyz="-0.0" ixz="-0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.100741 -0.08013 -0.052939" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find LeRemix_description)/meshes/hex_6_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="0.100741 -0.08013 -0.052939" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find LeRemix_description)/meshes/hex_6_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="hex_7_1">
+  <inertial>
+    <origin xyz="4.759582280522423e-07 1.0917278620015125e-07 0.022749588239174917" rpy="0 0 0"/>
+    <mass value="0.010098885204413197"/>
+    <inertia ixx="2e-06" iyy="2e-06" izz="0.0" ixy="0.0" iyz="-0.0" ixz="-0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.020741 0.09987 -0.052939" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find LeRemix_description)/meshes/hex_7_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="0.020741 0.09987 -0.052939" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find LeRemix_description)/meshes/hex_7_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="camera_pan_support_1">
+  <inertial>
+    <origin xyz="0.10339792639112688 -0.001532916653539503 -0.28178487018205256" rpy="0 0 0"/>
+    <mass value="0.5385469320676795"/>
+    <inertia ixx="0.000341" iyy="0.000375" izz="0.000154" ixy="-1e-06" iyz="3e-06" ixz="-3.6e-05"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.131184 -0.002523 -0.603589" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find LeRemix_description)/meshes/camera_pan_support_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="0.131184 -0.002523 -0.603589" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find LeRemix_description)/meshes/camera_pan_support_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="camera_tilt_servo_1">
+  <inertial>
+    <origin xyz="-0.010249940041966794 -0.016027412012279495 0.01999860703109191" rpy="0 0 0"/>
+    <mass value="0.2843033831904074"/>
+    <inertia ixx="7.3e-05" iyy="6.2e-05" izz="4e-05" ixy="0.0" iyz="1e-06" ixz="-0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.018492 -0.017562 -0.350745" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find LeRemix_description)/meshes/camera_tilt_servo_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="0.018492 -0.017562 -0.350745" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find LeRemix_description)/meshes/camera_tilt_servo_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="camera_pan_cover_1">
+  <inertial>
+    <origin xyz="0.02676382873654465 -0.3513395538521953 0.045124779350825706" rpy="0 0 0"/>
+    <mass value="0.10853073755546007"/>
+    <inertia ixx="4.6e-05" iyy="2.7e-05" izz="5.8e-05" ixy="-0.0" iyz="-0.0" ixz="-0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.0548 -0.352451 -0.307206" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find LeRemix_description)/meshes/camera_pan_cover_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="0.0548 -0.352451 -0.307206" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find LeRemix_description)/meshes/camera_pan_cover_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="realsense_support_v1_1">
+  <inertial>
+    <origin xyz="-0.01605117669353169 0.3832375900264063 0.05573622679026835" rpy="0 0 0"/>
+    <mass value="0.22381597612221305"/>
+    <inertia ixx="0.000145" iyy="4.8e-05" izz="0.00012" ixy="0.0" iyz="0.0" ixz="-3e-06"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.011804 0.381883 -0.342303" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find LeRemix_description)/meshes/realsense_support_v1_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="0.011804 0.381883 -0.342303" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find LeRemix_description)/meshes/realsense_support_v1_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
@@ -1040,220 +1152,176 @@
 </joint>
 
 <joint name="Rigid 50" type="fixed">
-  <origin xyz="-0.097591 0.0361 -0.031119" rpy="0 0 0"/>
+  <origin xyz="-0.094507 0.0361 -0.039506" rpy="0 0 0"/>
   <parent link="arm_shoulder_link_1"/>
   <child link="arm_elbow_servo_1"/>
 </joint>
 
 <joint name="3" type="continuous">
-  <origin xyz="-0.01839 -0.0346 0.02903" rpy="0 0 0"/>
+  <origin xyz="-0.02085 -0.0346 0.027316" rpy="0 0 0"/>
   <parent link="arm_elbow_servo_1"/>
   <child link="arm_elbow_link_1"/>
-  <axis xyz="-0.0 -1.0 -0.0"/>
+  <axis xyz="-0.0 -1.0 0.0"/>
 </joint>
 
 <joint name="Rigid 52" type="fixed">
-  <origin xyz="-0.033119 0.0361 0.09885" rpy="0 0 0"/>
+  <origin xyz="0.091598 0.0361 0.04978" rpy="0 0 0"/>
   <parent link="arm_elbow_link_1"/>
   <child link="arm_wrist_tilt_servo_1"/>
 </joint>
 
 <joint name="4" type="continuous">
-  <origin xyz="0.007353 -0.0346 0.033569" rpy="0 0 0"/>
+  <origin xyz="0.034335 -0.0346 -0.001411" rpy="0 0 0"/>
   <parent link="arm_wrist_tilt_servo_1"/>
   <child link="arm_wrist_link_1"/>
-  <axis xyz="-0.0 -1.0 -0.0"/>
+  <axis xyz="-0.0 -1.0 0.0"/>
 </joint>
 
 <joint name="arm_wrist_roll_solid" type="fixed">
-  <origin xyz="0.038407 -0.0089 0.045042" rpy="0 0 0"/>
+  <origin xyz="0.051028 -0.0089 -0.030002" rpy="0 0 0"/>
   <parent link="arm_wrist_link_1"/>
   <child link="arm_wrist_roll_servo_1"/>
 </joint>
 
 <joint name="5" type="continuous">
-  <origin xyz="0.008688 0.029 -0.006116" rpy="0 0 0"/>
+  <origin xyz="-0.004516 0.029 -0.009619" rpy="0 0 0"/>
   <parent link="arm_wrist_roll_servo_1"/>
   <child link="arm_gripper_1"/>
-  <axis xyz="0.770795 -0.0 0.637083"/>
+  <axis xyz="0.761252 -0.0 -0.648456"/>
 </joint>
 
 <joint name="Rigid 56" type="fixed">
-  <origin xyz="0.022483 0.006032 -0.006993" rpy="0 0 0"/>
+  <origin xyz="-0.002982 0.006032 -0.023356" rpy="0 0 0"/>
   <parent link="arm_gripper_1"/>
   <child link="arm_gripper_servo_1"/>
 </joint>
 
 <joint name="6" type="continuous">
-  <origin xyz="-0.02038 -0.017389 0.040747" rpy="0 0 0"/>
+  <origin xyz="0.036589 -0.017388 0.027147" rpy="0 0 0"/>
   <parent link="arm_gripper_servo_1"/>
   <child link="arm_jaw_1"/>
-  <axis xyz="-0.590361 0.375894 0.714267"/>
+  <axis xyz="0.6009 0.375894 0.705424"/>
 </joint>
 
 <joint name="Rigid 75" type="fixed">
-  <origin xyz="0.022679 -0.079282 0.005" rpy="0 0 0"/>
+  <origin xyz="0.021939 -0.079152 0.000439" rpy="0 0 0"/>
   <parent link="base_link"/>
-  <child link="right_servo_mount_1"/>
+  <child link="wheel_2_servo_mount_1"/>
 </joint>
 
 <joint name="Rigid 76" type="fixed">
-  <origin xyz="0.005666 0.009674 0.0185" rpy="0 0 0"/>
-  <parent link="right_servo_mount_1"/>
-  <child link="right_servo_1"/>
+  <origin xyz="0.005665 0.009674 0.0185" rpy="0 0 0"/>
+  <parent link="wheel_2_servo_mount_1"/>
+  <child link="wheel_2_servo_1"/>
 </joint>
 
-<joint name="right_motor_rotation" type="continuous">
+<joint name="wheel_2_rotation" type="continuous">
   <origin xyz="0.025689 -0.023966 -0.008283" rpy="0 0 0"/>
-  <parent link="right_servo_1"/>
-  <child link="right_wheel_mount_1"/>
+  <parent link="wheel_2_servo_1"/>
+  <child link="wheel_2_mount_1"/>
   <axis xyz="-0.5 0.866025 -0.0"/>
-  <dynamics damping="0.25" friction="0.03"/>  <!-- 👈 only here -->
-  <limit effort="5.0" velocity="40.0"/>
 </joint>
 
 <joint name="Rigid 79" type="fixed">
-  <origin xyz="-0.1 -0.02 0.005" rpy="0 0 0"/>
+  <origin xyz="-0.100741 -0.01987 0.000439" rpy="0 0 0"/>
   <parent link="base_link"/>
-  <child link="back_servo_mount_1"/>
+  <child link="wheel_1_servo_mount_1"/>
 </joint>
 
 <joint name="Rigid 80" type="fixed">
-  <origin xyz="0.032679 0.096603 0.005" rpy="0 0 0"/>
+  <origin xyz="0.031939 0.096733 0.000439" rpy="0 0 0"/>
   <parent link="base_link"/>
-  <child link="left_servo_mount_1"/>
+  <child link="wheel_3_servo_mount_1"/>
 </joint>
 
 <joint name="Rigid 81" type="fixed">
-  <origin xyz="0.025545 0.030257 0.042998" rpy="0 0 0"/>
-  <parent link="back_servo_mount_1"/>
-  <child link="back_servo_1"/>
+  <origin xyz="0.025546 0.030257 0.042998" rpy="0 0 0"/>
+  <parent link="wheel_1_servo_mount_1"/>
+  <child link="wheel_1_servo_1"/>
 </joint>
 
 <joint name="Rigid 82" type="fixed">
-  <origin xyz="0.003587 -0.006214 0.0" rpy="0 0 0"/>
-  <parent link="right_wheel_mount_1"/>
-  <child link="right_wheel_1"/>
+  <origin xyz="0.003588 -0.006214 0.0" rpy="0 0 0"/>
+  <parent link="wheel_2_mount_1"/>
+  <child link="wheel_2_1"/>
 </joint>
 
-<joint name="back_motor_rotation" type="continuous">
+<joint name="wheel1_rotation" type="continuous">
   <origin xyz="-0.0336 -0.01025 -0.0328" rpy="0 0 0"/>
-  <parent link="back_servo_1"/>
-  <child link="back_wheel_mount_1"/>
+  <parent link="wheel_1_servo_1"/>
+  <child link="wheel_1_mount_1"/>
   <axis xyz="-1.0 -0.0 -0.0"/>
-  <dynamics damping="0.25" friction="0.03"/>  <!-- 👈 only here -->
-  <limit effort="5.0" velocity="40.0"/>
 </joint>
 
 <joint name="Rigid 85" type="fixed">
   <origin xyz="-0.007175 0.0 0.0" rpy="0 0 0"/>
-  <parent link="back_wheel_mount_1"/>
-  <child link="back_wheel_1"/>
+  <parent link="wheel_1_mount_1"/>
+  <child link="wheel_1_1"/>
 </joint>
 
 <joint name="Rigid 86" type="fixed">
   <origin xyz="-0.004324 -0.027001 0.042998" rpy="0 0 0"/>
-  <parent link="left_servo_mount_1"/>
-  <child link="left_servo_1"/>
+  <parent link="wheel_3_servo_mount_1"/>
+  <child link="wheel_3_servo_1"/>
 </joint>
 
-<joint name="left_motor_rotation" type="continuous">
-  <origin xyz="0.025629 0.024001 -0.032817" rpy="0 0 0"/>
-  <parent link="left_servo_1"/>
-  <child link="left_wheel_mount_1"/>
+<joint name="wheel_3_rotation" type="continuous">
+  <origin xyz="0.025628 0.024001 -0.032817" rpy="0 0 0"/>
+  <parent link="wheel_3_servo_1"/>
+  <child link="wheel_3_mount_1"/>
   <axis xyz="-0.5 -0.866025 -0.0"/>
-  <dynamics damping="0.25" friction="0.03"/>  <!-- 👈 only here -->
-  <limit effort="5.0" velocity="40.0"/>
 </joint>
 
 <joint name="Rigid 88" type="fixed">
-  <origin xyz="0.003587 0.006214 0.0" rpy="0 0 0"/>
-  <parent link="left_wheel_mount_1"/>
-  <child link="left_wheel_1"/>
+  <origin xyz="0.003588 0.006214 0.0" rpy="0 0 0"/>
+  <parent link="wheel_3_mount_1"/>
+  <child link="wheel_3_1"/>
 </joint>
 
 <joint name="Rigid 90" type="fixed">
-  <origin xyz="2.081494 -2.342784 -0.0405" rpy="0 0 0"/>
+  <origin xyz="2.081363 -2.343524 -0.035938" rpy="0 0 0"/>
   <parent link="orin_mount_1"/>
   <child link="orin_1"/>
 </joint>
 
 <joint name="Rigid 96" type="fixed">
-  <origin xyz="0.1 0.04 0.005" rpy="0 0 0"/>
+  <origin xyz="0.099259 0.04013 0.000439" rpy="0 0 0"/>
   <parent link="base_link"/>
   <child link="hex_2_1"/>
 </joint>
 
 <joint name="Rigid 97" type="fixed">
-  <origin xyz="0.1 -0.04 0.005" rpy="0 0 0"/>
+  <origin xyz="0.099259 -0.03987 0.000439" rpy="0 0 0"/>
   <parent link="base_link"/>
   <child link="hex_1_1"/>
 </joint>
 
 <joint name="Rigid 99" type="fixed">
-  <origin xyz="-0.06 -0.1 0.005" rpy="0 0 0"/>
+  <origin xyz="-0.060741 -0.09987 0.000439" rpy="0 0 0"/>
   <parent link="base_link"/>
   <child link="hex_3_1"/>
 </joint>
 
 <joint name="Rigid 100" type="fixed">
-  <origin xyz="0.02 0.0 0.005" rpy="0 0 0"/>
+  <origin xyz="0.019259 0.00013 0.000439" rpy="0 0 0"/>
   <parent link="base_link"/>
   <child link="usb_pd_mount_1"/>
 </joint>
 
 <joint name="Rigid 115" type="fixed">
-  <origin xyz="-0.06792 0.166055 0.0655" rpy="0 0 0"/>
+  <origin xyz="-0.06779 0.166795 0.060938" rpy="0 0 0"/>
   <parent link="imu_mount_1"/>
   <child link="imu_1"/>
 </joint>
 
-<joint name="1" type="continuous">
-  <origin xyz="0.097448 0.01025 0.0994" rpy="0 0 0"/>
-  <parent link="arm_base_rotation_servo_1"/>
-  <child link="panny_v1_1"/>
-  <axis xyz="0.0 -0.0 -1.0"/>
-</joint>
-
-<joint name="Rigid 157" type="fixed">
-  <origin xyz="0.015048 0.015945 -0.092064" rpy="0 0 0"/>
-  <parent link="panny_v1_1"/>
-  <child link="pan_servo_1"/>
-</joint>
-
-<joint name="camera_tilt" type="continuous">
-  <origin xyz="-0.01025 0.0018 0.029" rpy="0 0 0"/>
-  <parent link="pan_servo_1"/>
-  <child link="camera_tilt_mount_v1_1"/>
-  <axis xyz="0.0 1.0 -0.0"/>
-</joint>
-
-<joint name="Rigid 159" type="fixed">
-  <origin xyz="0.014499 -0.0402 0.024426" rpy="0 0 0"/>
-  <parent link="camera_tilt_mount_v1_1"/>
-  <child link="camera_1"/>
-</joint>
-
 <joint name="Rigid 162" type="fixed">
-  <origin xyz="-0.06 0.08 0.005" rpy="0 0 0"/>
+  <origin xyz="-0.060741 0.08013 0.000439" rpy="0 0 0"/>
   <parent link="base_link"/>
   <child link="right_baseus_mount_v1_1"/>
 </joint>
 
-<joint name="Rigid 166" type="fixed">
-  <origin xyz="-0.023798 0.0163 -0.0434" rpy="0 0 0"/>
-  <parent link="panny_v1_1"/>
-  <child link="arm_shoulder_servo_1"/>
-</joint>
-
-<joint name="Rigid 167" type="fixed">
-  <origin xyz="-0.023798 0.023 -0.0434" rpy="0 0 0"/>
-  <parent link="panny_v1_1"/>
-  <child link="arm_base_rotation_link_cover_1"/>
-</joint>
-
 <joint name="Rigid 169" type="fixed">
-  <origin xyz="-2.043494 2.196648 0.0575" rpy="0 0 0"/>
+  <origin xyz="-2.043363 2.197388 0.052938" rpy="0 0 0"/>
   <parent link="upper_floor_1"/>
   <child link="orin_mount_1"/>
 </joint>
@@ -1270,20 +1338,8 @@
   <child link="imu_mount_1"/>
 </joint>
 
-<joint name="Rigid 172" type="fixed">
-  <origin xyz="-0.04 -0.18 0.005" rpy="0 0 0"/>
-  <parent link="upper_floor_1"/>
-  <child link="hex_5_1"/>
-</joint>
-
-<joint name="Rigid 173" type="fixed">
-  <origin xyz="0.0 0.0 0.0455" rpy="0 0 0"/>
-  <parent link="hex_5_1"/>
-  <child link="last_floor_v1_1"/>
-</joint>
-
 <joint name="Rigid 174" type="fixed">
-  <origin xyz="-0.06 -0.08 0.005" rpy="0 0 0"/>
+  <origin xyz="-0.060741 -0.07987 0.000439" rpy="0 0 0"/>
   <parent link="base_link"/>
   <child link="left_baseus_mount_v1_1"/>
 </joint>
@@ -1294,26 +1350,14 @@
   <child link="baseus_pack_v1_1"/>
 </joint>
 
-<joint name="Rigid 176" type="fixed">
-  <origin xyz="0.04 -0.2 0.005" rpy="0 0 0"/>
-  <parent link="upper_floor_1"/>
-  <child link="hex_7_1"/>
-</joint>
-
 <joint name="Rigid 177" type="fixed">
   <origin xyz="0.04 0.0 0.005" rpy="0 0 0"/>
   <parent link="upper_floor_1"/>
-  <child link="hex_7__1__1"/>
-</joint>
-
-<joint name="Rigid 178" type="fixed">
-  <origin xyz="-0.04 -0.02 0.005" rpy="0 0 0"/>
-  <parent link="upper_floor_1"/>
-  <child link="hex_6_1"/>
+  <child link="hex_8_1"/>
 </joint>
 
 <joint name="Rigid 179" type="fixed">
-  <origin xyz="-0.06 0.1 0.005" rpy="0 0 0"/>
+  <origin xyz="-0.060741 0.10013 0.000439" rpy="0 0 0"/>
   <parent link="base_link"/>
   <child link="hex_4_1"/>
 </joint>
@@ -1322,6 +1366,105 @@
   <origin xyz="0.0 0.0 0.0475" rpy="0 0 0"/>
   <parent link="hex_4_1"/>
   <child link="upper_floor_1"/>
+</joint>
+
+<joint name="1" type="continuous">
+  <origin xyz="0.0328 0.01025 0.0346" rpy="0 0 0"/>
+  <parent link="arm_base_rotation_servo_1"/>
+  <child link="arm_base_rotation_1"/>
+  <axis xyz="0.0 -0.0 -1.0"/>
+</joint>
+
+<joint name="Rigid 189" type="fixed">
+  <origin xyz="0.04085 0.0163 0.0214" rpy="0 0 0"/>
+  <parent link="arm_base_rotation_1"/>
+  <child link="arm_shoulder_servo_1"/>
+</joint>
+
+<joint name="Rigid 190" type="fixed">
+  <origin xyz="0.04085 0.023 0.0214" rpy="0 0 0"/>
+  <parent link="arm_base_rotation_1"/>
+  <child link="arm_base_rotation_link_cover_1"/>
+</joint>
+
+<joint name="Rigid 194" type="fixed">
+  <origin xyz="-0.005169 0.405645 0.06781" rpy="0 0 0"/>
+  <parent link="realsense_support_v1_1"/>
+  <child link="camera_1"/>
+</joint>
+
+<joint name="Rigid 202" type="fixed">
+  <origin xyz="-0.04 -0.18 0.005" rpy="0 0 0"/>
+  <parent link="upper_floor_1"/>
+  <child link="hex_5_1"/>
+</joint>
+
+<joint name="Rigid 203" type="fixed">
+  <origin xyz="0.06 0.04 0.005" rpy="0 0 0"/>
+  <parent link="last_floor_1"/>
+  <child link="just_the_tower_v1_1"/>
+</joint>
+
+<joint name="Rigid 205" type="fixed">
+  <origin xyz="0.0 0.0 0.0455" rpy="0 0 0"/>
+  <parent link="hex_5_1"/>
+  <child link="last_floor_1"/>
+</joint>
+
+<joint name="Rigid 206" type="fixed">
+  <origin xyz="0.018447 0.627298 0.351262" rpy="0 0 0"/>
+  <parent link="just_the_tower_v1_1"/>
+  <child link="support_v1_1"/>
+</joint>
+
+<joint name="Rigid 207" type="fixed">
+  <origin xyz="-2.605696 0.780556 -0.913553" rpy="0 0 0"/>
+  <parent link="support_v1_1"/>
+  <child link="camera_pan_1"/>
+</joint>
+
+<joint name="Rigid 208" type="fixed">
+  <origin xyz="-2.617544 0.788121 -0.927453" rpy="0 0 0"/>
+  <parent link="support_v1_1"/>
+  <child link="camera_pan_support_back_1"/>
+</joint>
+
+<joint name="Rigid 209" type="fixed">
+  <origin xyz="-0.04 -0.02 0.005" rpy="0 0 0"/>
+  <parent link="upper_floor_1"/>
+  <child link="hex_6_1"/>
+</joint>
+
+<joint name="Rigid 210" type="fixed">
+  <origin xyz="0.04 -0.2 0.005" rpy="0 0 0"/>
+  <parent link="upper_floor_1"/>
+  <child link="hex_7_1"/>
+</joint>
+
+<joint name="Revolute 211" type="continuous">
+  <origin xyz="2.496806 -1.365461 1.062441" rpy="0 0 0"/>
+  <parent link="camera_pan_1"/>
+  <child link="camera_pan_support_1"/>
+  <axis xyz="0.0 -0.0 -1.0"/>
+</joint>
+
+<joint name="Rigid 212" type="fixed">
+  <origin xyz="0.112692 0.015039 -0.252844" rpy="0 0 0"/>
+  <parent link="camera_pan_support_1"/>
+  <child link="camera_tilt_servo_1"/>
+</joint>
+
+<joint name="Rigid 213" type="fixed">
+  <origin xyz="0.076384 0.349928 -0.296383" rpy="0 0 0"/>
+  <parent link="camera_pan_support_1"/>
+  <child link="camera_pan_cover_1"/>
+</joint>
+
+<joint name="Revolute 214" type="continuous">
+  <origin xyz="0.006688 -0.399445 -0.008442" rpy="0 0 0"/>
+  <parent link="camera_tilt_servo_1"/>
+  <child link="realsense_support_v1_1"/>
+  <axis xyz="-0.0 -1.0 0.0"/>
 </joint>
 
 <!-- ros2_control hardware interface -->
