@@ -25,15 +25,29 @@
 
 ## 🧱 Layer 0 – Hardware
 
-The physical foundation. Based on the [Open Robotics Platform grid]() Affordable, modular, and easy to assemble.
+The physical foundation.  Affordable, modular, and easy to assemble.
 
 | Component | Description |
 |-----------|-------------|
 | **Power** | 145W USB-C power bank with dual USB-PD triggers (12V) |
 | **Compute** | Almost any SBC or Mini-PC under 12x12cm |
 | **Actuators** | 10× STS3215 servos via Waveshare ESP32 controller |
-| **Perception** | RGB-D head camera, wrist camera,  |
+| **Perception** | RGB-D head camera and wrist camera  |
 | **Localization** | RPLidar C1 for 2D SLAM, Wheel Encoders, ICM-20948 IMU |
+
+### 💰 Base Platform Cost
+
+| Part | Qty | US | EU |
+|------|:---:|---:|---:|
+| ST3215 Servo (12V) | 10 | $138.90 | €133.80 |
+| WaveShare ESP32 Controller | 1 | $10.55 | €4.76 |
+| USB-PD Trigger | 2 | $11.90 | €13.80 |
+| ICM20948 IMU | 1 | $14.95 | €18.91 |
+| Baseus GP12 Battery | 1 | $59.99 | €48.99 |
+| RPLidar C1 | 1 | $89.00 | €79.00 |
+| **Total** | | **$325.29** | **€299.26** |
+
+> 📋 **[Full BOM with sourcing links](docs/bom.md)** — includes camera options, SBC recommendations, and alternatives.
 
 
 ## ⚙️ Layer 1 – The Body and Reflexes
@@ -89,48 +103,7 @@ Two very different tasks — inspection vs. manipulation — handled by the same
 
 ---
 
-## 🚀 Quick Start
 
-### 🎮 Simulation (Fastest Way to Try LLMy!)
-
-Get the robot running in Gazebo simulation in just a few commands:
-
-```bash
-# Clone and build the workspace
-git clone github.com/cristidragomir97/llmy llmy_ws
-cd llmy_ws/ros
-colcon build
-source install/setup.bash
-
-# Launch Gazebo simulation with controllers
-ros2 launch llmy_gazebo sim.launch.py
-```
-
-The robot will spawn in Gazebo with all controllers active. 
-
-In a new terminal - start Xbox controller teleoperation
-
-```bash
-ros2 launch llmy_teleop_xbox teleop_xbox.launch.py
-```
-**🎮 Xbox Controller Mapping:**
-- **🏎️ Base Movement:** Right stick (forward/back + rotate)
-- **🦾 Arm Control:**
-  - **Joint 1:** RB button (+) / LB button (-)
-  - **Joint 2:** RT trigger (+) / LT trigger (-)
-  - **Joint 3:** Y button (+) / A button (-)
-  - **Joint 4:** B button (+) / X button (-)
-  - **Joint 5:** Start button (+) / Back button (-)
-  - **Joint 6:** Right stick click (+) / Left stick click (-)
-- **📷 Camera Control:**
-  - **Pan:** D-pad up/down
-  - **Tilt:** D-pad left/right
-
-For detailed setup instructions, hardware configuration, and troubleshooting, see:
-
-**📖 [Getting Started Guide](docs/getting-started.md)** - Complete installation and setup instructions for both simulation and hardware
-
----
 
 ## 🏗️ Architecture
 
@@ -248,6 +221,49 @@ graph TB
 
 **📋 [Detailed Package Documentation](docs/packages.md)**
 
+
+## 🚀 Quick Start
+
+### 🎮 Simulation (Fastest Way to Try LLMy!)
+
+Get the robot running in Gazebo simulation in just a few commands:
+
+```bash
+# Clone and build the workspace
+git clone github.com/cristidragomir97/llmy llmy_ws
+cd llmy_ws/ros
+colcon build
+source install/setup.bash
+
+# Launch Gazebo simulation with controllers
+ros2 launch llmy_gazebo sim.launch.py
+```
+
+The robot will spawn in Gazebo with all controllers active. 
+
+In a new terminal - start Xbox controller teleoperation
+
+```bash
+ros2 launch llmy_teleop_xbox teleop_xbox.launch.py
+```
+**🎮 Xbox Controller Mapping:**
+- **🏎️ Base Movement:** Right stick (forward/back + rotate)
+- **🦾 Arm Control:**
+  - **Joint 1:** RB button (+) / LB button (-)
+  - **Joint 2:** RT trigger (+) / LT trigger (-)
+  - **Joint 3:** Y button (+) / A button (-)
+  - **Joint 4:** B button (+) / X button (-)
+  - **Joint 5:** Start button (+) / Back button (-)
+  - **Joint 6:** Right stick click (+) / Left stick click (-)
+- **📷 Camera Control:**
+  - **Pan:** D-pad up/down
+  - **Tilt:** D-pad left/right
+
+For detailed setup instructions, hardware configuration, and troubleshooting, see:
+
+**📖 [Getting Started Guide](docs/getting-started.md)** - Complete installation and setup instructions for both simulation and hardware
+
+---
 
 --- 
 ## 🙏 Credits & Acknowledgments
