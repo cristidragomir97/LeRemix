@@ -54,17 +54,17 @@ class MotorManager:
         self.node.get_logger().info(f"Motor connectivity test complete: {connected_motors}/{len(enabled_ids)} enabled motors online")
         return connected_motors
     
-    def run_test_sequences(self, motor_ids: list, loc_ids: list, arm_ids: list, head_ids: list, loc_enable: bool):
+    def run_test_sequences(self, motor_ids: list, loc_ids: list, arm_ids: list, camera_ids: list, loc_enable: bool):
         """Run short test sequences to verify motor communication"""
         self.node.get_logger().info("Running motor communication test sequences...")
-        
+
         for motor_id in motor_ids:
             if not self.motor_manager.PingServo(motor_id):
                 continue
-                
+
             try:
                 self.node.get_logger().info(f"Testing motor {motor_id}...")
-                
+
                 # Test 1: Brief spin in velocity mode for locomotion motors
                 if motor_id in loc_ids and loc_enable:
                     self.motor_manager.SetMode(motor_id, 1)  # Velocity mode
@@ -73,29 +73,29 @@ class MotorManager:
                     time.sleep(1.0)
                     self.motor_manager.Rotate(motor_id, 0)
                     # Don't stop servo - it will be reinitialized later
-                    self.node.get_logger().info(f"  Motor {motor_id}: Velocity test ✅")
-                
-                # Test 2: Small position move for arm/head motors
-                elif motor_id in arm_ids + head_ids:
+                    self.node.get_logger().info(f"  Motor {motor_id}: Velocity test passed")
+
+                # Test 2: Small position move for arm/camera motors
+                elif motor_id in arm_ids + camera_ids:
                     self.motor_manager.SetMode(motor_id, 0)  # Position mode
                     self.motor_manager.StartServo(motor_id)
-                    
+
                     # Read current position and move slightly
                     current_pos = self.motor_manager.ReadPosition(motor_id)
                     if current_pos is not None:
                         test_pos = current_pos + 100  # Small movement
                         test_pos = max(0, min(4095, test_pos))
-                        
+
                         self.motor_manager.MoveTo(motor_id, test_pos, 500, 200)
                         time.sleep(0.5)
                         self.motor_manager.MoveTo(motor_id, current_pos, 500, 200)
-                        self.node.get_logger().info(f"  Motor {motor_id}: Position test ✅")
-                    
+                        self.node.get_logger().info(f"  Motor {motor_id}: Position test passed")
+
                 time.sleep(0.2)  # Brief pause between motors
-                
+
             except Exception as e:
                 self.node.get_logger().warn(f"Test failed for motor {motor_id}: {e}")
-                
+
         self.node.get_logger().info("Motor test sequences complete!")
     
     def initialize_locomotion_motors(self, loc_ids: list, loc_accel: list):
@@ -158,22 +158,22 @@ class MotorManager:
         
         self.node.get_logger().info("✅ Arm motors initialized with torque holding at current positions")
     
-    def initialize_head_motors(self, head_ids: list, head_accel: list, ticks_per_rev: int):
-        """Initialize head motors for position mode - reads current positions and sets holding torque"""
-        self.node.get_logger().info("Setting head motors to position mode...")
-        self.node.get_logger().info("🛡️  SAFETY: Reading current head positions and enabling torque holding")
-        
+    def initialize_camera_motors(self, camera_ids: list, camera_accel: list, ticks_per_rev: int):
+        """Initialize camera motors for position mode - reads current positions and sets holding torque"""
+        self.node.get_logger().info("Setting camera motors to position mode...")
+        self.node.get_logger().info("SAFETY: Reading current camera positions and enabling torque holding")
+
         # Store current positions for safety - no movements during initialization
-        self.head_current_positions = {}
-        
-        for i, motor_id in enumerate(head_ids):
-            accel = head_accel[i] if i < len(head_accel) else 30
-            
+        self.camera_current_positions = {}
+
+        for i, motor_id in enumerate(camera_ids):
+            accel = camera_accel[i] if i < len(camera_accel) else 30
+
             try:
                 # Set mode and acceleration but don't start servo yet
                 self.motor_manager.SetMode(motor_id, 0)
                 self.motor_manager.SetAcceleration(motor_id, accel)
-                
+
                 # Read current position instead of moving to home
                 current_pos_ticks = self.motor_manager.ReadPosition(motor_id)
                 if current_pos_ticks is not None:
@@ -181,25 +181,25 @@ class MotorManager:
                     servo_center = 2048
                     current_angle_rad = (current_pos_ticks - servo_center) / ticks_per_rev * 2.0 * math.pi
                     current_angle_deg = current_angle_rad * 180.0 / math.pi
-                    
+
                     # Store current position
-                    self.head_current_positions[motor_id] = current_pos_ticks
-                    
+                    self.camera_current_positions[motor_id] = current_pos_ticks
+
                     # Start servo and immediately command it to hold current position
                     self.motor_manager.StartServo(motor_id)
                     time.sleep(0.05)  # Brief delay to ensure servo is started
                     self.motor_manager.MoveTo(motor_id, current_pos_ticks, 100, accel)
-                    
-                    self.node.get_logger().info(f"Head motor {motor_id} holding at: {current_angle_deg:.1f}° ({current_angle_rad:.3f} rad, {current_pos_ticks} ticks)")
+
+                    self.node.get_logger().info(f"Camera motor {motor_id} holding at: {current_angle_deg:.1f} deg ({current_angle_rad:.3f} rad, {current_pos_ticks} ticks)")
                 else:
-                    self.node.get_logger().warn(f"Could not read current position for head motor {motor_id}")
-                    
+                    self.node.get_logger().warn(f"Could not read current position for camera motor {motor_id}")
+
                 time.sleep(0.1)  # Small delay to prevent bus congestion
-                    
+
             except Exception as e:
-                self.node.get_logger().warn(f"Failed to initialize head motor {motor_id}: {e}")
-        
-        self.node.get_logger().info("✅ Head motors initialized with torque holding at current positions")
+                self.node.get_logger().warn(f"Failed to initialize camera motor {motor_id}: {e}")
+
+        self.node.get_logger().info("Camera motors initialized with torque holding at current positions")
     
     def send_velocity_command(self, motor_id: int, speed_raw: int):
         """Send velocity command to a motor"""

@@ -13,85 +13,79 @@
 </p>
 
 <p align="center">
-  <img src="img/LLMy.jpeg" alt="LLMy Robot"/>
+  <img src="img/LLMy.png" alt="LLMy Robot"/>
 </p>
 
 
 
-**LLMy** is a fully 3D-printed mobile manipulator built as a hands-on playground for **Hybrid Robotics**.
+**LLMy** is a fully 3D-printed mobile manipulator built as a hands-on playground for the integration of **reliable deterministic control** with the **reasoning capabilities of LLMs**. 
 
-Hybrid Robotics is an architectural approach that combines the **reliability of deterministic control systems** with the **flexibility and reasoning capabilities of Large Language Models (LLMs)**. Rather than replacing classical robotics stacks, LLMy layers intelligence *on top* of them.
 
-At its core, LLMy’s “brain” is organized into **three cooperative layers**, each with a clearly defined responsibility.
 
 
 ## 🧱 Layer 0 – Hardware
 
-The hardware layer provides the physical capabilities that make everything else possible.  
-LLMy is designed to be **affordable, modular, and easy to assemble**, using off-the-shelf components wherever possible.
+The physical foundation. Based on the [Open Robotics Platform grid]() Affordable, modular, and easy to assemble.
 
-- **Power system**  
-  145 W USB-C power bank with dual USB-PD triggers, supplying clean 12 V power to all subsystems
+| Component | Description |
+|-----------|-------------|
+| **Power** | 145W USB-C power bank with dual USB-PD triggers (12V) |
+| **Compute** | Almost any SBC or Mini-PC under 12x12cm |
+| **Actuators** | 10× STS3215 servos via Waveshare ESP32 controller |
+| **Perception** | RGB-D head camera, wrist camera,  |
+| **Localization** | RPLidar C1 for 2D SLAM, Wheel Encoders, ICM-20948 IMU |
 
-- **Compute**  
-  Raspberry Pi 5 or Jetson Orin Nano as the main SBC, running ROS 2 and handling perception and control
-
-- **Actuators**  
-  10× STS3215 serial bus servos in a daisy-chain configuration via a Waveshare ESP32 controller
-
-- **Perception**  
-  RGB-D head camera, wrist camera for manipulation, and an ICM-20948 IMU for orientation
-
-- **Localization**  
-  RPLidar C1 and ICM-20948 providing data for 2D SLAM and environment mapping
-
----
 
 ## ⚙️ Layer 1 – The Body and Reflexes
 
 This layer is responsible for **precision, safety, and real-time execution**.  
 It is built entirely on well-established ROS 2 tooling and is designed to behave predictably under all conditions.
 
-- **Hardware abstraction**  
-  `ros2_control` manages low-level motor and sensor interfaces, cleanly abstracting hardware details
+- **Hardware abstraction** — [ros2_control]() manages low-level motor and sensor interfaces, cleanly abstracting hardware details
 
-- **Mapping & localization**  
-  `slam_toolbox` provides robust 2D SLAM for environment mapping and localization
+- **Mapping & localization** — [slam_toolbox](https://github.com/SteveMacenski/slam_toolbox/tree/ros2) provides robust 2D SLAM for environment mapping and localization
 
-- **Navigation**  
-  Nav2 handles path planning, obstacle avoidance, and autonomous movement from A to B
+- **Navigation** — [Nav2](https://docs.nav2.org/) handles path planning, obstacle avoidance, and autonomous movement from A to B
 
-- **Manipulation**  
-  MoveIt 2 plans collision-free trajectories and solves inverse kinematics for the robotic arm
+- **Manipulation** — [MoveIt](https://moveit.picknik.ai/main/index.html) plans collision-free trajectories and solves inverse kinematics for the robotic arm
 
-- **Communication backbone**  
-  ROS 2 enables scalable, high-performance data exchange across the system.
+
 
 ---
 
+
 ## 🧠 Layer 2 – The Mind
 
-The probabilistic layer introduces **reasoning, flexibility, and high-level planning**.
-Instead of hard-coding behaviors, LLMy exposes its deterministic capabilities—navigation, manipulation, perception—as **MCP Tools**. 
+LLMy exposes its deterministic capabilities as **MCP Tools**, letting an LLM reason about *what* to do while the ROS stack handles *how*.
 
-A language model, local or in the cloud, reasons about *what* should be done, while the underlying ROS stack guarantees *how* it is executed.
 
-#### Natural-language goals
-  Accepts high-level, human-readable instructions such as: ```Clean up the spill in the kitchen```
+**Example:** My cats love digging in my plant pot and throwing dirt around.
 
-### Task decomposition
-  Transforms goals into structured, executable steps, for example:
-    * navigate to the kitchen
-    * locate the spill
-    * select and execute a manipulation primitive
-    * verify task completion
+```
+"Check on the big plant pot"
+```
 
-### Service orchestration
-Each step is executed by invoking ROS 2 services via the Model Context Protocol (MCP), ensuring:
-  
-  - a clear separation between reasoning and control
-  - deterministic and safe execution
-  - introspectable and debuggable system behavior
+The LLM decomposes this into executable steps, each invoking ROS 2 services via MCP:
+
+1. **Search for plant** → Roams using Nav2, continuously capturing frames and querying VLM: "Do you see a large plant pot?"
+2. **Approach & inspect** → Once found, navigates closer and asks VLM: "Is there dirt scattered around the pot?"
+3. **Assess situation** → VLM returns detection + bounding boxes, projected to map coordinates
+4. **Report or act** → Either notifies user ("Found dirt near the plant") or triggers cleanup sequence
+
+---
+
+**Example:** I'm on the couch and want to boot up my workstation.
+
+```
+"Turn on my PC"
+```
+
+1. **Locate workstation** → Roams and queries VLM: "Do you see a desktop PC or workstation?"
+2. **Find power button** → Moves closer, asks VLM: "Where is the power button?" — gets pixel coordinates
+3. **Position for reach** → Projects button location to 3D, plans base position for arm reach
+4. **Press button** → MoveIt plans trajectory, arm extends and presses the button
+
+Two very different tasks — inspection vs. manipulation — handled by the same robot without writing a single line of code. The LLM simply chains MCP tools in a different order based on the request.
 
 ---
 
@@ -156,14 +150,14 @@ graph TB
 
     LLMyDescription[📦 LLMy_Description]
     API[📡 ROS2]
-    Apps[🤖 AI/ML Applications]
+
 
     subgraph "Sensors"
         WristCamera[📷 Wrist Camera<br/>UVC 32x32 RGB]
         HeadCamera[📷 Head Camera<br/>RealSense RGB-D]
         IMU[📐 IMU Sensor<br/>ICM20948]
-        LIDAR[📏 LIDAR ]
-         CameraNode[📦 LLMy_Camera]
+        LIDAR[📏 LIDAR]
+        CameraNode[📦 LLMy_Camera]
         ImuNode[📦 LLMy_IMU]
         LidarNode[📦 rplidar]
     end
@@ -173,15 +167,25 @@ graph TB
         LLMyControl[📦 LLMy_Control]
         LLMyControlPlugin[📦 LLMy_ControlPlugin]
     end
-    
+
+    subgraph "Navigation & SLAM"
+        LLMyNav[📦 LLMy_Nav<br/>Nav2 Integration]
+        LLMySlam[📦 LLMy_SLAM<br/>slam_toolbox]
+    end
+
+    subgraph "AI Layer"
+        LLMyMCP[📦 LLMy_MCP<br/>Model Context Protocol]
+        Apps[🤖 AI/ML Applications]
+    end
+
     subgraph "Actuators"
         LLMyServoManager[📦 LLMy_ServoManager]
-        Base[<strong>Skid-Steer Base</strong><br/>4x ST3215 Servos]
+        Base[Differential Drive Base<br/>2x ST3215 Servos]
         Arm[6-DOF Arm<br/>6x ST3215 Servos]
         Head[Pan & Tilt System<br/>2x ST3215 Servos]
     end
 
-
+  
     %% Top to bottom flow
     LLMyDescription --> API
 
@@ -194,8 +198,15 @@ graph TB
     CameraNode --> API
     ImuNode --> API
 
-    API <--> Apps
+
     API --> Control
+    API --> LLMyNav
+    API --> LLMySlam
+
+    LLMySlam --> LLMyNav
+
+    LLMyMCP <--> API
+    Apps --> LLMyMCP
 
     LLMyControl --> Control
     Control --> LLMyControlPlugin
@@ -204,7 +215,7 @@ graph TB
     LLMyServoManager --> Base
     LLMyServoManager --> Arm
     LLMyServoManager --> Head
-    
+
 ```
 
 --- 
@@ -213,17 +224,26 @@ graph TB
 
 **Core Packages:**
 - [**llmy_description**](ros/src/llmy_description/) - Robot URDF model with accurate kinematics and collision meshes
-- [**llmy_control_plugin**](ros/src/llmy_control_plugin) - ros2_control hardware bridge enabling MoveIt2/Nav2 integration
-- [**llmy_control**]() - Controller parameters and ros2_control configurations
-- [**llmy_servo_manager**]() - Low-level motor control with real-time telemetry
-- [**llmy_teleop_xbox**]() - Xbox controller interface for manual operation
+- [**llmy_control_plugin**](ros/src/llmy_control_plugin/) - ros2_control hardware bridge enabling MoveIt2/Nav2 integration
+- [**llmy_control**](ros/src/llmy_control/) - Controller parameters and ros2_control configurations
+- [**llmy_servo_manager**](ros/src/llmy_servo_manager/) - Low-level motor control with real-time telemetry
+- [**llmy_teleop_xbox**](ros/src/llmy_teleop_xbox/) - Xbox controller interface for manual operation
+- [**llmy_bringup**](ros/src/llmy_bringup/) - Hardware bringup launching camera, IMU, micro-ROS agent, and ros2_control
+
+**Navigation & SLAM:**
+- [**llmy_nav**](ros/src/llmy_nav/) - Nav2 configuration and navigation mode management
+- [**llmy_slam**](ros/src/llmy_slam/) - SLAM integration using slam_toolbox with custom launch files
 
 **Sensor & Vision:**
-- [**llmy_camera**]() - RGB-D camera integration with depth-to-laser conversion
-- [**llmy_imu**]() - IMU sensor fusion for orientation and navigation
+- [**llmy_camera**](ros/src/llmy_camera/) - RGB-D camera integration with depth-to-laser conversion
+- [**llmy_imu**](ros/src/llmy_imu/) - IMU sensor fusion for orientation and navigation
 
-**Simulation Packages**
-- **llmy_gazebo** - Configurations and launch files for the Gazebo Classic
+**AI & Integration:**
+- [**llmy_mcp**](ros/src/llmy_mcp/) - MCP (Model Context Protocol) server exposing ROS2 interfaces to LLMs
+
+**Simulation & Visualization:**
+- [**llmy_gazebo**](ros/src/llmy_gazebo/) - Configurations and launch files for Gazebo simulation
+- [**llmy_rviz**](ros/src/llmy_rviz/) - RViz configuration and visualization presets
 
 
 **📋 [Detailed Package Documentation](docs/packages.md)**
@@ -236,7 +256,6 @@ This project stands on the shoulders of incredible open-source work:
 - **[LeRobot Team](https://github.com/huggingface/lerobot)** - For pioneering accessible robotics and AI integration
 - **[SIGRobotics-UIUC](https://github.com/SIGRobotics-UIUC)** - For their foundational work on LeKiwi
 - **[Pavan Vishwanath](https://github.com/Pavankv92)** - ROS2 package development for [LeRobot SO-ARM101](https://github.com/Pavankv92/lerobot_ws)
-- **[Mateus Menezes](https://github.com/mateusmenezes95)** - [Omnidirectional controllers](https://github.com/mateusmenezes95/omnidirectional_controllers) and [AxeBot](https://github.com/mateusmenezes95/axebot) simulation expertise
 - **[Gaotian Wang](https://github.com/Vector-Wangel/XLeRobot)** - For his amazing work on XLeRobot. Also for being kind enough to publish the STEP files for his robot upon request, files that were used to create the camera tower for LLMy. 
 
 ---

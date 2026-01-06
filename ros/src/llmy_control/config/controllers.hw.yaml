@@ -13,7 +13,7 @@ controller_manager:
     arm_controller:
       type: position_controllers/JointGroupPositionController
 
-    head_controller:
+    camera_controller:
       type: position_controllers/JointGroupPositionController
 
 arm_controller:
@@ -28,9 +28,9 @@ arm_controller:
 
     open_loop_control: true
 
-head_controller:
+camera_controller:
   ros__parameters:
-    joints: ["pan", "tilt"]
+    joints: ["camera_tilt"]
 
     command_interfaces:
       - position
@@ -42,7 +42,8 @@ head_controller:
 
 diff_drive_controller:
   ros__parameters:
-    # Wheel joints (right side and left side)
+    # Wheel joints (4 wheels: 2 left, 2 right)
+    # Motor IDs: 1=front_right, 2=back_right, 3=back_left, 4=front_left
     left_wheel_names: ['front_left_wheel_joint', 'back_left_wheel_joint']
     right_wheel_names: ['front_right_wheel_joint', 'back_right_wheel_joint']
 

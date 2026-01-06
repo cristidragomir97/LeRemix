@@ -1,0 +1,26 @@
+# Recovery Behaviors Configuration for LLMy Robot
+
+behavior_server:
+  ros__parameters:
+    use_sim_time: false
+    global_frame: odom
+    robot_base_frame: base_link
+    transform_tolerance: 0.1
+
+    # Costmap subscription
+    local_costmap_topic: local_costmap/costmap_raw
+    global_costmap_topic: global_costmap/costmap_raw
+
+    # Available recovery behaviors
+    behavior_plugins: ["spin", "backup", "wait"]
+
+    spin:
+      plugin: "nav2_behaviors/Spin"
+      simulate_ahead_time: 2.0
+
+    backup:
+      plugin: "nav2_behaviors/BackUp"
+      simulate_ahead_time: 2.0
+
+    wait:
+      plugin: "nav2_behaviors/Wait"

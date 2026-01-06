@@ -38,25 +38,25 @@ private:
   // Parameters
   std::string base_cmd_topic_{"/motor_manager/base_cmd"};
   std::string arm_cmd_topic_{"/motor_manager/arm_cmd"};
-  std::string head_cmd_topic_{"/motor_manager/head_cmd"};
+  std::string camera_cmd_topic_{"/motor_manager/camera_cmd"};
   std::string state_topic_{"/motor_manager/joint_states"};
   bool publish_if_unchanged_{true};
 
   // Joint sets derived from interfaces:
-  std::vector<std::string> base_joints_; // velocity command
-  std::vector<std::string> arm_joints_;  // position command
-  std::vector<std::string> head_joints_; // position command
+  std::vector<std::string> base_joints_;   // velocity command
+  std::vector<std::string> arm_joints_;    // position command
+  std::vector<std::string> camera_joints_; // position command
 
   // Buffers
   std::unordered_map<std::string, double> cmd_vel_;   // for base joints (rad/s)
-  std::unordered_map<std::string, double> cmd_pos_;   // for arm+head joints (rad)
+  std::unordered_map<std::string, double> cmd_pos_;   // for arm+camera joints (rad)
 
   std::unordered_map<std::string, double> pos_state_; // all joints (rad)
   std::unordered_map<std::string, double> vel_state_; // base joints (rad/s), arm optional
 
   // Track whether valid commands have been received to prevent initial 0.0 commands
-  std::unordered_map<std::string, bool> cmd_pos_received_;  // for arm+head joints
-  
+  std::unordered_map<std::string, bool> cmd_pos_received_;  // for arm+camera joints
+
   // Track if we've received meaningful (non-zero) joint states
   bool received_meaningful_joint_states_{false};
 
@@ -64,7 +64,7 @@ private:
   std::shared_ptr<rclcpp::Node> node_;
   rclcpp::Publisher<std_msgs::msg::Float64MultiArray>::SharedPtr base_pub_;
   rclcpp::Publisher<std_msgs::msg::Float64MultiArray>::SharedPtr arm_pub_;
-  rclcpp::Publisher<std_msgs::msg::Float64MultiArray>::SharedPtr head_pub_;
+  rclcpp::Publisher<std_msgs::msg::Float64MultiArray>::SharedPtr camera_pub_;
   rclcpp::Subscription<sensor_msgs::msg::JointState>::SharedPtr state_sub_;
   rclcpp::executors::SingleThreadedExecutor exec_;
   std::mutex state_mtx_;

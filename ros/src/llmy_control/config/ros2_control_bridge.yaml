@@ -7,7 +7,7 @@ ros2_control:
       # Topics for communication with servo manager
       base_cmd_topic: /motor_manager/base_cmd
       arm_cmd_topic: /motor_manager/arm_cmd
-      head_cmd_topic: /motor_manager/head_cmd
+      camera_cmd_topic: /motor_manager/camera_cmd
       state_topic: /motor_manager/joint_states
 
       # optional
@@ -15,6 +15,7 @@ ros2_control:
 
     joints:
       # Base joints — velocity command, position+velocity states
+      # Motor IDs: 1=front_right, 2=back_right, 3=back_left, 4=front_left
       - name: front_right_wheel_joint
         command_interfaces: [velocity]
         state_interfaces: [position, velocity]
@@ -29,6 +30,7 @@ ros2_control:
         state_interfaces: [position, velocity]
 
       # Arm joints — position command, position state
+      # Motor IDs: 5=base_rotation, 6=shoulder, 7=elbow, 8=wrist, 9=wrist_rotation, 10=gripper
       - name: "1"
         command_interfaces: [position]
         state_interfaces: [position]
@@ -48,10 +50,8 @@ ros2_control:
         command_interfaces: [position]
         state_interfaces: [position]
 
-      # Head joints — position command, position state
-      - name: tilt
-        command_interfaces: [position]
-        state_interfaces: [position]
-      - name: pan
+      # Camera joint — position command, position state
+      # Motor ID: 11=camera_tilt
+      - name: camera_tilt
         command_interfaces: [position]
         state_interfaces: [position]

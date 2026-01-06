@@ -1,21 +1,21 @@
 ros_distro: jazzy
 local: true
 ros_domain_id: 0
-registry: nx128.lan:5000/robocore
-image_prefix: llmy_sim
+registry: registry.core:5000/robocore
+# ros_apt_mirror: http://apt.core/ros2 
+image_prefix: llmysimaarch64
 
 hosts:
   - name: localhost
     ip: 127.0.0.1
     user: cdr 
-    arch: amd64
+    arch: arm64
     manager: true
-    mount_root: /home/temp/robocore
+    mount_root: /home/cdr/robocore-deploy
 
 components:
 
   - name: rviz
-    nvidia: true
     gui: true
     apt_packages:
       - ros-jazzy-rviz2
@@ -26,7 +26,6 @@ components:
     entrypoint: ros2 launch llmy_rviz rviz.launch.py 
 
   - name: simulation
-    nvidia: true
     gui: true
     volumes:
       - gz_fuel_cache:/root/.gz/fuel

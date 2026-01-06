@@ -23,14 +23,14 @@ CallbackReturn ROS2ControlBridge::on_init(const hardware_interface::HardwareInfo
   if (it != info_.hardware_parameters.end()) base_cmd_topic_ = it->second;
   it = info_.hardware_parameters.find("arm_cmd_topic");
   if (it != info_.hardware_parameters.end()) arm_cmd_topic_ = it->second;
-  it = info_.hardware_parameters.find("head_cmd_topic");
-  if (it != info_.hardware_parameters.end()) head_cmd_topic_ = it->second;
+  it = info_.hardware_parameters.find("camera_cmd_topic");
+  if (it != info_.hardware_parameters.end()) camera_cmd_topic_ = it->second;
   it = info_.hardware_parameters.find("state_topic");
   if (it != info_.hardware_parameters.end()) state_topic_ = it->second;
   it = info_.hardware_parameters.find("publish_if_unchanged");
   if (it != info_.hardware_parameters.end()) publish_if_unchanged_ = (it->second == "true" || it->second == "1");
 
-  // Split joints into base (velocity cmd), arm (position cmd), and head (position cmd)
+  // Split joints into base (velocity cmd), arm (position cmd), and camera (position cmd)
   for (const auto & j : info_.joints) {
     bool has_vel_cmd = false, has_pos_cmd = false;
     for (const auto & ci : j.command_interfaces) {
@@ -44,9 +44,9 @@ CallbackReturn ROS2ControlBridge::on_init(const hardware_interface::HardwareInfo
       vel_state_[j.name] = 0.0;
     }
     if (has_pos_cmd) {
-      // Classify position joints as arm or head based on joint name
-      if (j.name.find("camera") != std::string::npos || j.name.find("head") != std::string::npos) {
-        head_joints_.push_back(j.name);
+      // Classify position joints as arm or camera based on joint name
+      if (j.name.find("camera") != std::string::npos) {
+        camera_joints_.push_back(j.name);
       } else {
         arm_joints_.push_back(j.name);
       }
@@ -72,8 +72,8 @@ std::vector<hardware_interface::StateInterface> ROS2ControlBridge::export_state_
   for (const auto & name : arm_joints_) {
     state_interfaces.emplace_back(name, HW_IF_POSITION, &pos_state_[name]);
   }
-  // Head joints: position
-  for (const auto & name : head_joints_) {
+  // Camera joints: position
+  for (const auto & name : camera_joints_) {
     state_interfaces.emplace_back(name, HW_IF_POSITION, &pos_state_[name]);
   }
   return state_interfaces;
@@ -88,7 +88,7 @@ std::vector<hardware_interface::CommandInterface> ROS2ControlBridge::export_comm
   for (const auto & name : arm_joints_) {
     command_interfaces.emplace_back(name, HW_IF_POSITION, &cmd_pos_[name]);
   }
-  for (const auto & name : head_joints_) {
+  for (const auto & name : camera_joints_) {
     command_interfaces.emplace_back(name, HW_IF_POSITION, &cmd_pos_[name]);
   }
   return command_interfaces;
@@ -104,8 +104,8 @@ CallbackReturn ROS2ControlBridge::on_configure(const rclcpp_lifecycle::State &)
     base_cmd_topic_, rclcpp::QoS(rclcpp::KeepLast(1)).best_effort());
   arm_pub_ = node_->create_publisher<std_msgs::msg::Float64MultiArray>(
     arm_cmd_topic_, rclcpp::QoS(rclcpp::KeepLast(1)).best_effort());
-  head_pub_ = node_->create_publisher<std_msgs::msg::Float64MultiArray>(
-    head_cmd_topic_, rclcpp::QoS(rclcpp::KeepLast(1)).best_effort());
+  camera_pub_ = node_->create_publisher<std_msgs::msg::Float64MultiArray>(
+    camera_cmd_topic_, rclcpp::QoS(rclcpp::KeepLast(1)).best_effort());
 
   // Subscriber (best-effort for micro-ROS compatibility)
   auto qos = rclcpp::QoS(rclcpp::KeepLast(5)).best_effort();
@@ -115,8 +115,8 @@ CallbackReturn ROS2ControlBridge::on_configure(const rclcpp_lifecycle::State &)
 
   exec_.add_node(node_);
 
-  RCLCPP_INFO(node_->get_logger(), "Configured MotorBridge. base_cmd_topic=%s arm_cmd_topic=%s head_cmd_topic=%s state_topic=%s",
-              base_cmd_topic_.c_str(), arm_cmd_topic_.c_str(), head_cmd_topic_.c_str(), state_topic_.c_str());
+  RCLCPP_INFO(node_->get_logger(), "Configured MotorBridge. base_cmd_topic=%s arm_cmd_topic=%s camera_cmd_topic=%s state_topic=%s",
+              base_cmd_topic_.c_str(), arm_cmd_topic_.c_str(), camera_cmd_topic_.c_str(), state_topic_.c_str());
 
   return CallbackReturn::SUCCESS;
 }
@@ -134,7 +134,7 @@ CallbackReturn ROS2ControlBridge::on_deactivate(const rclcpp_lifecycle::State &)
   state_sub_.reset();
   base_pub_.reset();
   arm_pub_.reset();
-  head_pub_.reset();
+  camera_pub_.reset();
   node_.reset();
   return CallbackReturn::SUCCESS;
 }
@@ -145,16 +145,16 @@ void ROS2ControlBridge::state_callback(const sensor_msgs::msg::JointState::Share
 
   const size_t n = msg->name.size();
   bool has_meaningful_position = false;
-  
+
   for (size_t i = 0; i < n; ++i) {
     const auto & name = msg->name[i];
 
     if (pos_state_.count(name)) {
       if (i < msg->position.size()) {
         pos_state_[name] = msg->position[i];
-        // Check if this is a meaningful (non-zero) position for arm/head joints
+        // Check if this is a meaningful (non-zero) position for arm/camera joints
         if ((std::find(arm_joints_.begin(), arm_joints_.end(), name) != arm_joints_.end() ||
-             std::find(head_joints_.begin(), head_joints_.end(), name) != head_joints_.end()) &&
+             std::find(camera_joints_.begin(), camera_joints_.end(), name) != camera_joints_.end()) &&
             std::abs(msg->position[i]) > 0.005) {  // More than 0.005 radians (~0.3 degrees)
           has_meaningful_position = true;
         }
@@ -164,7 +164,7 @@ void ROS2ControlBridge::state_callback(const sensor_msgs::msg::JointState::Share
       if (i < msg->velocity.size()) vel_state_[name] = msg->velocity[i];
     }
   }
-  
+
   // Mark that we've received meaningful joint states
   if (has_meaningful_position && !received_meaningful_joint_states_) {
     received_meaningful_joint_states_ = true;
@@ -191,13 +191,13 @@ return_type ROS2ControlBridge::write(const rclcpp::Time &, const rclcpp::Duratio
           cmd_pos_[j] = pos_state_[j];  // Keep current position
         }
       }
-      for (const auto & j : head_joints_) {
+      for (const auto & j : camera_joints_) {
         if (pos_state_.count(j)) {
           cmd_pos_[j] = pos_state_[j];  // Keep current position
         }
       }
     }
-    
+
     RCLCPP_INFO_THROTTLE(node_->get_logger(), *node_->get_clock(), 2000,
                          "Waiting for meaningful joint states - holding current positions");
   } else {
@@ -207,7 +207,7 @@ return_type ROS2ControlBridge::write(const rclcpp::Time &, const rclcpp::Duratio
         cmd_pos_received_[j] = true;
       }
     }
-    for (const auto & j : head_joints_) {
+    for (const auto & j : camera_joints_) {
       if (!cmd_pos_received_[j]) {
         cmd_pos_received_[j] = true;
       }
@@ -242,12 +242,12 @@ return_type ROS2ControlBridge::write(const rclcpp::Time &, const rclcpp::Duratio
     }
   }
 
-  // Publish head positions in the order of head_joints_ - only if valid commands received
+  // Publish camera positions in the order of camera_joints_ - only if valid commands received
   {
     std_msgs::msg::Float64MultiArray msg;
-    msg.data.reserve(head_joints_.size());
+    msg.data.reserve(camera_joints_.size());
     bool has_valid_cmd = false;
-    for (const auto & j : head_joints_) {
+    for (const auto & j : camera_joints_) {
       if (cmd_pos_received_[j] && !std::isnan(cmd_pos_[j])) {
         msg.data.push_back(cmd_pos_[j]);
         has_valid_cmd = true;
@@ -256,7 +256,7 @@ return_type ROS2ControlBridge::write(const rclcpp::Time &, const rclcpp::Duratio
       }
     }
     if (has_valid_cmd) {
-      head_pub_->publish(msg);
+      camera_pub_->publish(msg);
     }
   }
 

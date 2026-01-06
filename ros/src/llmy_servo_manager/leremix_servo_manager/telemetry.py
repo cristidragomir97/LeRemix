@@ -66,19 +66,25 @@ class TelemetrySystem:
     def _motor_id_to_joint_name(self, motor_id: int) -> str:
         """Map motor ID to ros2_control joint name"""
         if motor_id in self.config.loc_ids:
-            # Base motors: map to wheel names based on position in array
-            idx = self.config.loc_ids.index(motor_id)
-            wheel_names = ["wheel1_rotation", "wheel2_rotation", "wheel3_rotation"]
-            return wheel_names[idx] if idx < len(wheel_names) else f"wheel{idx+1}_rotation"
+            # Base motors: Motor IDs 1-4 map to wheel joint names
+            # Motor ID 1 = front_right, 2 = back_right, 3 = back_left, 4 = front_left
+            wheel_id_to_name = {
+                1: "front_right_wheel_joint",
+                2: "back_right_wheel_joint",
+                3: "back_left_wheel_joint",
+                4: "front_left_wheel_joint"
+            }
+            return wheel_id_to_name.get(motor_id, f"wheel_{motor_id}_joint")
         elif motor_id in self.config.arm_ids:
-            # Arm motors: map motor IDs [4,5,6,7,8,9] to joint names ["1","2","3","4","5","6"]
+            # Arm motors: map motor IDs [5,6,7,8,9,10] to joint names ["1","2","3","4","5","6"]
             idx = self.config.arm_ids.index(motor_id)
             return str(idx + 1)
-        elif motor_id in self.config.head_ids:
-            # Head motors: map motor IDs [10,11] to joint names ["camera_pan", "camera_tilt"]
-            idx = self.config.head_ids.index(motor_id)
-            head_names = ["camera_pan", "camera_tilt"]
-            return head_names[idx] if idx < len(head_names) else f"head_joint_{idx}"
+        elif motor_id in self.config.camera_ids:
+            # Camera motor: ID 11 = camera_tilt
+            camera_id_to_name = {
+                11: "camera_tilt"
+            }
+            return camera_id_to_name.get(motor_id, f"camera_joint_{motor_id}")
         else:
             # Fallback for unknown motors
             return f"motor_{motor_id}"

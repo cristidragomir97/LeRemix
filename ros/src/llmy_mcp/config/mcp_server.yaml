@@ -1,0 +1,41 @@
+# LLMy MCP Server Configuration
+# ================================
+# This file configures the ROS2-MCP bridge behavior.
+# Pass to the server with: mcp_server --config /path/to/config.yaml
+
+# Topics to exclude from discovery (regex patterns)
+# Useful for filtering out noisy or internal topics
+excluded_topics:
+  - "^/rosout.*"           # ROS logging
+  - "^/parameter_events$"  # Parameter change events
+  # - "^/tf$"              # Uncomment to hide TF
+  # - "^/tf_static$"
+
+# Topics to always include, even if type resolution fails
+# (rarely needed, but useful for custom message types)
+included_topics: []
+
+# Services to exclude from discovery (regex patterns)
+excluded_services:
+  - ".*/describe_parameters$"
+  - ".*/get_parameter_types$"
+  - ".*/get_parameters$"
+  - ".*/list_parameters$"
+  - ".*/set_parameters$"
+  - ".*/set_parameters_atomically$"
+
+# Number of messages to cache per subscribed topic
+message_cache_size: 10
+
+# Topics to automatically subscribe to on startup
+# These will be ready to read immediately
+auto_subscribe:
+  - /joint_states
+  # - /scan
+  # - /imu/data
+  # - /diff_drive_controller/odom
+
+# Default QoS settings
+# reliability: "best_effort" or "reliable"
+default_reliability: best_effort
+default_history_depth: 10

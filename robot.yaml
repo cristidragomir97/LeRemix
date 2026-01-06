@@ -74,7 +74,7 @@ components:
     source:
       - ros/src/llmy_slam
     entrypoint: ros2 launch llmy_slam online_mapping_launch.py 
-    
+  
   
   - name: xbox
     runs_on: odin

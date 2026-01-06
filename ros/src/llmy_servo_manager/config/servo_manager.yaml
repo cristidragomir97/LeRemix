@@ -3,26 +3,30 @@ servo_manager_node:
     port: "/dev/ttyACM0"
     baud: 1000000
 
-    loc_enable: true    # Enable/disable locomotion motors
-    arm_enable: true   # Enable/disable arm motors
-    head_enable: true  # Enable/disable head motors
+    loc_enable: true     # Enable/disable locomotion motors
+    arm_enable: true     # Enable/disable arm motors
+    camera_enable: true  # Enable/disable camera motor
 
-    loc_ids:  [1, 2, 3]
-    arm_ids:  [4, 5, 6, 7, 8, 9]
-    head_ids: [10, 11]
+    # Motor IDs:
+    # Locomotion (4 wheels): 1=front_right, 2=back_right, 3=back_left, 4=front_left
+    # Arm (6 joints): 5=base_rotation, 6=shoulder, 7=elbow, 8=wrist, 9=wrist_rotation, 10=gripper
+    # Camera (1 joint): 11=tilt
+    loc_ids:    [1, 2, 3, 4]
+    arm_ids:    [5, 6, 7, 8, 9, 10]
+    camera_ids: [11]
 
     ticks_per_rev: 4096
     telemetry_rate: 50.0  # Reduced from 50Hz to reduce bus load
 
     # Acceleration parameters (0-255, lower = smoother acceleration)
-    loc_accel:  [15, 15, 15]  # Locomotion motors - reduced acceleration for smoother movement
-    arm_accel:  [20, 20, 15, 15, 25, 25]  # Arm motors - smooth acceleration
-    head_accel: [15, 15]  # Head motors - moderate acceleration
+    loc_accel:    [15, 15, 15, 15]        # Locomotion motors - reduced acceleration for smoother movement
+    arm_accel:    [20, 20, 15, 15, 25, 25]  # Arm motors - smooth acceleration
+    camera_accel: [15]                     # Camera motor - moderate acceleration
 
     # Speed scaling factors (0.0 to 1.0, lower = slower)
-    loc_speed_scale: 1.0  # Further reduced locomotion speed (10% of max)
-    arm_speed_scale: 0.5  # Normal arm speed
-    head_speed_scale: 1.0  # Normal head speed
+    loc_speed_scale: 1.0     # Locomotion speed scale
+    arm_speed_scale: 0.5     # Normal arm speed
+    camera_speed_scale: 1.0  # Camera speed
 
     # IMPROVED BRAKING CONFIGURATION
     # Options: "torque_disable", "velocity_ramp", "position_brake"
@@ -37,6 +41,6 @@ servo_manager_node:
     arm_min_limits: []      # Minimum position limits (6 values)
     arm_max_limits: []      # Maximum position limits (6 values)
 
-    head_zero_positions: [] # Zero position for head joints (2 values)
-    head_min_limits: []     # Minimum position limits (2 values)
-    head_max_limits: []     # Maximum position limits (2 values)
+    camera_zero_positions: []  # Zero position for camera joint (1 value)
+    camera_min_limits: []      # Minimum position limits (1 value)
+    camera_max_limits: []      # Maximum position limits (1 value)

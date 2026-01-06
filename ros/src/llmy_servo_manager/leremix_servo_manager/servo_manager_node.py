@@ -39,8 +39,8 @@ class ServoManagerNode(Node):
         enabled_ids = self.config.get_enabled_motor_ids()
         connected_count = self.motor_manager.test_connectivity(enabled_ids)
         if connected_count > 0:
-            self.motor_manager.run_test_sequences(enabled_ids, self.config.loc_ids, 
-                                                self.config.arm_ids, self.config.head_ids, 
+            self.motor_manager.run_test_sequences(enabled_ids, self.config.loc_ids,
+                                                self.config.arm_ids, self.config.camera_ids,
                                                 self.config.loc_enable)
         
         # Add delay between test sequences and initialization to prevent bus congestion
@@ -73,29 +73,29 @@ class ServoManagerNode(Node):
     def _initialize_motors(self):
         """Initialize all motor groups"""
         self.get_logger().info("Initializing motor modes and positions...")
-        
+
         if self.config.loc_enable:
             self.motor_manager.initialize_locomotion_motors(self.config.loc_ids, self.config.loc_accel)
-        
+
         if self.config.arm_enable:
             self.motor_manager.initialize_arm_motors(self.config.arm_ids, self.config.arm_accel, self.config.ticks_per_rev)
-        
-        if self.config.head_enable:
-            self.motor_manager.initialize_head_motors(self.config.head_ids, self.config.head_accel, self.config.ticks_per_rev)
-        
+
+        if self.config.camera_enable:
+            self.motor_manager.initialize_camera_motors(self.config.camera_ids, self.config.camera_accel, self.config.ticks_per_rev)
+
         self.get_logger().info("Motor initialization complete!")
     
     def _setup_ros_communication(self):
         """Setup ROS subscribers, publishers and timers"""
         self.get_logger().info("Setting up ROS2 communication...")
-        
+
         # Create QoS profile matching C++ version
         cmd_qos = QoSProfile(
             history=HistoryPolicy.KEEP_LAST,
             depth=10,
             reliability=ReliabilityPolicy.BEST_EFFORT
         )
-        
+
         # Create subscribers
         self.get_logger().info("Creating command subscribers:")
         self.base_cmd_sub = self.create_subscription(
@@ -104,39 +104,39 @@ class ServoManagerNode(Node):
             self.command_handlers.handle_base_command,
             cmd_qos
         )
-        self.get_logger().info("  ✅ Base command subscriber: /motor_manager/base_cmd")
-        
+        self.get_logger().info("  Base command subscriber: /motor_manager/base_cmd")
+
         self.arm_cmd_sub = self.create_subscription(
             Float64MultiArray,
-            "/motor_manager/arm_cmd", 
+            "/motor_manager/arm_cmd",
             self.command_handlers.handle_arm_command,
             cmd_qos
         )
-        self.get_logger().info("  ✅ Arm command subscriber: /motor_manager/arm_cmd")
-        
-        self.head_cmd_sub = self.create_subscription(
+        self.get_logger().info("  Arm command subscriber: /motor_manager/arm_cmd")
+
+        self.camera_cmd_sub = self.create_subscription(
             Float64MultiArray,
-            "/motor_manager/head_cmd",
-            self.command_handlers.handle_head_command,
+            "/motor_manager/camera_cmd",
+            self.command_handlers.handle_camera_command,
             cmd_qos
         )
-        self.get_logger().info("  ✅ Head command subscriber: /motor_manager/head_cmd")
-        
+        self.get_logger().info("  Camera command subscriber: /motor_manager/camera_cmd")
+
         # Create timer for telemetry
         timer_period = 1.0 / self.config.telemetry_rate
         self.timer = self.create_timer(timer_period, self.telemetry.publish_telemetry)
-        self.get_logger().info(f"  ✅ Telemetry timer started at {self.config.telemetry_rate} Hz")
+        self.get_logger().info(f"  Telemetry timer started at {self.config.telemetry_rate} Hz")
     
     def _log_startup_summary(self):
         """Log startup summary information"""
-        self.get_logger().info("🚀 === Python Servo Manager Node Successfully Started ===")
-        self.get_logger().info("📊 System Summary:")
-        self.get_logger().info(f"  🏃 Locomotion motors: {len(self.config.loc_ids)} ({'ENABLED' if self.config.loc_enable else 'DISABLED'})")
-        self.get_logger().info(f"  🦾 Arm motors: {len(self.config.arm_ids)} ({'ENABLED' if self.config.arm_enable else 'DISABLED'})")
-        self.get_logger().info(f"  🗣️  Head motors: {len(self.config.head_ids)} ({'ENABLED' if self.config.head_enable else 'DISABLED'})")
-        
+        self.get_logger().info("=== Python Servo Manager Node Successfully Started ===")
+        self.get_logger().info("System Summary:")
+        self.get_logger().info(f"  Locomotion motors: {len(self.config.loc_ids)} ({'ENABLED' if self.config.loc_enable else 'DISABLED'})")
+        self.get_logger().info(f"  Arm motors: {len(self.config.arm_ids)} ({'ENABLED' if self.config.arm_enable else 'DISABLED'})")
+        self.get_logger().info(f"  Camera motors: {len(self.config.camera_ids)} ({'ENABLED' if self.config.camera_enable else 'DISABLED'})")
+
         enabled_count, total_count = self.config.get_motor_counts()
-        self.get_logger().info(f"  📡 Total motors enabled: {enabled_count}/{total_count}")
+        self.get_logger().info(f"  Total motors enabled: {enabled_count}/{total_count}")
         self.get_logger().info("----------------------------------")
         self.get_logger().info("Ready to receive motor commands and publish telemetry!")
 

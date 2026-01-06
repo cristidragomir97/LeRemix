@@ -1,0 +1,17 @@
+<!--
+  Compute Path Only Behavior Tree for LLMy Robot
+
+  This BT only computes a path without following it.
+  Useful for path visualization or planning queries.
+-->
+<root BTCPP_format="4" main_tree_to_execute="MainTree">
+  <BehaviorTree ID="MainTree">
+    <RecoveryNode number_of_retries="3" name="ComputePathRecovery">
+      <ComputePathToPose goal="{goal}" path="{path}" planner_id="GridBased" error_code_id="{compute_path_error_code}"/>
+      <Sequence name="RecoveryActions">
+        <ClearEntireCostmap name="ClearGlobalCostmap" service_name="global_costmap/clear_entirely_global_costmap"/>
+        <Wait wait_duration="1.0"/>
+      </Sequence>
+    </RecoveryNode>
+  </BehaviorTree>
+</root>
