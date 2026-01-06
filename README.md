@@ -1,8 +1,15 @@
 # LLMy (leh·mee)
+
 <p>
-  <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
-  <a href="https://docs.ros.org/en/humble/"><img src="https://img.shields.io/badge/ROS2-Jazzy-blue.svg" alt="ROS2 Jazzy"></a>
-  <a href="http://gazebosim.org/"><img src="https://img.shields.io/badge/Gazebo-Harmonic-orange.svg" alt="Gazebo"></a>
+  <a href="https://opensource.org/licenses/MIT">
+    <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT">
+  </a>
+  <a href="https://docs.ros.org/en/jazzy/">
+    <img src="https://img.shields.io/badge/ROS2-Jazzy-blue.svg" alt="ROS2 Jazzy">
+  </a>
+  <a href="http://gazebosim.org/">
+    <img src="https://img.shields.io/badge/Gazebo-Harmonic-orange.svg" alt="Gazebo Harmonic">
+  </a>
 </p>
 
 <p align="center">
@@ -10,99 +17,81 @@
 </p>
 
 
-**LLMy** is a fully 3D-printed mobile manipulator designed for **AI experimentation**, **research**, and **education**. Building upon [LeRobot](https://github.com/huggingface/lerobot) and [LeKiwi](https://github.com/SIGRobotics-UIUC), it introduces hardware improvements and comprehensive ROS2 integration.
 
-* 🔧 **Fully 3D Printable** - ORP Grid-based modular design with complete CAD files
-* 🤖 **ROS2 Native** - Complete ros2_control integration with MoveIt2 & Nav2 support
-* 🎮 **Simulation Ready** - Digital-twin Gazebo simulation with virtual sensors and controllers
-* 📷 **RGB-D Vision** - Depth sensing gives you the distance and physical parameters of the objects you detect using neural nets.
-* ⚡ **145W Power** - 4-5 hours runtime with USB-C charging
-* 💰 **Affordable** - Starting at ~$280 for the base platform
+**LLMy** is a fully 3D-printed mobile manipulator built as a hands-on playground for **Hybrid Robotics**.
+
+Hybrid Robotics is an architectural approach that combines the **reliability of deterministic control systems** with the **flexibility and reasoning capabilities of Large Language Models (LLMs)**. Rather than replacing classical robotics stacks, LLMy layers intelligence *on top* of them.
+
+At its core, LLMy’s “brain” is organized into **three cooperative layers**, each with a clearly defined responsibility.
+
+
+## 🧱 Layer 0 – Hardware
+
+The hardware layer provides the physical capabilities that make everything else possible.  
+LLMy is designed to be **affordable, modular, and easy to assemble**, using off-the-shelf components wherever possible.
+
+- **Power system**  
+  145 W USB-C power bank with dual USB-PD triggers, supplying clean 12 V power to all subsystems
+
+- **Compute**  
+  Raspberry Pi 5 or Jetson Orin Nano as the main SBC, running ROS 2 and handling perception and control
+
+- **Actuators**  
+  10× STS3215 serial bus servos in a daisy-chain configuration via a Waveshare ESP32 controller
+
+- **Perception**  
+  RGB-D head camera, wrist camera for manipulation, and an ICM-20948 IMU for orientation
+
+- **Localization**  
+  RPLidar C1 and ICM-20948 providing data for 2D SLAM and environment mapping
 
 ---
 
-## ⚙️ Hardware
-The LLMy platform combines a **4-wheel skid-steer base** for robust differential drive mobility with a **6-DOF SO-ARM100 robotic arm** for manipulation tasks. A **pan-tilt elevated camera mount** provides flexible perception capabilities, allowing the robot to survey its environment while performing manipulation operations.
+## ⚙️ Layer 1 – The Body and Reflexes
 
-LLMy is designed to be easy to assamble, easy to get started with and easy to expand. 
+This layer is responsible for **precision, safety, and real-time execution**.  
+It is built entirely on well-established ROS 2 tooling and is designed to behave predictably under all conditions.
 
-### Actuators
+- **Hardware abstraction**  
+  `ros2_control` manages low-level motor and sensor interfaces, cleanly abstracting hardware details
 
-**12x Feetech STS3215 Servos (12V, 30KG torque):**
-- 4x Base wheels (skid-steer drive)
-- 6x Arm joints (SO-ARM100)
-- 2x Camera head (pan & tilt)
+- **Mapping & localization**  
+  `slam_toolbox` provides robust 2D SLAM for environment mapping and localization
 
-**Control Options:**
-- [FE-URT-1](https://www.feetechrc.com/FE-URT1-C001.html)
-- [Waveshare Serial Bus Servo Driver](https://www.waveshare.com/bus-servo-adapter-a.htm)
+- **Navigation**  
+  Nav2 handles path planning, obstacle avoidance, and autonomous movement from A to B
 
-### Power System
+- **Manipulation**  
+  MoveIt 2 plans collision-free trajectories and solves inverse kinematics for the robotic arm
 
-- **145W USB-C power bank** with USB-PD trigger modules
-- **Hot-swappable charging** - operate while charging
-- **4-5 hour runtime** on single charge
-- **Nearly solderless** - simplified assembly
+- **Communication backbone**  
+  ROS 2 enables scalable, high-performance data exchange across the system.
 
-### Sensors & Perception
+---
 
-- **RGB-D Camera** - RealSense D435i, ZED 2i, or Orbbec Gemini 2
-- **IMU (ICM-20948)** - 9-axis sensor for odometry and SLAM
-- **LiDAR (Optional)** - RPLidar C1
-- **Wrist Camera** - 640x480 USB camera for manipulation tasks
-- **Universal 1/4" mount** - Compatible with various camera systems
+## 🧠 Layer 2 – The Mind
 
-### Mechanical Design
-- **[ORP Grid-based structure](https://openroboticplatform.com/designrules)** - Modular, expandable design
-- **3D printable STL files** - Available in [`/parts`](/parts/) directory
-- **Fusion 360 source** - Editable CAD files for customization
-- **Expansion ready** - 20x20mm Grid layout supports additional sensors and actuators
+The probabilistic layer introduces **reasoning, flexibility, and high-level planning**.
+Instead of hard-coding behaviors, LLMy exposes its deterministic capabilities—navigation, manipulation, perception—as **MCP Tools**. 
 
-### System Diagram
+A language model, local or in the cloud, reasons about *what* should be done, while the underlying ROS stack guarantees *how* it is executed.
 
-```mermaid
-graph TB
+#### Natural-language goals
+  Accepts high-level, human-readable instructions such as: ```Clean up the spill in the kitchen```
 
-    subgraph PowerDelivery["Power Delivery"]
-      Battery["145W USB-C Power Bank"]
-      Battery --> USBPD1["USB-PD Trigger 1<br/>12V"]
-      Battery --> USBPD2["USB-PD Trigger 2<br/>12V"]
-    end
+### Task decomposition
+  Transforms goals into structured, executable steps, for example:
+    * navigate to the kitchen
+    * locate the spill
+    * select and execute a manipulation primitive
+    * verify task completion
 
-    USBPD1 --> SBC["Raspberry Pi 5 / Jetson Orin Nano"]
-    USBPD2 --> MotorDriver["Serial Motor Controller<br/>FE-URT-1 / Waveshare"]
-
-
-    subgraph Actuators["Actuators"]
-      MotorDriver -->|Daisy Chain| M1["Servo Motors x11<br/>STS3215"]
-    end
+### Service orchestration
+Each step is executed by invoking ROS 2 services via the Model Context Protocol (MCP), ensuring:
   
-
-    MotorDriver <-->|UART| SBC
-
-    subgraph Sensors["Sensors"]
-      IMU["IMU<br/>ICM-20948"]
-      Camera["Head Camera<br/>RGB-D"]
-      Wrist["Wrist Camera<br/>640x480 USB"]
-      LiDAR["LiDAR<br/>RPLidar C1"]
-    end
-
-    IMU <-->|I2C| SBC
-    Camera -->|USB| SBC
-    Wrist -->|USB| SBC
-    LiDAR -.->|USB| SBC
-
-```
-
-### Pricing
-**📋 [Complete BOM & Sourcing Guide](docs/bom.md)**
-| Configuration | US Price | EU Price | What's Included |
-|---------------|----------|----------|-----------------|
-| **Base Platform** | **$264** | **€247** | Servos, controller, IMU, battery |
-| **+ RGB-D Camera** | **$498-763** | **€477-696** | + Orbbec Gemini 2/ZED 2i |
-| **+ LIDAR** | **$587-852** | **€556-775** | + RPLidar C1/YDLidar options |
-
-
+  - a clear separation between reasoning and control
+  - deterministic and safe execution
+  - introspectable and debuggable system behavior
 
 ---
 
