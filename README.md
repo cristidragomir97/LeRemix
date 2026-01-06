@@ -25,7 +25,7 @@
 
 ## 🧱 Layer 0 – Hardware
 
-The physical foundation.  Affordable, modular, and easy to assemble.
+The physical foundation.  Affordable (about 300$ for the basic platform), modular, and easy to assemble.
 
 | Component | Description |
 |-----------|-------------|
@@ -34,18 +34,6 @@ The physical foundation.  Affordable, modular, and easy to assemble.
 | **Actuators** | 10× STS3215 servos via Waveshare ESP32 controller |
 | **Perception** | RGB-D head camera and wrist camera  |
 | **Localization** | RPLidar C1 for 2D SLAM, Wheel Encoders, ICM-20948 IMU |
-
-### 💰 Base Platform Cost
-
-| Part | Qty | US | EU |
-|------|:---:|---:|---:|
-| ST3215 Servo (12V) | 10 | $138.90 | €133.80 |
-| WaveShare ESP32 Controller | 1 | $10.55 | €4.76 |
-| USB-PD Trigger | 2 | $11.90 | €13.80 |
-| ICM20948 IMU | 1 | $14.95 | €18.91 |
-| Baseus GP12 Battery | 1 | $59.99 | €48.99 |
-| RPLidar C1 | 1 | $89.00 | €79.00 |
-| **Total** | | **$325.29** | **€299.26** |
 
 > 📋 **[Full BOM with sourcing links](docs/bom.md)** — includes camera options, SBC recommendations, and alternatives.
 
@@ -73,10 +61,11 @@ It is built entirely on well-established ROS 2 tooling and is designed to behave
 LLMy exposes its deterministic capabilities as **MCP Tools**, letting an LLM reason about *what* to do while the ROS stack handles *how*.
 
 
-**Example:** My cats love digging in my plant pot and throwing dirt around.
+### Example 1
+*My cats love digging in my plant pot and throwing dirt around during the night. So I added a laser pointer to the robot.*
 
 ```
-"Check on the big plant pot"
+"Check on the big plant pot. If you find cats inside use the laser pointer"
 ```
 
 The LLM decomposes this into executable steps, each invoking ROS 2 services via MCP:
@@ -84,11 +73,11 @@ The LLM decomposes this into executable steps, each invoking ROS 2 services via 
 1. **Search for plant** → Roams using Nav2, continuously capturing frames and querying VLM: "Do you see a large plant pot?"
 2. **Approach & inspect** → Once found, navigates closer and asks VLM: "Is there dirt scattered around the pot?"
 3. **Assess situation** → VLM returns detection + bounding boxes, projected to map coordinates
-4. **Report or act** → Either notifies user ("Found dirt near the plant") or triggers cleanup sequence
+4. **Report or act** → Enable the the GPIO pin for the laser pointer to distract them
 
----
 
-**Example:** I'm on the couch and want to boot up my workstation.
+### Example 2
+*I'm away from home, and I would like to SSH into my computer, but it's turned off*
 
 ```
 "Turn on my PC"
