@@ -13,9 +13,9 @@ hosts:
     mount_root: /home/cdr/robocore-artifacts
 
 common_packages:
-  - name: llmy_description
-    source: 
-      - ros/src/llmy_description
+  - name: llmy_root_description
+    source:
+      - llmy_root_description
 
 components:
 ##### HARDWARE ABSTRACTION

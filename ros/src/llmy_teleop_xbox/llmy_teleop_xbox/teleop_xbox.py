@@ -284,6 +284,10 @@ class XboxTeleop(Node):
         self.pub_head.publish(msg)
 
     def publish_base(self):
+        # Only publish base commands after initialization
+        if not self.initialization_complete:
+            return
+
         # Smooth acceleration/deceleration
         max_delta = self.acceleration_limit * self.dt
         

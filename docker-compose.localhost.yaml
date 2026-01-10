@@ -1,0 +1,89 @@
+version: '3.8'
+services:
+  rviz:
+    image: docker.io/dragomirxyz/llmy_sim_rviz:latest
+    network_mode: host
+    volumes:
+      - "/home/cdr/LLMy/.robocore/build/rviz/ros_ws:/ros_ws:rw"
+      - "/tmp/.X11-unix:/tmp/.X11-unix:rw"
+      - "${XAUTHORITY:-$HOME/.Xauthority}:/root/.Xauthority:ro"
+    environment:
+      - ROS_DOMAIN_ID=0
+      - ROS_DISTRO=jazzy
+      - ROS_DISCOVERY_SERVER=127.0.0.1
+      - DISPLAY=${DISPLAY}
+      - QT_X11_NO_MITSHM=1
+    command: >
+      bash -lc "\
+        # always source core ROS
+        source /opt/ros/jazzy/setup.bash && \source /ros_ws/install/setup.bash && \ros2 launch llmy_rviz rviz.launch.py 
+      "
+  simulation:
+    image: docker.io/dragomirxyz/llmy_sim_simulation:latest
+    network_mode: host
+    volumes:
+      - "/home/cdr/LLMy/.robocore/build/simulation/ros_ws:/ros_ws:rw"
+      - "/tmp/.X11-unix:/tmp/.X11-unix:rw"
+      - "${XAUTHORITY:-$HOME/.Xauthority}:/root/.Xauthority:ro"
+      - "gz_fuel_cache:/root/.gz/fuel"
+    environment:
+      - ROS_DOMAIN_ID=0
+      - ROS_DISTRO=jazzy
+      - ROS_DISCOVERY_SERVER=127.0.0.1
+      - DISPLAY=${DISPLAY}
+      - QT_X11_NO_MITSHM=1
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=all
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    command: >
+      bash -lc "\
+        # always source core ROS
+        source /opt/ros/jazzy/setup.bash && \source /ros_ws/install/setup.bash && \ros2 launch llmy_gazebo gazebo.launch.py 
+      "
+  
+  rosboard:
+    image: docker.io/dragomirxyz/llmy_sim_rosboard:latest
+    network_mode: host
+    environment:
+      - ROS_DOMAIN_ID=0
+      - ROS_DISTRO=jazzy
+      - ROS_DISCOVERY_SERVER=127.0.0.1
+    command: >
+      bash -lc "\
+        # always source core ROS
+        source /opt/ros/jazzy/setup.bash && \source /vcs_ws/install/setup.bash && \ros2 run rosboard rosboard_node 
+      "
+  slam:
+    image: docker.io/dragomirxyz/llmy_sim_slam:latest
+    network_mode: host
+    volumes:
+      - "/home/cdr/LLMy/.robocore/build/slam/ros_ws:/ros_ws:rw"
+    environment:
+      - ROS_DOMAIN_ID=0
+      - ROS_DISTRO=jazzy
+      - ROS_DISCOVERY_SERVER=127.0.0.1
+    command: >
+      bash -lc "\
+        # always source core ROS
+        source /opt/ros/jazzy/setup.bash && \source /ros_ws/install/setup.bash && \ros2 launch llmy_slam online_mapping_launch.py 
+      "
+  dds_server:
+    image: docker.io/dragomirxyz/llmy_sim_base:jazzy-latest
+    container_name: dds_server
+    network_mode: host
+    environment:
+      - RMW_IMPLEMENTATION=rmw_fastrtps_cpp
+    command: >
+      bash -lc "
+        source /opt/ros/jazzy/setup.bash &&
+        fastdds discovery -i 0 -l 127.0.0.1 -p 11811
+      "
+
+volumes:
+  gz_fuel_cache:

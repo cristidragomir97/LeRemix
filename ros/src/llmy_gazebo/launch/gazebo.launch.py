@@ -14,13 +14,13 @@ import xacro
 
 def generate_launch_description():
     # Package directories
-    pkg_llmy_description = get_package_share_directory('llmy_description')
+    pkg_llmy_description = get_package_share_directory('llmy_root_description')
     pkg_llmy_gazebo = get_package_share_directory('llmy_gazebo')
     pkg_llmy_control = get_package_share_directory('llmy_control')
     pkg_ros_gz_sim = get_package_share_directory('ros_gz_sim')
 
     # Get the install prefix to set up Gazebo resource path
-    install_prefix = get_package_prefix('llmy_description')
+    install_prefix = get_package_prefix('llmy_root_description')
 
     # Set GZ_SIM_RESOURCE_PATH to include the ROS 2 install directory
     # This allows Gazebo to find package:// URIs
@@ -31,7 +31,7 @@ def generate_launch_description():
 
     # Paths
     world_file = os.path.join(pkg_llmy_gazebo, 'worlds', 'sticky_floor.world')
-    urdf_file = os.path.join(pkg_llmy_description, 'urdf', 'LLMy.xacro')
+    urdf_file = os.path.join(pkg_llmy_description, 'urdf', 'llmy_root.xacro')
     controllers_file = os.path.join(pkg_llmy_control, 'config', 'controllers.sim.yaml')
     bridge_config = os.path.join(pkg_llmy_gazebo, 'config', 'gz_ros_bridge.yaml')
 

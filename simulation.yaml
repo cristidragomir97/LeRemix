@@ -1,15 +1,14 @@
 ros_distro: jazzy
-local: true
 ros_domain_id: 0
-registry: registry.core:5000/robocore
+registry: docker.io/dragomirxyz
 # ros_apt_mirror: http://apt.core/ros2 
-image_prefix: llmysimaarch64
+image_prefix: llmy_sim
 
 hosts:
   - name: localhost
     ip: 127.0.0.1
     user: cdr 
-    arch: arm64
+    arch: amd64
     manager: true
     mount_root: /home/cdr/robocore-deploy
 
@@ -20,17 +19,18 @@ components:
     apt_packages:
       - ros-jazzy-rviz2
     runs_on: localhost
-    source: 
-      - ros/src/llmy_description
+    source:
+      - llmy_root_description
       - ros/src/llmy_rviz
-    entrypoint: ros2 launch llmy_rviz rviz.launch.py 
+    entrypoint: ros2 launch llmy_rviz rviz.launch.py
 
   - name: simulation
     gui: true
+    nvidia: true
     volumes:
       - gz_fuel_cache:/root/.gz/fuel
-    source: 
-      - ros/src/llmy_description
+    source:
+      - llmy_root_description
       - ros/src/llmy_control
       - ros/src/llmy_gazebo
     runs_on: localhost
@@ -40,7 +40,7 @@ components:
     runs_on: localhost
     privileged: true
     source:
-      - ros/src/llmy_description
+      - llmy_root_description
       - ros/src/llmy_teleop_xbox
     entrypoint: ros2 launch llmy_teleop_xbox teleop_xbox.launch.py
     devices:
@@ -49,7 +49,7 @@ components:
   - name: rosboard
     runs_on: localhost
     apt_packages: []
-    pip_packages: 
+    pip_packages:
       - tornado
       - simplejpeg
     repositories:
@@ -61,7 +61,7 @@ components:
   - name: slam
     runs_on: localhost
     source:
-      - ros/src/llmy_description
+      - llmy_root_description
       - ros/src/llmy_slam
     entrypoint: ros2 launch llmy_slam online_mapping_launch.py 
     

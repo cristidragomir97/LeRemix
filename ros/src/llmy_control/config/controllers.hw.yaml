@@ -13,7 +13,7 @@ controller_manager:
     arm_controller:
       type: position_controllers/JointGroupPositionController
 
-    camera_controller:
+    head_controller:
       type: position_controllers/JointGroupPositionController
 
 arm_controller:
@@ -28,9 +28,9 @@ arm_controller:
 
     open_loop_control: true
 
-camera_controller:
+head_controller:
   ros__parameters:
-    joints: ["camera_tilt"]
+    joints: ["pan", "tilt"]
 
     command_interfaces:
       - position
@@ -42,13 +42,13 @@ camera_controller:
 
 diff_drive_controller:
   ros__parameters:
-    # Wheel joints (4 wheels: 2 left, 2 right)
-    # Motor IDs: 1=front_right, 2=back_right, 3=back_left, 4=front_left
-    left_wheel_names: ['front_left_wheel_joint', 'back_left_wheel_joint']
-    right_wheel_names: ['front_right_wheel_joint', 'back_right_wheel_joint']
+    # Wheel joints
+    # Motor IDs: 1=right, 2=left
+    left_wheel_names: ['left_wheel_joint']
+    right_wheel_names: ['right_wheel_joint']
 
     # Robot geometry
-    wheel_separation: 0.176  # Distance between left and right wheels (m)
+    wheel_separation: 0.179  # Distance between left and right wheels (m)
     wheel_radius: 0.025      # Wheel radius (m)
 
     # Wheel separation multiplier for calibration

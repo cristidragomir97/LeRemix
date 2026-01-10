@@ -15,16 +15,15 @@ controller_manager:
     head_controller:
       type: position_controllers/JointGroupPositionController
 
-# Differential Drive Controller (supports skid-steer with 4 wheels)
+# Differential Drive Controller (2-wheel differential drive)
 diff_drive_controller:
   ros__parameters:
-    # Wheel joints (right side and left side)
-    # Swapped because all wheels now have same axis direction (0, 1, 0)
-    left_wheel_names: ['front_right_wheel_joint', 'back_right_wheel_joint']
-    right_wheel_names: ['front_left_wheel_joint', 'back_left_wheel_joint']
+    # Wheel joints
+    left_wheel_names: ['left_wheel_joint']
+    right_wheel_names: ['right_wheel_joint']
 
     # Robot geometry (measured from URDF)
-    wheel_separation: 0.176  # Distance between left and right wheels (m)
+    wheel_separation: 0.179  # Distance between left and right wheels (m)
     wheel_radius: 0.039      # Wheel radius (m)
 
     # Wheel separation multiplier for calibration
