@@ -2,7 +2,17 @@ ros_distro: jazzy
 ros_domain_id: 0
 registry: docker.io/dragomirxyz
 # ros_apt_mirror: http://apt.core/ros2 
-image_prefix: llmy_sim
+image_prefix: llmy_sim_cuda
+base_image_override: nvidia/cuda:12.6.1-base-ubuntu24.04
+
+
+rmw_implementation: zenoh
+
+  # Optional Zenoh config
+zenoh:
+  router_image: eclipse/zenoh:latest
+  router_port: 7447
+
 
 hosts:
   - name: localhost
@@ -20,7 +30,7 @@ components:
       - ros-jazzy-rviz2
     runs_on: localhost
     source:
-      - llmy_root_description
+      - ros/src/llmy_description
       - ros/src/llmy_rviz
     entrypoint: ros2 launch llmy_rviz rviz.launch.py
 
@@ -30,7 +40,7 @@ components:
     volumes:
       - gz_fuel_cache:/root/.gz/fuel
     source:
-      - llmy_root_description
+      - ros/src/llmy_description
       - ros/src/llmy_control
       - ros/src/llmy_gazebo
     runs_on: localhost
@@ -40,7 +50,7 @@ components:
     runs_on: localhost
     privileged: true
     source:
-      - llmy_root_description
+      - ros/src/llmy_description
       - ros/src/llmy_teleop_xbox
     entrypoint: ros2 launch llmy_teleop_xbox teleop_xbox.launch.py
     devices:
@@ -61,7 +71,7 @@ components:
   - name: slam
     runs_on: localhost
     source:
-      - llmy_root_description
+      - ros/src/llmy_description
       - ros/src/llmy_slam
     entrypoint: ros2 launch llmy_slam online_mapping_launch.py 
     

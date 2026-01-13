@@ -1,0 +1,5 @@
+repositories:
+  rosboard:
+    type: git
+    url: https://github.com/dheera/rosboard
+    version: main

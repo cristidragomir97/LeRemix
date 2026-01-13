@@ -1,0 +1,74 @@
+# ─── STAGE 0: Build ROS2 + common_packages ───────────────────────────────
+FROM ubuntu:noble AS common-builder
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Configure apt to retry and handle mirror sync issues
+RUN echo 'Acquire::Retries "3";' > /etc/apt/apt.conf.d/80-retries && \
+    echo 'Acquire::http::Timeout "120";' >> /etc/apt/apt.conf.d/80-retries && \
+    echo 'Acquire::ftp::Timeout "120";' >> /etc/apt/apt.conf.d/80-retries
+
+
+RUN apt-get clean && rm -rf /var/lib/apt/lists/* && \
+    apt-get update && apt-get install -y --fix-missing \
+    locales \
+    curl \
+    gnupg2 \
+    lsb-release \
+    software-properties-common \
+    git \
+    net-tools \
+    inetutils-ping \
+    iproute2 && \
+    locale-gen en_US.UTF-8 
+
+
+ENV LANG=en_US.UTF-8
+ENV LANGUAGE=en_US:en
+ENV LC_ALL=en_US.UTF-8
+
+# Add ROS2 apt repository
+# Using default ROS apt mirror (packages.ros.org)
+RUN curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | apt-key add - && \
+    sh -c 'echo "deb [arch=$(dpkg --print-architecture)] http://packages.ros.org/ros2/ubuntu $(lsb_release -cs) main" > /etc/apt/sources.list.d/ros2-latest.list'
+
+# Install ROS2 base + build tools
+RUN apt-get clean && apt-get update && apt-get install -y --fix-missing \
+    ros-jazzy-ros-base \
+    python3-colcon-common-extensions \
+    python3-rosdep \
+    ros-jazzy-rmw-zenoh-cpp \
+    python3-pip && \
+    pip3 install --break-system-packages -U vcstool && \
+    rosdep init
+
+
+
+# Overlay your shared packages
+WORKDIR /ros_ws_common
+
+
+# Create src directory
+RUN mkdir -p src
+
+# VCS-based packages: generate repos.yaml and import with vcstool
+
+# Local source-based packages: copy from context src/ folder
+COPY src/ /ros_ws_common/src/
+
+# Install dependencies with rosdep
+RUN rosdep update && \
+    . /opt/ros/jazzy/setup.sh && \
+    rosdep install --from-paths src --ignore-src -r -y
+
+# Build all packages
+RUN . /opt/ros/jazzy/setup.sh && colcon build --symlink-install --install-base install
+
+
+
+# automatically source ROS2 and common overlay
+RUN echo "source /opt/ros/jazzy/setup.bash" >> ~/.bashrc
+RUN echo "source /ros_ws_common/install/setup.bash" >> ~/.bashrc
+
+ENTRYPOINT ["/bin/bash","-lc","exec \"$@\"","--"]
+CMD ["bash"]

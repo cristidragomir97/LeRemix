@@ -1,0 +1,77 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 100  # Hz
+    use_sim_time: true
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+    diff_drive_controller:
+      type: diff_drive_controller/DiffDriveController
+
+    arm_controller:
+      type: position_controllers/JointGroupPositionController
+
+    head_controller:
+      type: position_controllers/JointGroupPositionController
+
+# Differential Drive Controller (2-wheel differential drive)
+diff_drive_controller:
+  ros__parameters:
+    # Wheel joints
+    left_wheel_names: ['left_wheel_joint']
+    right_wheel_names: ['right_wheel_joint']
+
+    # Robot geometry (measured from URDF)
+    wheel_separation: 0.179  # Distance between left and right wheels (m)
+    wheel_radius: 0.039      # Wheel radius (m)
+
+    # Wheel separation multiplier for calibration
+    wheel_separation_multiplier: 1.0
+
+    # Use actual wheel feedback for odometry (not commanded velocities)
+    position_feedback: true
+
+    # Frames
+    odom_frame_id: odom
+    base_frame_id: base_footprint
+    pose_covariance_diagonal: [0.001, 0.001, 0.001, 0.001, 0.001, 0.01]
+    twist_covariance_diagonal: [0.001, 0.001, 0.001, 0.001, 0.001, 0.01]
+
+    # TF publishing - disabled because EKF publishes the filtered odom->base_link transform
+    enable_odom_tf: false
+    publish_rate: 50.0
+
+    # Command timeout
+    cmd_vel_timeout: 0.5
+
+    # Velocity limits
+    linear.x.has_velocity_limits: true
+    linear.x.max_velocity: 1.0
+    linear.x.min_velocity: -1.0
+    linear.x.has_acceleration_limits: true
+    linear.x.max_acceleration: 2.0
+
+    angular.z.has_velocity_limits: true
+    angular.z.max_velocity: 2.0
+    angular.z.min_velocity: -2.0
+    angular.z.has_acceleration_limits: true
+    angular.z.max_acceleration: 3.0
+
+arm_controller:
+  ros__parameters:
+    joints: ["1", "2", "3", "4", "5", "6"]
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position
+    open_loop_control: true
+
+head_controller:
+  ros__parameters:
+    joints: ["pan", "tilt"]
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position
+    open_loop_control: true

@@ -1,0 +1,119 @@
+version: '3.8'
+services:
+  motion:
+    image: registry.core:5000/llmy_motion:latest
+    network_mode: host
+    volumes:
+      - "/home/cdr/robocore-artifacts/motion/ros_ws:/ros_ws:rw"
+      - "/dev/shm:/dev/shm:rw"
+    devices:
+        - "/dev/ttyTHS1:/dev/ttyTHS1"
+    cap_add:
+        - SYS_RAWIO
+        - NET_ADMIN
+    environment:
+      - ROS_DOMAIN_ID=0
+      - ROS_DISTRO=jazzy
+      - RMW_IMPLEMENTATION=rmw_fastrtps_cpp
+      - ROS_DISCOVERY_SERVER=localhost
+    shm_size: 1024m
+    ipc: host
+    cpuset: "0,1"
+    command: >
+      bash -lc "\
+        # always source core ROS
+        source /opt/ros/jazzy/setup.bash && \# source common packages from base image
+        source /ros_ws_common/install/setup.bash && \source /ros_ws/install/setup.bash && \ros2 launch llmy_control motion.launch.py servo_port:=/dev/ttyTHS1 
+      "
+  imu:
+    image: registry.core:5000/llmy_imu:latest
+    network_mode: host
+    volumes:
+      - "/home/cdr/robocore-artifacts/imu/ros_ws:/ros_ws:rw"
+    devices:
+        - "/dev/i2c-7:/dev/i2c-7"
+    cap_add:
+        - SYS_RAWIO
+        - NET_ADMIN
+    environment:
+      - ROS_DOMAIN_ID=0
+      - ROS_DISTRO=jazzy
+      - RMW_IMPLEMENTATION=rmw_fastrtps_cpp
+      - ROS_DISCOVERY_SERVER=localhost
+    command: >
+      bash -lc "\
+        # always source core ROS
+        source /opt/ros/jazzy/setup.bash && \# source common packages from base image
+        source /ros_ws_common/install/setup.bash && \source /ros_ws/install/setup.bash && \ros2 launch llmy_imu imu.launch.py 
+      "
+  lidar:
+    image: registry.core:5000/llmy_lidar:latest
+    network_mode: host
+    devices:
+        - "/dev/ttyUSB0:/dev/ttyUSB0"
+    cap_add:
+        - SYS_RAWIO
+        - NET_ADMIN
+    environment:
+      - ROS_DOMAIN_ID=0
+      - ROS_DISTRO=jazzy
+      - RMW_IMPLEMENTATION=rmw_fastrtps_cpp
+      - ROS_DISCOVERY_SERVER=localhost
+    command: >
+      bash -lc "\
+        # always source core ROS
+        source /opt/ros/jazzy/setup.bash && \# source common packages from base image
+        source /ros_ws_common/install/setup.bash && \source /vcs_ws/install/setup.bash && \ros2 launch rplidar_ros rplidar_c1_launch.py serial_port:=/dev/ttyUSB0 
+      "
+  rosboard:
+    image: registry.core:5000/llmy_rosboard:latest
+    network_mode: host
+    environment:
+      - ROS_DOMAIN_ID=0
+      - ROS_DISTRO=jazzy
+      - RMW_IMPLEMENTATION=rmw_fastrtps_cpp
+      - ROS_DISCOVERY_SERVER=localhost
+    command: >
+      bash -lc "\
+        # always source core ROS
+        source /opt/ros/jazzy/setup.bash && \# source common packages from base image
+        source /ros_ws_common/install/setup.bash && \source /vcs_ws/install/setup.bash && \ros2 run rosboard rosboard_node 
+      "
+  slam:
+    image: registry.core:5000/llmy_slam:latest
+    network_mode: host
+    volumes:
+      - "/home/cdr/robocore-artifacts/slam/ros_ws:/ros_ws:rw"
+    environment:
+      - ROS_DOMAIN_ID=0
+      - ROS_DISTRO=jazzy
+      - RMW_IMPLEMENTATION=rmw_fastrtps_cpp
+      - ROS_DISCOVERY_SERVER=localhost
+    command: >
+      bash -lc "\
+        # always source core ROS
+        source /opt/ros/jazzy/setup.bash && \# source common packages from base image
+        source /ros_ws_common/install/setup.bash && \source /ros_ws/install/setup.bash && \ros2 launch llmy_slam online_mapping_launch.py 
+      "
+  xbox:
+    image: registry.core:5000/llmy_xbox:latest
+    network_mode: host
+    privileged: true
+    volumes:
+      - "/home/cdr/robocore-artifacts/xbox/ros_ws:/ros_ws:rw"
+    devices:
+        - "/dev/input:/dev/input"
+    cap_add:
+        - SYS_RAWIO
+        - NET_ADMIN
+    environment:
+      - ROS_DOMAIN_ID=0
+      - ROS_DISTRO=jazzy
+      - RMW_IMPLEMENTATION=rmw_fastrtps_cpp
+      - ROS_DISCOVERY_SERVER=localhost
+    command: >
+      bash -lc "\
+        # always source core ROS
+        source /opt/ros/jazzy/setup.bash && \# source common packages from base image
+        source /ros_ws_common/install/setup.bash && \source /ros_ws/install/setup.bash && \ros2 launch llmy_teleop_xbox teleop_xbox.launch.py 
+      "

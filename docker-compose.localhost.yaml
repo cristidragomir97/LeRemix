@@ -1,16 +1,19 @@
 version: '3.8'
 services:
   rviz:
-    image: docker.io/dragomirxyz/llmy_sim_rviz:latest
+    image: docker.io/dragomirxyz/llmy_sim_cuda_rviz:latest
     network_mode: host
     volumes:
-      - "/home/cdr/LLMy/.robocore/build/rviz/ros_ws:/ros_ws:rw"
+      - "/home/cdr/LLMy/.forge/build/rviz/ros_ws:/ros_ws:rw"
+      # Linux: X11 socket mount
       - "/tmp/.X11-unix:/tmp/.X11-unix:rw"
       - "${XAUTHORITY:-$HOME/.Xauthority}:/root/.Xauthority:ro"
     environment:
       - ROS_DOMAIN_ID=0
       - ROS_DISTRO=jazzy
-      - ROS_DISCOVERY_SERVER=127.0.0.1
+      - RMW_IMPLEMENTATION=rmw_zenoh_cpp
+      - ZENOH_ROUTER=tcp/127.0.0.1:7447
+      # Linux: Use host DISPLAY
       - DISPLAY=${DISPLAY}
       - QT_X11_NO_MITSHM=1
     command: >
@@ -19,17 +22,20 @@ services:
         source /opt/ros/jazzy/setup.bash && \source /ros_ws/install/setup.bash && \ros2 launch llmy_rviz rviz.launch.py 
       "
   simulation:
-    image: docker.io/dragomirxyz/llmy_sim_simulation:latest
+    image: docker.io/dragomirxyz/llmy_sim_cuda_simulation:latest
     network_mode: host
     volumes:
-      - "/home/cdr/LLMy/.robocore/build/simulation/ros_ws:/ros_ws:rw"
+      - "/home/cdr/LLMy/.forge/build/simulation/ros_ws:/ros_ws:rw"
+      # Linux: X11 socket mount
       - "/tmp/.X11-unix:/tmp/.X11-unix:rw"
       - "${XAUTHORITY:-$HOME/.Xauthority}:/root/.Xauthority:ro"
       - "gz_fuel_cache:/root/.gz/fuel"
     environment:
       - ROS_DOMAIN_ID=0
       - ROS_DISTRO=jazzy
-      - ROS_DISCOVERY_SERVER=127.0.0.1
+      - RMW_IMPLEMENTATION=rmw_zenoh_cpp
+      - ZENOH_ROUTER=tcp/127.0.0.1:7447
+      # Linux: Use host DISPLAY
       - DISPLAY=${DISPLAY}
       - QT_X11_NO_MITSHM=1
       - NVIDIA_VISIBLE_DEVICES=all
@@ -46,44 +52,61 @@ services:
         # always source core ROS
         source /opt/ros/jazzy/setup.bash && \source /ros_ws/install/setup.bash && \ros2 launch llmy_gazebo gazebo.launch.py 
       "
-  
+  xbox:
+    image: docker.io/dragomirxyz/llmy_sim_cuda_xbox:latest
+    network_mode: host
+    privileged: true
+    volumes:
+      - "/home/cdr/LLMy/.forge/build/xbox/ros_ws:/ros_ws:rw"
+    devices:
+        - "/dev/input:/dev/input"
+    cap_add:
+        - SYS_RAWIO
+        - NET_ADMIN
+    environment:
+      - ROS_DOMAIN_ID=0
+      - ROS_DISTRO=jazzy
+      - RMW_IMPLEMENTATION=rmw_zenoh_cpp
+      - ZENOH_ROUTER=tcp/127.0.0.1:7447
+    command: >
+      bash -lc "\
+        # always source core ROS
+        source /opt/ros/jazzy/setup.bash && \source /ros_ws/install/setup.bash && \ros2 launch llmy_teleop_xbox teleop_xbox.launch.py 
+      "
   rosboard:
-    image: docker.io/dragomirxyz/llmy_sim_rosboard:latest
+    image: docker.io/dragomirxyz/llmy_sim_cuda_rosboard:latest
     network_mode: host
     environment:
       - ROS_DOMAIN_ID=0
       - ROS_DISTRO=jazzy
-      - ROS_DISCOVERY_SERVER=127.0.0.1
+      - RMW_IMPLEMENTATION=rmw_zenoh_cpp
+      - ZENOH_ROUTER=tcp/127.0.0.1:7447
     command: >
       bash -lc "\
         # always source core ROS
         source /opt/ros/jazzy/setup.bash && \source /vcs_ws/install/setup.bash && \ros2 run rosboard rosboard_node 
       "
   slam:
-    image: docker.io/dragomirxyz/llmy_sim_slam:latest
+    image: docker.io/dragomirxyz/llmy_sim_cuda_slam:latest
     network_mode: host
     volumes:
-      - "/home/cdr/LLMy/.robocore/build/slam/ros_ws:/ros_ws:rw"
+      - "/home/cdr/LLMy/.forge/build/slam/ros_ws:/ros_ws:rw"
     environment:
       - ROS_DOMAIN_ID=0
       - ROS_DISTRO=jazzy
-      - ROS_DISCOVERY_SERVER=127.0.0.1
+      - RMW_IMPLEMENTATION=rmw_zenoh_cpp
+      - ZENOH_ROUTER=tcp/127.0.0.1:7447
     command: >
       bash -lc "\
         # always source core ROS
         source /opt/ros/jazzy/setup.bash && \source /ros_ws/install/setup.bash && \ros2 launch llmy_slam online_mapping_launch.py 
       "
-  dds_server:
-    image: docker.io/dragomirxyz/llmy_sim_base:jazzy-latest
-    container_name: dds_server
+  zenoh_router:
+    image: eclipse/zenoh:latest
+    container_name: zenoh_router
     network_mode: host
-    environment:
-      - RMW_IMPLEMENTATION=rmw_fastrtps_cpp
-    command: >
-      bash -lc "
-        source /opt/ros/jazzy/setup.bash &&
-        fastdds discovery -i 0 -l 127.0.0.1 -p 11811
-      "
+    restart: unless-stopped
+    command: --listen tcp/127.0.0.1:7447
 
 volumes:
   gz_fuel_cache:

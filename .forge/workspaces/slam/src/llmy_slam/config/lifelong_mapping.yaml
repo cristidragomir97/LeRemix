@@ -1,0 +1,52 @@
+# Lifelong Mapping Configuration - LLMy SLAM
+# Allows dynamic switching between mapping and localization
+# Can load existing maps and continue mapping
+
+slam_toolbox:
+  ros__parameters:
+    # Solver
+    solver_plugin: solver_plugins::CeresSolver
+    ceres_linear_solver: SPARSE_NORMAL_CHOLESKY
+    ceres_preconditioner: SCHUR_JACOBI
+    ceres_trust_strategy: LEVENBERG_MARQUARDT
+    ceres_dogleg_type: TRADITIONAL_DOGLEG
+    ceres_loss_function: None
+
+    # Frame IDs
+    odom_frame: odom
+    map_frame: map
+    base_frame: base_footprint  # Must match diff_drive_controller base_frame_id
+    scan_topic: /scan
+
+    # Mode (can be changed dynamically via services)
+    mode: mapping
+
+    # Optional: Load existing map to continue
+    # map_file_name: /path/to/existing/map
+    # map_start_pose: [0.0, 0.0, 0.0]
+
+    # Performance
+    transform_publish_period: 0.02  # 50 Hz
+    map_update_interval: 5.0
+    resolution: 0.05  # 5cm per pixel
+    max_laser_range: 12.0  # RPLidar max range
+    transform_timeout: 2.0
+    tf_buffer_duration: 30.0
+
+    # Scan Processing
+    throttle_scans: 1
+    minimum_time_interval: 0.5
+    minimum_travel_distance: 0.3  # meters
+    minimum_travel_heading: 0.3  # radians
+
+    # Scan Matching
+    use_scan_matching: true
+    use_scan_barycenter: true
+
+    # Loop Closure
+    do_loop_closing: true
+    loop_search_maximum_distance: 3.0
+
+    # Other
+    enable_interactive_mode: true  # Enable for dynamic control
+    debug_logging: false

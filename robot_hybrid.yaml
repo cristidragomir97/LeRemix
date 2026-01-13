@@ -1,0 +1,97 @@
+ros_distro: jazzy
+ros_domain_id: 0
+registry: nx128.lan:5000/robocore
+image_prefix: llmy
+
+hosts:
+  - name: odin
+    ip: odin.lan
+    dds_ip: 192.168.99.183
+    user: cdr 
+    arch: arm64
+    manager: true
+    mount_root: /home/cdr/robocore-artifacts
+
+  - name: localhost
+    ip: 127.0.0.1
+    user: cdr 
+    arch: amd64
+    manager: true
+    mount_root: /home/cdr/robocore-deploy
+
+
+common_packages:
+  - name: llmy_root_description
+    source:
+      - llmy_root_description
+
+components:
+##### HARDWARE ABSTRACTION
+
+  ### CAMERAS (Realsense + Wrist Webcam)
+  - name: camera
+    source: 
+      - ros/src/llmy_camera
+    runs_on: odin
+    privileged: true
+    entrypoint: ros2 launch llmy_camera camera.launch.py
+    devices: 
+      - /dev:/dev
+
+  - name: motion
+    source:
+    - ros/src/llmy_control
+    - ros/src/llmy_control_plugin
+    - ros/src/llmy_servo_manager
+    runs_on: odin
+    pip_packages:
+      - st3215
+    entrypoint: ros2 launch llmy_control motion.launch.py servo_port:=/dev/ttyTHS1
+    devices:
+      - /dev/ttyTHS1:/dev/ttyTHS1
+    optimisations:
+      - shm: 1024m
+      - mount_shm: true
+      - ipc: host
+      - pinned_cores: [0, 1]
+
+  - name: lidar
+    runs_on: odin
+    devices: 
+      - /dev/ttyUSB0:/dev/ttyUSB0
+    repositories:
+      - url: https://github.com/Slamtec/rplidar_ros
+        version: ros2
+        folder: rplidar_ros
+    entrypoint: ros2 launch rplidar_ros rplidar_c1_launch.py serial_port:=/dev/ttyUSB0
+
+  - name: rosboard
+    runs_on: odin
+    apt_packages: []
+    pip_packages: 
+      - tornado
+      - simplejpeg
+    repositories:
+      - url: https://github.com/dheera/rosboard
+        version: main
+        folder: rosboard
+    entrypoint: ros2 run rosboard rosboard_node
+
+  - name: slam
+    runs_on: odin
+    source:
+      - ros/src/llmy_slam
+    entrypoint: ros2 launch llmy_slam online_mapping_launch.py 
+  
+  
+  - name: xbox
+    runs_on: odin
+    privileged: true
+    source:
+      - ros/src/llmy_teleop_xbox
+    entrypoint: ros2 launch llmy_teleop_xbox teleop_xbox.launch.py
+    devices:
+      - /dev/input:/dev/input
+
+    
+  

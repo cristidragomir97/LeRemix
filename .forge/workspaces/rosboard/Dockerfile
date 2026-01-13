@@ -1,0 +1,52 @@
+# ─── Component Builder ─────────────────────────────────────────────────────
+FROM registry.core:5000/llmy_base:jazzy-latest
+
+ENV PYTHONDONTWRITEBYTECODE=1
+
+ENV DEBIAN_FRONTEND=noninteractive
+ENV ROS_DISTRO=jazzy
+SHELL ["/bin/bash","-lc"]
+#ENV ROS_WS=/ros_ws
+
+# 1) Install any component-specific system packages
+
+# 1b) Install any component-specific pip packages
+RUN pip3 install --no-cache-dir --break-system-packages  tornado simplejpeg
+
+# 2) VCS repos → build into /vcs_ws/install
+
+# ─── Ensure workspace exists ──────────────────────────────────────────────
+RUN mkdir -p /vcs_ws/src
+
+# ─── Import repos.yaml ────────────────────────────────────────────────────
+COPY repos.yaml /vcs_ws/repos.yaml
+
+# Install vcstool if needed
+RUN apt-get update && apt-get install -y python3-vcstool && rm -rf /var/lib/apt/lists/*
+
+# Import VCS repositories
+RUN vcs import /vcs_ws/src < /vcs_ws/repos.yaml
+
+# ─── Build workspace ──────────────────────────────────────────────────────
+WORKDIR /vcs_ws
+RUN apt-get update \
+ && source /opt/ros/$ROS_DISTRO/setup.bash \
+ && rosdep init || true \
+ && rosdep update \
+ && rosdep install --from-paths src --ignore-src -y \
+ && colcon build --symlink-install --event-handlers console_direct+
+
+# ─── Optional: Validate build success ─────────────────────────────────────
+
+
+
+
+# 3) Copy & prepare any local source
+
+
+# RMW Configuration
+# FastDDS Discovery Server config
+COPY superclient.xml /superclient.xml
+ENV FASTRTPS_DEFAULT_PROFILES_FILE=/superclient.xml
+ENV ROS_DISCOVERY_SERVER=192.168.99.183:11811
+ENV RMW_IMPLEMENTATION=rmw_fastrtps_cpp

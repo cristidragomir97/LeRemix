@@ -1,34 +1,35 @@
 ros_distro: jazzy
 ros_domain_id: 0
-registry: nx128.lan:5000/robocore
+registry: registry.core:5000
 image_prefix: llmy
+
 
 hosts:
   - name: odin
-    ip: odin.lan
+    ip: odin.core
     dds_ip: 192.168.99.183
     user: cdr 
     arch: arm64
-    manager: true
+    build_on_device: true
     mount_root: /home/cdr/robocore-artifacts
 
 common_packages:
-  - name: llmy_root_description
+  - name: llmy_description
     source:
-      - llmy_root_description
+      - ros/src/llmy_description
 
 components:
 ##### HARDWARE ABSTRACTION
 
   ### CAMERAS (Realsense + Wrist Webcam)
-  - name: camera
-    source: 
-      - ros/src/llmy_camera
-    runs_on: odin
-    privileged: true
-    entrypoint: ros2 launch llmy_camera camera.launch.py
-    devices: 
-      - /dev:/dev
+  #- name: camera
+  #  source: 
+  #    - ros/src/llmy_camera
+  #  runs_on: odin
+  #  privileged: true
+  #  entrypoint: ros2 launch llmy_camera camera.launch.py
+  #  devices: 
+  #    - /dev:/dev
 
   - name: motion
     source:
@@ -47,6 +48,17 @@ components:
       - ipc: host
       - pinned_cores: [0, 1]
 
+  - name: imu
+    source:
+    - ros/src/llmy_imu
+    runs_on: odin
+    pip_packages: 
+      - icm20948
+    entrypoint: ros2 launch llmy_imu imu.launch.py
+    devices:
+      - /dev/i2c-7:/dev/i2c-7
+
+    
   - name: lidar
     runs_on: odin
     devices: 
@@ -74,8 +86,8 @@ components:
     source:
       - ros/src/llmy_slam
     entrypoint: ros2 launch llmy_slam online_mapping_launch.py 
-  
-  
+
+
   - name: xbox
     runs_on: odin
     privileged: true
