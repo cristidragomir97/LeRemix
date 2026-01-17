@@ -5,7 +5,7 @@
   <version>1.0.0</version>
   <description>MCP (Model Context Protocol) server for LLMy robot - exposes ROS2 interfaces to LLMs</description>
 
-  <maintainer email="dev@leremix.com">LeRemix Team</maintainer>
+  <maintainer email="dev@llmy.dev">LLMy Team</maintainer>
   <license>MIT</license>
 
   <buildtool_depend>ament_python</buildtool_depend>

@@ -5,7 +5,7 @@
   <version>1.0.0</version>
   <description>Navigation package for LLMy robot - Nav2 configuration and mode management</description>
 
-  <maintainer email="dev@leremix.com">LeRemix Team</maintainer>
+  <maintainer email="dev@llmy.dev">LLMy Team</maintainer>
   <license>MIT</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>

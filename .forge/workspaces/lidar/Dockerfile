@@ -1,5 +1,5 @@
 # ─── Component Builder ─────────────────────────────────────────────────────
-FROM registry.core:5000/llmy_base:jazzy-latest
+FROM qwiki.lan:5000/llmy/llmy_base:jazzy-latest
 
 ENV PYTHONDONTWRITEBYTECODE=1
 
@@ -44,8 +44,5 @@ RUN apt-get update \
 
 
 # RMW Configuration
-# FastDDS Discovery Server config
-COPY superclient.xml /superclient.xml
-ENV FASTRTPS_DEFAULT_PROFILES_FILE=/superclient.xml
-ENV ROS_DISCOVERY_SERVER=192.168.99.183:11811
-ENV RMW_IMPLEMENTATION=rmw_fastrtps_cpp
+ENV RMW_IMPLEMENTATION=rmw_zenoh_cpp
+ENV ZENOH_ROUTER=tcp/192.168.99.184:7447

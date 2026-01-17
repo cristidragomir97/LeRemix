@@ -1,42 +1,47 @@
 ros_distro: jazzy
 ros_domain_id: 0
-registry: nx128.lan:5000/robocore
+registry: qwiki.lan:5000/llmy
+ros_apt_mirror: http://qwiki.lan/ros2
 image_prefix: llmy
 
 hosts:
   - name: odin
-    ip: odin.lan
+    ip: 192.168.99.183
     dds_ip: 192.168.99.183
     user: cdr 
     arch: arm64
     manager: true
-    mount_root: /home/cdr/robocore-artifacts
+    mount_root: /home/cdr/.rc
 
-  - name: localhost
-    ip: 127.0.0.1
-    user: cdr 
-    arch: amd64
-    manager: true
-    mount_root: /home/cdr/robocore-deploy
+  - name: mac 
+    ip: 192.168.
+
+
+rmw_implementation: zenoh
+
+  # Optional Zenoh config
+zenoh:
+  router_image: eclipse/zenoh:1.0.0
+  router_port: 7447
 
 
 common_packages:
-  - name: llmy_root_description
+  - name: llmy_description
     source:
-      - llmy_root_description
+      - ros/src/llmy_description
 
 components:
 ##### HARDWARE ABSTRACTION
 
   ### CAMERAS (Realsense + Wrist Webcam)
-  - name: camera
-    source: 
-      - ros/src/llmy_camera
-    runs_on: odin
-    privileged: true
-    entrypoint: ros2 launch llmy_camera camera.launch.py
-    devices: 
-      - /dev:/dev
+  #- name: camera
+  #  source: 
+  #    - ros/src/llmy_camera
+  #  runs_on: odin
+  #  privileged: true
+  #  entrypoint: ros2 launch llmy_camera camera.launch.py
+  #  devices: 
+  #    - /dev:/dev
 
   - name: motion
     source:
@@ -55,6 +60,17 @@ components:
       - ipc: host
       - pinned_cores: [0, 1]
 
+  - name: imu
+    source:
+    - ros/src/llmy_imu_bno055
+    runs_on: odin
+    pip_packages:
+      - smbus2
+    entrypoint: ros2 launch llmy_imu_bno055 imu.launch.py
+    devices:
+      - /dev/i2c-7:/dev/i2c-7
+
+    
   - name: lidar
     runs_on: odin
     devices: 
@@ -67,6 +83,8 @@ components:
 
   - name: rosboard
     runs_on: odin
+    ports: 
+      - "8888:8888"
     apt_packages: []
     pip_packages: 
       - tornado
@@ -82,8 +100,8 @@ components:
     source:
       - ros/src/llmy_slam
     entrypoint: ros2 launch llmy_slam online_mapping_launch.py 
-  
-  
+
+
   - name: xbox
     runs_on: odin
     privileged: true

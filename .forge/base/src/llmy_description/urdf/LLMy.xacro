@@ -1,9 +1,14 @@
 <?xml version="1.0" ?>
 <robot name="llmy_root" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
+<!-- use_sim arg: set to false to exclude Gazebo sim hardware (for real robot) -->
+<xacro:arg name="use_sim" default="true"/>
+
 <xacro:include filename="$(find llmy_description)/urdf/materials.xacro" />
-<xacro:include filename="$(find llmy_description)/urdf/LLMy.ros2control" />
-<xacro:include filename="$(find llmy_description)/urdf/LLMy.gazebo" />
+<xacro:if value="$(arg use_sim)">
+  <xacro:include filename="$(find llmy_description)/urdf/LLMy.ros2control" />
+  <xacro:include filename="$(find llmy_description)/urdf/LLMy.gazebo" />
+</xacro:if>
 
 <!-- Base footprint for navigation -->
 <link name="base_footprint">

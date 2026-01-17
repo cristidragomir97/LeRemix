@@ -17,14 +17,15 @@ def generate_launch_description():
         'ros2_control_bridge.yaml'
     ])
 
-    # Robot description
+    # Robot description (use_sim:=false to exclude Gazebo hardware)
     robot_description_content = Command([
         'xacro ',
         PathJoinSubstitution([
             FindPackageShare('llmy_control'),
             'urdf',
             'LLMy.hardware.xacro'
-        ])
+        ]),
+        ' use_sim:=false'
     ])
 
     # Robot state publisher - publishes robot_description topic

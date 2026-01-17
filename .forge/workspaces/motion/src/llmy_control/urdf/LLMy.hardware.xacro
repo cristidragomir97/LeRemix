@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <robot name="LLMy" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-    <!-- Base model from description -->
+    <!-- Base model from description (without sim ros2_control) -->
     <xacro:include filename="$(find llmy_description)/urdf/LLMy.xacro"/>
 
     <ros2_control name="llmy_hardware" type="system">

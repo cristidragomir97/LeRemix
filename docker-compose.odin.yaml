@@ -1,119 +1,148 @@
 version: '3.8'
+networks:
+  ros_net:
+    driver: bridge
 services:
-  motion:
-    image: registry.core:5000/llmy_motion:latest
-    network_mode: host
+  camera:
+    image: qwiki.lan:5000/llmy/llmy_camera:latest
+    networks:
+      - ros_net
+    privileged: true
     volumes:
-      - "/home/cdr/robocore-artifacts/motion/ros_ws:/ros_ws:rw"
-      - "/dev/shm:/dev/shm:rw"
+      - "/home/cdr/.rc/camera/ros_ws:/ros_ws:rw"
     devices:
-        - "/dev/ttyTHS1:/dev/ttyTHS1"
+      - "/dev:/dev"
     cap_add:
-        - SYS_RAWIO
-        - NET_ADMIN
+      - SYS_RAWIO
+      - NET_ADMIN
     environment:
       - ROS_DOMAIN_ID=0
       - ROS_DISTRO=jazzy
-      - RMW_IMPLEMENTATION=rmw_fastrtps_cpp
-      - ROS_DISCOVERY_SERVER=localhost
+      - RMW_IMPLEMENTATION=rmw_zenoh_cpp
+      - ZENOH_ROUTER_CHECK_ATTEMPTS=10
+      - ZENOH_CONFIG_OVERRIDE=listen/endpoints=["tcp/0.0.0.0:0"];connect/endpoints=["tcp/zenoh_router:7447"]
+    command: bash -lc "source /opt/ros/jazzy/setup.bash && source /ros_ws_common/install/setup.bash && source /ros_ws/install/setup.bash && ros2 launch llmy_camera camera.launch.py "
+    depends_on:
+      - zenoh_router
+  motion:
+    image: qwiki.lan:5000/llmy/llmy_motion:latest
+    networks:
+      - ros_net
+    volumes:
+      - "/home/cdr/.rc/motion/ros_ws:/ros_ws:rw"
+      - "/dev/shm:/dev/shm:rw"
+    devices:
+      - "/dev/ttyTHS1:/dev/ttyTHS1"
+    cap_add:
+      - SYS_RAWIO
+      - NET_ADMIN
+    environment:
+      - ROS_DOMAIN_ID=0
+      - ROS_DISTRO=jazzy
+      - RMW_IMPLEMENTATION=rmw_zenoh_cpp
+      - ZENOH_ROUTER_CHECK_ATTEMPTS=10
+      - ZENOH_CONFIG_OVERRIDE=listen/endpoints=["tcp/0.0.0.0:0"];connect/endpoints=["tcp/zenoh_router:7447"]
     shm_size: 1024m
     ipc: host
     cpuset: "0,1"
-    command: >
-      bash -lc "\
-        # always source core ROS
-        source /opt/ros/jazzy/setup.bash && \# source common packages from base image
-        source /ros_ws_common/install/setup.bash && \source /ros_ws/install/setup.bash && \ros2 launch llmy_control motion.launch.py servo_port:=/dev/ttyTHS1 
-      "
+    command: bash -lc "source /opt/ros/jazzy/setup.bash && source /ros_ws_common/install/setup.bash && source /ros_ws/install/setup.bash && ros2 launch llmy_control motion.launch.py servo_port:=/dev/ttyTHS1 "
+    depends_on:
+      - zenoh_router
   imu:
-    image: registry.core:5000/llmy_imu:latest
-    network_mode: host
+    image: qwiki.lan:5000/llmy/llmy_imu:latest
+    networks:
+      - ros_net
     volumes:
-      - "/home/cdr/robocore-artifacts/imu/ros_ws:/ros_ws:rw"
+      - "/home/cdr/.rc/imu/ros_ws:/ros_ws:rw"
     devices:
-        - "/dev/i2c-7:/dev/i2c-7"
+      - "/dev/i2c-7:/dev/i2c-7"
     cap_add:
-        - SYS_RAWIO
-        - NET_ADMIN
+      - SYS_RAWIO
+      - NET_ADMIN
     environment:
       - ROS_DOMAIN_ID=0
       - ROS_DISTRO=jazzy
-      - RMW_IMPLEMENTATION=rmw_fastrtps_cpp
-      - ROS_DISCOVERY_SERVER=localhost
-    command: >
-      bash -lc "\
-        # always source core ROS
-        source /opt/ros/jazzy/setup.bash && \# source common packages from base image
-        source /ros_ws_common/install/setup.bash && \source /ros_ws/install/setup.bash && \ros2 launch llmy_imu imu.launch.py 
-      "
+      - RMW_IMPLEMENTATION=rmw_zenoh_cpp
+      - ZENOH_ROUTER_CHECK_ATTEMPTS=10
+      - ZENOH_CONFIG_OVERRIDE=listen/endpoints=["tcp/0.0.0.0:0"];connect/endpoints=["tcp/zenoh_router:7447"]
+    command: bash -lc "source /opt/ros/jazzy/setup.bash && source /ros_ws_common/install/setup.bash && source /ros_ws/install/setup.bash && ros2 launch llmy_imu_bno055 imu.launch.py "
+    depends_on:
+      - zenoh_router
   lidar:
-    image: registry.core:5000/llmy_lidar:latest
-    network_mode: host
+    image: qwiki.lan:5000/llmy/llmy_lidar:latest
+    networks:
+      - ros_net
     devices:
-        - "/dev/ttyUSB0:/dev/ttyUSB0"
+      - "/dev/ttyUSB0:/dev/ttyUSB0"
     cap_add:
-        - SYS_RAWIO
-        - NET_ADMIN
+      - SYS_RAWIO
+      - NET_ADMIN
     environment:
       - ROS_DOMAIN_ID=0
       - ROS_DISTRO=jazzy
-      - RMW_IMPLEMENTATION=rmw_fastrtps_cpp
-      - ROS_DISCOVERY_SERVER=localhost
-    command: >
-      bash -lc "\
-        # always source core ROS
-        source /opt/ros/jazzy/setup.bash && \# source common packages from base image
-        source /ros_ws_common/install/setup.bash && \source /vcs_ws/install/setup.bash && \ros2 launch rplidar_ros rplidar_c1_launch.py serial_port:=/dev/ttyUSB0 
-      "
+      - RMW_IMPLEMENTATION=rmw_zenoh_cpp
+      - ZENOH_ROUTER_CHECK_ATTEMPTS=10
+      - ZENOH_CONFIG_OVERRIDE=listen/endpoints=["tcp/0.0.0.0:0"];connect/endpoints=["tcp/zenoh_router:7447"]
+    command: bash -lc "source /opt/ros/jazzy/setup.bash && source /ros_ws_common/install/setup.bash && source /vcs_ws/install/setup.bash && ros2 launch rplidar_ros rplidar_c1_launch.py serial_port:=/dev/ttyUSB0 "
+    depends_on:
+      - zenoh_router
   rosboard:
-    image: registry.core:5000/llmy_rosboard:latest
-    network_mode: host
+    image: qwiki.lan:5000/llmy/llmy_rosboard:latest
+    networks:
+      - ros_net
+    ports:
+      - "8888:8888"
     environment:
       - ROS_DOMAIN_ID=0
       - ROS_DISTRO=jazzy
-      - RMW_IMPLEMENTATION=rmw_fastrtps_cpp
-      - ROS_DISCOVERY_SERVER=localhost
-    command: >
-      bash -lc "\
-        # always source core ROS
-        source /opt/ros/jazzy/setup.bash && \# source common packages from base image
-        source /ros_ws_common/install/setup.bash && \source /vcs_ws/install/setup.bash && \ros2 run rosboard rosboard_node 
-      "
+      - RMW_IMPLEMENTATION=rmw_zenoh_cpp
+      - ZENOH_ROUTER_CHECK_ATTEMPTS=10
+      - ZENOH_CONFIG_OVERRIDE=listen/endpoints=["tcp/0.0.0.0:0"];connect/endpoints=["tcp/zenoh_router:7447"]
+    command: bash -lc "source /opt/ros/jazzy/setup.bash && source /ros_ws_common/install/setup.bash && source /vcs_ws/install/setup.bash && ros2 run rosboard rosboard_node "
+    depends_on:
+      - zenoh_router
   slam:
-    image: registry.core:5000/llmy_slam:latest
-    network_mode: host
+    image: qwiki.lan:5000/llmy/llmy_slam:latest
+    networks:
+      - ros_net
     volumes:
-      - "/home/cdr/robocore-artifacts/slam/ros_ws:/ros_ws:rw"
+      - "/home/cdr/.rc/slam/ros_ws:/ros_ws:rw"
     environment:
       - ROS_DOMAIN_ID=0
       - ROS_DISTRO=jazzy
-      - RMW_IMPLEMENTATION=rmw_fastrtps_cpp
-      - ROS_DISCOVERY_SERVER=localhost
-    command: >
-      bash -lc "\
-        # always source core ROS
-        source /opt/ros/jazzy/setup.bash && \# source common packages from base image
-        source /ros_ws_common/install/setup.bash && \source /ros_ws/install/setup.bash && \ros2 launch llmy_slam online_mapping_launch.py 
-      "
+      - RMW_IMPLEMENTATION=rmw_zenoh_cpp
+      - ZENOH_ROUTER_CHECK_ATTEMPTS=10
+      - ZENOH_CONFIG_OVERRIDE=listen/endpoints=["tcp/0.0.0.0:0"];connect/endpoints=["tcp/zenoh_router:7447"]
+    command: bash -lc "source /opt/ros/jazzy/setup.bash && source /ros_ws_common/install/setup.bash && source /ros_ws/install/setup.bash && ros2 launch llmy_slam online_mapping_launch.py "
+    depends_on:
+      - zenoh_router
   xbox:
-    image: registry.core:5000/llmy_xbox:latest
-    network_mode: host
+    image: qwiki.lan:5000/llmy/llmy_xbox:latest
+    networks:
+      - ros_net
     privileged: true
     volumes:
-      - "/home/cdr/robocore-artifacts/xbox/ros_ws:/ros_ws:rw"
+      - "/home/cdr/.rc/xbox/ros_ws:/ros_ws:rw"
     devices:
-        - "/dev/input:/dev/input"
+      - "/dev/input:/dev/input"
     cap_add:
-        - SYS_RAWIO
-        - NET_ADMIN
+      - SYS_RAWIO
+      - NET_ADMIN
     environment:
       - ROS_DOMAIN_ID=0
       - ROS_DISTRO=jazzy
-      - RMW_IMPLEMENTATION=rmw_fastrtps_cpp
-      - ROS_DISCOVERY_SERVER=localhost
-    command: >
-      bash -lc "\
-        # always source core ROS
-        source /opt/ros/jazzy/setup.bash && \# source common packages from base image
-        source /ros_ws_common/install/setup.bash && \source /ros_ws/install/setup.bash && \ros2 launch llmy_teleop_xbox teleop_xbox.launch.py 
-      "
+      - RMW_IMPLEMENTATION=rmw_zenoh_cpp
+      - ZENOH_ROUTER_CHECK_ATTEMPTS=10
+      - ZENOH_CONFIG_OVERRIDE=listen/endpoints=["tcp/0.0.0.0:0"];connect/endpoints=["tcp/zenoh_router:7447"]
+    command: bash -lc "source /opt/ros/jazzy/setup.bash && source /ros_ws_common/install/setup.bash && source /ros_ws/install/setup.bash && ros2 launch llmy_teleop_xbox teleop_xbox.launch.py "
+    depends_on:
+      - zenoh_router
+  zenoh_router:
+    image: eclipse/zenoh:1.7.1
+    container_name: zenoh_router
+    networks:
+      - ros_net
+    restart: unless-stopped
+    ports:
+      - "7447:7447"
+    command: --listen tcp/0.0.0.0:7447

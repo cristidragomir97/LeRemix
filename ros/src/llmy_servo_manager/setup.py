@@ -18,7 +18,7 @@ setup(
     install_requires=['setuptools'],
     zip_safe=True,
     maintainer='LLMy Team',
-    maintainer_email='dev@leremix.com',
+    maintainer_email='dev@llmy.dev',
     description='Servo manager for LLMy robot using ST3215 servos',
     license='MIT',
     tests_require=['pytest'],

@@ -22,25 +22,27 @@ ekf_filter_node:
     # To add an input, simply set its topic name and configure the boolean vector
 
     # Wheel odometry from diff_drive_controller
+    # Using pose (x, y, yaw) instead of velocities because velocity readings are noisy
     odom0: /diff_drive_controller/odom
-    odom0_config: [false, false, false,  # x, y, z position
-                   false, false, false,  # roll, pitch, yaw orientation
-                   true,  false, false,  # x_dot, y_dot, z_dot velocities
-                   false, false, true]   # roll_dot, pitch_dot, yaw_dot velocities
-    odom0_differential: false
+    odom0_config: [true,  true,  false,  # x, y, z position
+                   false, false, true,   # roll, pitch, yaw orientation
+                   false, false, false,  # x_dot, y_dot, z_dot velocities
+                   false, false, false]  # roll_dot, pitch_dot, yaw_dot velocities
+    odom0_differential: true
     odom0_relative: false
     odom0_queue_size: 10
 
-    # IMU data
-    imu0: /sensors/imu
-    imu0_config: [false, false, false,   # x, y, z position
-                  false, false, false,   # roll, pitch, yaw orientation
-                  false, false, false,   # x_dot, y_dot, z_dot velocities
-                  false, false, true]    # roll_dot, pitch_dot, yaw_dot (angular velocities)
-    imu0_differential: false
-    imu0_relative: false
-    imu0_queue_size: 10
-    imu0_remove_gravitational_acceleration: true
+    # IMU data (from BNO055)
+    # Disabled for now - wheel odometry yaw seems more reliable
+    # imu0: /imu/data
+    # imu0_config: [false, false, false,   # x, y, z position
+    #               false, false, false,   # roll, pitch, yaw orientation
+    #               false, false, false,   # x_dot, y_dot, z_dot velocities
+    #               false, false, true]    # roll_dot, pitch_dot, yaw_dot (angular velocities)
+    # imu0_differential: false
+    # imu0_relative: false
+    # imu0_queue_size: 10
+    # imu0_remove_gravitational_acceleration: true
 
     # Use the IMU for measuring the Z-axis angular velocity
     use_control: false

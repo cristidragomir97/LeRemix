@@ -1,17 +1,28 @@
 ros_distro: jazzy
 ros_domain_id: 0
-registry: registry.core:5000
+registry: qwiki.lan:5000/llmy
+ros_apt_mirror: http://qwiki.lan/ros2
 image_prefix: llmy
-
 
 hosts:
   - name: odin
-    ip: odin.core
-    dds_ip: 192.168.99.183
+    ip: 192.168.99.184
+    dds_ip: 192.168.99.184
     user: cdr 
     arch: arm64
-    build_on_device: true
-    mount_root: /home/cdr/robocore-artifacts
+    manager: true
+    mount_root: /home/cdr/.rc
+
+
+
+
+rmw_implementation: zenoh
+
+  # Optional Zenoh config
+zenoh:
+  router_image: eclipse/zenoh:1.7.1
+  router_port: 7447
+
 
 common_packages:
   - name: llmy_description
@@ -22,14 +33,14 @@ components:
 ##### HARDWARE ABSTRACTION
 
   ### CAMERAS (Realsense + Wrist Webcam)
-  #- name: camera
-  #  source: 
-  #    - ros/src/llmy_camera
-  #  runs_on: odin
-  #  privileged: true
-  #  entrypoint: ros2 launch llmy_camera camera.launch.py
-  #  devices: 
-  #    - /dev:/dev
+  - name: camera
+    source: 
+      - ros/src/llmy_camera
+    runs_on: odin
+    privileged: true
+    entrypoint: ros2 launch llmy_camera camera.launch.py
+    devices: 
+      - /dev:/dev
 
   - name: motion
     source:
@@ -50,11 +61,11 @@ components:
 
   - name: imu
     source:
-    - ros/src/llmy_imu
+    - ros/src/llmy_imu_bno055
     runs_on: odin
-    pip_packages: 
-      - icm20948
-    entrypoint: ros2 launch llmy_imu imu.launch.py
+    pip_packages:
+      - smbus2
+    entrypoint: ros2 launch llmy_imu_bno055 imu.launch.py
     devices:
       - /dev/i2c-7:/dev/i2c-7
 
@@ -71,6 +82,8 @@ components:
 
   - name: rosboard
     runs_on: odin
+    ports: 
+      - "8888:8888"
     apt_packages: []
     pip_packages: 
       - tornado
@@ -96,6 +109,3 @@ components:
     entrypoint: ros2 launch llmy_teleop_xbox teleop_xbox.launch.py
     devices:
       - /dev/input:/dev/input
-
-    
-  

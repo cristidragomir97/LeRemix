@@ -128,7 +128,7 @@ def main():
     parser.add_argument('--port', default='/dev/ttyUSB0', help='Serial port')
     args = parser.parse_args()
     
-    print("LeRemix Motor State Diagnostic")
+    print("LLMy Motor State Diagnostic")
     print("This tool checks the status and mode of all servos")
     print("Make sure no ROS nodes are running!")
     print()

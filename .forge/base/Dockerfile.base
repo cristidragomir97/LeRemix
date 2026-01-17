@@ -28,9 +28,9 @@ ENV LANGUAGE=en_US:en
 ENV LC_ALL=en_US.UTF-8
 
 # Add ROS2 apt repository
-# Using default ROS apt mirror (packages.ros.org)
+# Using custom ROS apt mirror: http://qwiki.lan/ros2
 RUN curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | apt-key add - && \
-    sh -c 'echo "deb [arch=$(dpkg --print-architecture)] http://packages.ros.org/ros2/ubuntu $(lsb_release -cs) main" > /etc/apt/sources.list.d/ros2-latest.list'
+    sh -c 'echo "deb [trusted=yes arch=$(dpkg --print-architecture)] http://qwiki.lan/ros2 noble main" > /etc/apt/sources.list.d/ros2-latest.list'
 
 # Install ROS2 base + build tools
 RUN apt-get clean && apt-get update && apt-get install -y --fix-missing \

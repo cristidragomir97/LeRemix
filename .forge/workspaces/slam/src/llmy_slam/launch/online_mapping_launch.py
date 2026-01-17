@@ -16,6 +16,9 @@ def generate_launch_description():
 
     Automatically activates slam_toolbox lifecycle node.
 
+    Uses wheel odometry directly from diff_drive_controller (no EKF fusion).
+    The diff_drive_controller publishes odom -> base_footprint transform.
+
     Topics:
     - Subscribes: /scan (from RPLidar)
     - Publishes: /map, /map_metadata
@@ -30,22 +33,6 @@ def generate_launch_description():
     # Config files
     pkg_dir = get_package_share_directory('llmy_slam')
     config_file = os.path.join(pkg_dir, 'config', 'online_mapping.yaml')
-    ekf_config = os.path.join(pkg_dir, 'config', 'ekf.yaml')
-
-    # EKF node for sensor fusion (wheel odom + IMU)
-    ekf_node = Node(
-        package='robot_localization',
-        executable='ekf_node',
-        name='ekf_filter_node',
-        output='screen',
-        parameters=[
-            ekf_config,
-            {'use_sim_time': True}
-        ],
-        remappings=[
-            ('odometry/filtered', '/odometry/filtered')
-        ]
-    )
 
     # Static TF: lidar_frame -> laser (rplidar uses "laser" frame_id)
     # Note: base_footprint is already defined in URDF as child of base_link
@@ -97,7 +84,6 @@ def generate_launch_description():
     )
 
     return LaunchDescription([
-        ekf_node,
         laser_tf,
         slam_node,
         configure_event,

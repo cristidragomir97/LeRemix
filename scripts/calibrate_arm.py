@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Arm Calibration Tool for LeRemix
+Arm Calibration Tool for LLMy
 Calibrates arm joint zero positions and limits
 """
 
@@ -21,7 +21,7 @@ class ArmCalibrator:
         self.servo = None
         self.config_path = config_path
 
-        # Joint names for LeRemix arm (IDs 4-9)
+        # Joint names for LLMy arm (IDs 4-9)
         self.joint_names = [
             "Joint 1 (Base Rotation)",
             "Joint 2 (Shoulder)",
@@ -457,7 +457,7 @@ class ArmCalibrator:
     def run_calibration(self):
         """Run complete calibration process"""
         print("\n" + "="*70)
-        print("  LeRemix Arm Calibration Wizard")
+        print("  LLMy Arm Calibration Wizard")
         print("="*70)
         print("\nThis tool will calibrate your robot arm's zero position and joint limits.")
         print("Make sure:")
@@ -506,7 +506,7 @@ class ArmCalibrator:
 
 def main():
     parser = argparse.ArgumentParser(
-        description='LeRemix Arm Calibration Tool',
+        description='LLMy Arm Calibration Tool',
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 This tool calibrates the arm's zero position and joint limits.
@@ -521,7 +521,7 @@ Examples:
   python3 calibrate_arm.py
 
   # Specify config file to update
-  python3 calibrate_arm.py --config ~/leremix_ws/ros/src/leremix_servo_manager/config/servo_manager.yaml
+  python3 calibrate_arm.py --config ~/llmy_ws/ros/src/llmy_servo_manager/config/servo_manager.yaml
 
   # Use custom serial port
   python3 calibrate_arm.py --port /dev/ttyACM0 --live

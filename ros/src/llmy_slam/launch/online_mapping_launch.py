@@ -16,6 +16,8 @@ def generate_launch_description():
 
     Automatically activates slam_toolbox lifecycle node.
 
+    Uses EKF for sensor fusion (wheel odom + IMU).
+
     Topics:
     - Subscribes: /scan (from RPLidar)
     - Publishes: /map, /map_metadata
@@ -40,7 +42,7 @@ def generate_launch_description():
         output='screen',
         parameters=[
             ekf_config,
-            {'use_sim_time': True}
+            {'use_sim_time': False}
         ],
         remappings=[
             ('odometry/filtered', '/odometry/filtered')
@@ -48,7 +50,7 @@ def generate_launch_description():
     )
 
     # Static TF: lidar_frame -> laser (rplidar uses "laser" frame_id)
-    # Note: base_footprint is already defined in URDF as child of base_link
+    # Note: lidar_frame already has 180° rotation in URDF, so no additional rotation here
     laser_tf = Node(
         package='tf2_ros',
         executable='static_transform_publisher',
@@ -97,7 +99,8 @@ def generate_launch_description():
     )
 
     return LaunchDescription([
-        ekf_node,
+        # EKF disabled - using raw wheel odometry for now
+        # ekf_node,
         laser_tf,
         slam_node,
         configure_event,

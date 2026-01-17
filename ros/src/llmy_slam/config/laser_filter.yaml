@@ -1,0 +1,12 @@
+# Laser filter configuration
+# Filters out laser readings that hit the robot body
+# Only keeps readings from 0-90° (front-right) and 270-360° (front-left)
+
+scan_to_scan_filter_chain:
+  ros__parameters:
+    filter1:
+      type: laser_filters/LaserScanAngularBoundsFilterInPlace
+      name: angular_filter
+      params:
+        lower_angle: -1.5708   # -90° in radians (270° from robot perspective)
+        upper_angle: 1.5708    # 90° in radians

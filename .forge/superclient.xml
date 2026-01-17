@@ -7,7 +7,7 @@
         <defaultUnicastLocatorList>
           <locator>
             <udpv4>
-              <address>192.168.99.10</address>
+              <address>192.168.99.110</address>
             </udpv4>
           </locator>
         </defaultUnicastLocatorList>
@@ -19,7 +19,7 @@
                 <metatrafficUnicastLocatorList>
                   <locator>
                     <udpv4>
-                      <address>192.168.99.183</address>
+                      <address>192.168.99.184</address>
                       <port>11811</port>
                     </udpv4>
                   </locator>

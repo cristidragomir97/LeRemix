@@ -9,7 +9,7 @@ ros/build/
 ros/install/
 ros/log/
 
-# Ignore non-leremix packages in src
+# Ignore non-llmy packages in src
 ros/src/*/
 !ros/src/llmy_*/
 

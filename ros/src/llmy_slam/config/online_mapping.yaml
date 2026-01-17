@@ -9,7 +9,7 @@ slam_toolbox:
     ceres_preconditioner: SCHUR_JACOBI
     ceres_trust_strategy: LEVENBERG_MARQUARDT
     ceres_dogleg_type: TRADITIONAL_DOGLEG
-    ceres_loss_function: None
+    ceres_loss_function: HuberLoss  # More robust to outliers (robot seeing itself)
 
     # Frame IDs
     odom_frame: odom
@@ -23,25 +23,33 @@ slam_toolbox:
     # Performance
     transform_publish_period: 0.02  # 50 Hz
     map_update_interval: 5.0
-    resolution: 0.05  # 5cm per pixel
-    max_laser_range: 12.0  # RPLidar max range
-    transform_timeout: 2.0
-    tf_buffer_duration: 30.0
+    resolution: 0.05  # 5cm per pixel (was 0.01 = 1cm, too fine)
+    max_laser_range: 8.0  # Reduce from 12m - closer range more reliable
+    minimum_laser_range: 0.15  # Ignore readings closer than 15cm (robot body)
+    transform_timeout: 0.5
+    tf_buffer_duration: 10.0
 
-    # Scan Processing
+    # Scan Processing - more conservative to reduce smearing
     throttle_scans: 1
-    minimum_time_interval: 0.5
-    minimum_travel_distance: 0.3  # meters
-    minimum_travel_heading: 0.3  # radians
+    minimum_time_interval: 0.2  # Wait longer between scans
+    minimum_travel_distance: 0.15  # 15cm before adding new scan
+    minimum_travel_heading: 0.2  # ~11.5 degrees before adding new scan
 
-    # Scan Matching
+    # Scan Matching - correlation parameters
     use_scan_matching: true
     use_scan_barycenter: true
+    correlation_search_space_dimension: 0.3  # Search window size (meters)
+    correlation_search_space_resolution: 0.01
+    correlation_search_space_smear_deviation: 0.03
 
     # Loop Closure
     do_loop_closing: true
     loop_search_maximum_distance: 3.0
+    loop_match_minimum_chain_size: 3
+    loop_match_maximum_variance_coarse: 0.4
+    loop_match_minimum_response_coarse: 0.5
+    loop_match_minimum_response_fine: 0.6
 
     # Other
     enable_interactive_mode: false
-    debug_logging: false
+    debug_logging: true  # Disable for cleaner output

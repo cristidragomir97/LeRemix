@@ -31,8 +31,8 @@ ekf_filter_node:
     odom0_relative: false
     odom0_queue_size: 10
 
-    # IMU data
-    imu0: /sensors/imu
+    # IMU data (from BNO055)
+    imu0: /imu/data
     imu0_config: [false, false, false,   # x, y, z position
                   false, false, false,   # roll, pitch, yaw orientation
                   false, false, false,   # x_dot, y_dot, z_dot velocities

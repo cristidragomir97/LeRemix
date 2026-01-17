@@ -1,0 +1,25 @@
+# Configuration for depthimage_to_laserscan node
+depthimage_to_laserscan:
+  ros__parameters:
+    # Scanning parameters
+    scan_height: 10                    # Number of pixel rows to use when creating laser scan
+    scan_time: 0.020                  # Time between scans (30Hz)
+    
+    # Range parameters
+    range_min: 0.2                     # Minimum range value (meters)
+    range_max: 10.0                    # Maximum range value (meters)
+    
+    # Output parameters  
+    output_frame_id: "camera_depth_frame"  # Frame ID for the output laser scan
+    
+    # Quality of Service
+    qos_overrides:
+      depth:
+        reliability: "best_effort"
+        durability: "volatile"
+      depth_camera_info:
+        reliability: "best_effort"
+        durability: "volatile"
+      scan:
+        reliability: "reliable"
+        durability: "volatile"

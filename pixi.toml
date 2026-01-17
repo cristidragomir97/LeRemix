@@ -1,6 +1,6 @@
 [workspace]
 channels = ["https://prefix.dev/robostack-jazzy", "https://prefix.dev/conda-forge" ]
-name = "LeRemix"
+name = "LLMy"
 platforms = ["linux-64", "osx-arm64"]
 version = "0.1.0"
 
@@ -43,6 +43,7 @@ cmake = "*"
 ninja  = "*"
 setuptools = "*"
 ros-jazzy-gz-ros2-control = "*"
+ros-jazzy-rmw-zenoh-cpp = "*"
 filelock  = "*"
 
 [pypi-dependencies]
