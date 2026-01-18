@@ -4,8 +4,8 @@
 # PlatformIO build artifacts
 firmware/*/.pio/
 
-.pixi 
-.forge
+.pixi/
+.forge/
 
 docker-compose.*.yaml
 

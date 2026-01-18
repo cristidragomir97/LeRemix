@@ -31,6 +31,15 @@ common_packages:
 
 components:
 
+  - name: mcp
+    source: 
+      - ros/src/llmy_mcp
+    runs_on: odin
+    pip_packages:
+      - fastmcp
+    ports: 
+      - "8765:8765"
+    entrypoint: ros2 run llmy_mcp mcp_server --port 8765
 
 
   ### CAMERAS (Realsense + Wrist Webcam)
