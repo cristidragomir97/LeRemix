@@ -1,1 +1,0 @@
-# Empty init file for ROS2 Python package

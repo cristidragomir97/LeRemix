@@ -30,7 +30,8 @@ common_packages:
       - ros/src/llmy_description
 
 components:
-##### HARDWARE ABSTRACTION
+
+
 
   ### CAMERAS (Realsense + Wrist Webcam)
   - name: camera

@@ -4,6 +4,11 @@
 # PlatformIO build artifacts
 firmware/*/.pio/
 
+.pixi 
+.forge
+
+docker-compose.*.yaml
+
 # ROS2 build artifacts
 ros/build/
 ros/install/

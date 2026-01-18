@@ -444,6 +444,23 @@ def main():
         type=Path,
         help="Path to configuration YAML file"
     )
+    parser.add_argument(
+        "--transport", "-t",
+        choices=["stdio", "sse"],
+        default="sse",
+        help="Transport mode: stdio (local) or sse (HTTP server)"
+    )
+    parser.add_argument(
+        "--host",
+        default="0.0.0.0",
+        help="Host to bind to (for SSE transport)"
+    )
+    parser.add_argument(
+        "--port", "-p",
+        type=int,
+        default=8765,
+        help="Port to listen on (for SSE transport)"
+    )
     args = parser.parse_args()
 
     # Load config
@@ -472,7 +489,12 @@ def main():
 
     try:
         # Run FastMCP server
-        mcp.run()
+        if args.transport == "sse":
+            logger.info(f"Starting SSE server on http://{args.host}:{args.port}/sse")
+            mcp.run(transport="sse", host=args.host, port=args.port)
+        else:
+            logger.info("Starting stdio server")
+            mcp.run(transport="stdio")
     except KeyboardInterrupt:
         logger.info("Shutting down...")
     finally:
