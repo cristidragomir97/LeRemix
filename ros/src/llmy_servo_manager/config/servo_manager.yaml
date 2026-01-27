@@ -12,11 +12,15 @@ servo_manager_node:
     # Arm (6 joints): 5=base_rotation, 6=shoulder, 7=elbow, 8=wrist, 9=wrist_rotation, 10=gripper
     # Camera (1 joint): 11=tilt
     loc_ids:    [1, 2]
-    arm_ids:    [5, 6, 7, 8, 9, 10]
+    arm_ids:    [3, 4, 5, 6, 7, 8]
     camera_ids: [11]
 
     ticks_per_rev: 4096
     telemetry_rate: 50.0  # Reduced from 50Hz to reduce bus load
+
+    # Motor telemetry (current, voltage, load, temperature per motor)
+    motor_telemetry_enable: true  # Enable/disable individual motor telemetry
+    motor_telemetry_rate: 50.0     # Hz - lower than main telemetry to reduce bus load
 
     # Acceleration parameters (0-255, lower = smoother acceleration)
     loc_accel:    [15, 15]        # Locomotion motors - reduced acceleration for smoother movement

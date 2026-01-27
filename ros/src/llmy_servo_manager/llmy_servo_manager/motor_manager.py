@@ -203,8 +203,11 @@ class MotorManager:
     
     def send_velocity_command(self, motor_id: int, speed_raw: int):
         """Send velocity command to a motor"""
+        # Scale speed to 25% to limit max velocity (does not affect odometry readings)
+        speed_raw = int(speed_raw * 0.25)
+
         self.node.get_logger().info(f"send_velocity_command: motor_id={motor_id}, speed_raw={speed_raw}")
-        
+
         try:
             if speed_raw == 0:
                 # Zero velocity: set zero velocity, then stop motor
@@ -259,3 +262,26 @@ class MotorManager:
             pass
 
         return None, None
+
+    def read_motor_telemetry(self, motor_id: int) -> dict:
+        """Read detailed telemetry from a motor (current, voltage, load, temperature)
+
+        Returns dict with keys: current, voltage, load, temperature
+        Values are None if read fails
+        """
+        telemetry = {
+            'current': None,      # mA
+            'voltage': None,      # V
+            'load': None,         # %
+            'temperature': None,  # C
+        }
+
+        try:
+            telemetry['current'] = self.motor_manager.ReadCurrent(motor_id)
+            telemetry['voltage'] = self.motor_manager.ReadVoltage(motor_id)
+            telemetry['load'] = self.motor_manager.ReadLoad(motor_id)
+            telemetry['temperature'] = self.motor_manager.ReadTemperature(motor_id)
+        except Exception as e:
+            self.node.get_logger().debug(f"Failed to read telemetry for motor {motor_id}: {e}")
+
+        return telemetry

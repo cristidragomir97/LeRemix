@@ -15,6 +15,7 @@ from .brake_system import BrakeSystem
 from .command_handlers import CommandHandlers
 
 from .telemetry import TelemetrySystem
+from .motor_telemetry import MotorTelemetrySystem
 
 class ServoManagerNode(Node):
     def __init__(self):
@@ -58,7 +59,10 @@ class ServoManagerNode(Node):
         
         # Initialize telemetry system
         self.telemetry = TelemetrySystem(self, self.motor_manager, self.config)
-        
+
+        # Initialize motor telemetry system (individual motor metrics)
+        self.motor_telemetry = MotorTelemetrySystem(self, self.motor_manager, self.config)
+
         self._setup_ros_communication()
         
         # Publish initial joint states immediately to inform ros2_control of current positions
@@ -126,6 +130,13 @@ class ServoManagerNode(Node):
         timer_period = 1.0 / self.config.telemetry_rate
         self.timer = self.create_timer(timer_period, self.telemetry.publish_telemetry)
         self.get_logger().info(f"  Telemetry timer started at {self.config.telemetry_rate} Hz")
+
+        # Create timer for motor telemetry if enabled
+        if self.config.motor_telemetry_enable:
+            motor_telemetry_period = 1.0 / self.config.motor_telemetry_rate
+            self.motor_telemetry_timer = self.create_timer(
+                motor_telemetry_period, self.motor_telemetry.publish_telemetry)
+            self.get_logger().info(f"  Motor telemetry timer started at {self.config.motor_telemetry_rate} Hz")
     
     def _log_startup_summary(self):
         """Log startup summary information"""
