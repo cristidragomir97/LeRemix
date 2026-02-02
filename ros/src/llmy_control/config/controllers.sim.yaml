@@ -26,7 +26,7 @@ diff_drive_controller:
     right_wheel_names: ['right_wheel_joint']
 
     # Robot geometry (measured from URDF)
-    wheel_separation: 0.179  # Distance between left and right wheels (m)
+    wheel_separation: 0.20111  # Distance between left and right wheels (m)
     wheel_radius: 0.039      # Wheel radius (m)
 
     # Wheel separation multiplier for calibration
