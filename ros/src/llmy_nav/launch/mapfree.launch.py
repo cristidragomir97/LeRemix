@@ -136,7 +136,7 @@ def generate_launch_description():
             ],
             remappings=[
                 ('cmd_vel', 'cmd_vel_raw'),
-                ('cmd_vel_smoothed', 'cmd_vel'),
+                ('cmd_vel_smoothed', 'cmd_vel_nav'),
             ]
         ),
 

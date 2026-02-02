@@ -17,7 +17,7 @@ def generate_launch_description():
 
         Node(package='llmy_teleop_xbox', executable='teleop_xbox', name='teleop_xbox',
              parameters=[{
-                 'cmd_vel_topic': '/diff_drive_controller/cmd_vel',
+                 'cmd_vel_topic': '/cmd_vel_xbox',
                  'arm_cmd_topic': '/arm_controller/commands',
                  'head_cmd_topic': '/head_controller/commands',
                  'arm_increment': 0.0175,  # 1.0 degree

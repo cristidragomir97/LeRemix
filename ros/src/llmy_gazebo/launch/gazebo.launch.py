@@ -109,6 +109,19 @@ def generate_launch_description():
         output='screen'
     )
 
+    # Twist mux - multiplexes velocity commands from xbox, nav, mcp
+    twist_mux_config = os.path.join(pkg_llmy_control, 'config', 'twist_mux.yaml')
+    twist_mux = Node(
+        package='twist_mux',
+        executable='twist_mux',
+        name='twist_mux',
+        output='screen',
+        parameters=[twist_mux_config, {'use_sim_time': True}],
+        remappings=[
+            ('cmd_vel_out', '/diff_drive_controller/cmd_vel'),
+        ]
+    )
+
     # Spawn Robot
     spawn_robot = Node(
         package='ros_gz_sim',
@@ -135,10 +148,17 @@ def generate_launch_description():
         output='screen'
     )
 
-    # Arm Controller
+    # Arm Controller (active by default)
     load_arm_controller = ExecuteProcess(
         cmd=['ros2', 'control', 'load_controller', '--set-state', 'active',
              'arm_controller'],
+        output='screen'
+    )
+
+    # Arm Trajectory Controller (inactive, for MoveIt)
+    load_arm_trajectory_controller = ExecuteProcess(
+        cmd=['ros2', 'control', 'load_controller', '--set-state', 'inactive',
+             'arm_trajectory_controller'],
         output='screen'
     )
 
@@ -171,9 +191,16 @@ def generate_launch_description():
         )
     )
 
-    load_head_controller_event = RegisterEventHandler(
+    load_arm_trajectory_controller_event = RegisterEventHandler(
         event_handler=OnProcessExit(
             target_action=load_arm_controller,
+            on_exit=[load_arm_trajectory_controller],
+        )
+    )
+
+    load_head_controller_event = RegisterEventHandler(
+        event_handler=OnProcessExit(
+            target_action=load_arm_trajectory_controller,
             on_exit=[load_head_controller],
         )
     )
@@ -184,6 +211,7 @@ def generate_launch_description():
         gz_sim,
         clock_bridge,
         bridge,
+        twist_mux,
         image_bridge_head_rgb,
         image_bridge_head_depth,
         image_bridge_wrist,
@@ -191,5 +219,6 @@ def generate_launch_description():
         load_joint_state_broadcaster_event,
         load_diff_drive_controller_event,
         load_arm_controller_event,
+        load_arm_trajectory_controller_event,
         load_head_controller_event,
     ])

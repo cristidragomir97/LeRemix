@@ -2,6 +2,7 @@
 
 behavior_server:
   ros__parameters:
+    enable_stamped_cmd_vel: true
     use_sim_time: false
     global_frame: odom
     robot_base_frame: base_link

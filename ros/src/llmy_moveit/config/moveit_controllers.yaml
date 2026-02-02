@@ -1,0 +1,25 @@
+# MoveIt controller configuration
+# Tells MoveIt which ros2_control controllers to use for trajectory execution
+moveit_simple_controller_manager:
+  ros__parameters:
+    controller_names:
+      - arm_trajectory_controller
+      - gripper_controller
+
+    arm_trajectory_controller:
+      action_ns: follow_joint_trajectory
+      type: FollowJointTrajectory
+      default: true
+      joints:
+        - "1"
+        - "2"
+        - "3"
+        - "4"
+        - "5"
+
+    gripper_controller:
+      action_ns: follow_joint_trajectory
+      type: FollowJointTrajectory
+      default: true
+      joints:
+        - "6"

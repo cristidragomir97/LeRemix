@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot name="llmy_root">
+  <!-- Arm planning group: joints 1-5 (base rotation through wrist roll) -->
+  <group name="arm">
+    <chain base_link="arm_base_rotation_servo_1" tip_link="arm_gripper_1"/>
+  </group>
+
+  <!-- Gripper planning group: joint 6 (jaw) -->
+  <group name="gripper">
+    <joint name="6"/>
+  </group>
+
+  <!-- Named states -->
+  <group_state name="home" group="arm">
+    <joint name="1" value="0.0"/>
+    <joint name="2" value="0.0"/>
+    <joint name="3" value="0.0"/>
+    <joint name="4" value="1.57"/>
+    <joint name="5" value="0.0"/>
+  </group_state>
+
+  <group_state name="open" group="gripper">
+    <joint name="6" value="0.0"/>
+  </group_state>
+
+  <group_state name="closed" group="gripper">
+    <joint name="6" value="2.0"/>
+  </group_state>
+
+  <!-- End effector -->
+  <end_effector name="gripper" parent_link="arm_gripper_1" group="gripper"/>
+
+  <!-- Disable collisions between adjacent links -->
+  <disable_collisions link1="arm_base_rotation_servo_1" link2="arm_base_rotation_link_1" reason="Adjacent"/>
+  <disable_collisions link1="arm_base_rotation_link_1" link2="arm_base_rotation_link_cover_1" reason="Adjacent"/>
+  <disable_collisions link1="arm_base_rotation_link_1" link2="arm_shoulder_servo_1" reason="Adjacent"/>
+  <disable_collisions link1="arm_shoulder_servo_1" link2="arm_shoulder_link_1" reason="Adjacent"/>
+  <disable_collisions link1="arm_shoulder_link_1" link2="arm_elbow_servo_1" reason="Adjacent"/>
+  <disable_collisions link1="arm_elbow_servo_1" link2="arm_elbow_link_1" reason="Adjacent"/>
+  <disable_collisions link1="arm_elbow_link_1" link2="arm_wrist_tilt_servo_1" reason="Adjacent"/>
+  <disable_collisions link1="arm_wrist_tilt_servo_1" link2="arm_wrist_link_1" reason="Adjacent"/>
+  <disable_collisions link1="arm_wrist_link_1" link2="arm_wrist_roll_servo_1" reason="Adjacent"/>
+  <disable_collisions link1="arm_wrist_roll_servo_1" link2="arm_gripper_1" reason="Adjacent"/>
+  <disable_collisions link1="arm_gripper_1" link2="arm_gripper_servo_1" reason="Adjacent"/>
+  <disable_collisions link1="arm_gripper_servo_1" link2="arm_jaw_1" reason="Adjacent"/>
+  <disable_collisions link1="arm_gripper_1" link2="arm_jaw_1" reason="Adjacent"/>
+  <disable_collisions link1="arm_gripper_1" link2="wrist_camera_mount_1" reason="Adjacent"/>
+  <disable_collisions link1="wrist_camera_mount_1" link2="wrist_camera_v1_1" reason="Adjacent"/>
+  <disable_collisions link1="arm_base_1" link2="arm_base_rotation_servo_1" reason="Adjacent"/>
+  <disable_collisions link1="arm_base_rotation_link_cover_1" link2="arm_shoulder_servo_1" reason="Never"/>
+  <disable_collisions link1="arm_base_rotation_servo_1" link2="arm_base_1" reason="Adjacent"/>
+</robot>

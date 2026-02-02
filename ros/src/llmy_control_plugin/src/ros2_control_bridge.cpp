@@ -53,7 +53,7 @@ CallbackReturn ROS2ControlBridge::on_init(const hardware_interface::HardwareInfo
       cmd_pos_[j.name] = std::numeric_limits<double>::quiet_NaN();  // Use NaN to indicate no command received
       cmd_pos_received_[j.name] = false;  // Track that no command has been received yet
       pos_state_[j.name] = 0.0;
-      // vel_state_ optional for position joints; leave default 0
+      vel_state_[j.name] = 0.0;  // velocity state for trajectory controller feedback
     }
   }
 
@@ -68,9 +68,10 @@ std::vector<hardware_interface::StateInterface> ROS2ControlBridge::export_state_
     state_interfaces.emplace_back(name, HW_IF_POSITION, &pos_state_[name]);
     state_interfaces.emplace_back(name, HW_IF_VELOCITY, &vel_state_[name]);
   }
-  // Arm joints: position
+  // Arm joints: position & velocity
   for (const auto & name : arm_joints_) {
     state_interfaces.emplace_back(name, HW_IF_POSITION, &pos_state_[name]);
+    state_interfaces.emplace_back(name, HW_IF_VELOCITY, &vel_state_[name]);
   }
   // Camera joints: position
   for (const auto & name : camera_joints_) {

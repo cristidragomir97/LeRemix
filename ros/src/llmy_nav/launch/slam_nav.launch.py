@@ -1,16 +1,17 @@
 #!/usr/bin/env python3
 """
-Navigation Launch File for LLMy Robot
+SLAM + Navigation Launch File for LLMy Robot
 
-Launches the full Nav2 stack for map-based autonomous navigation:
-- map_server: Serves the static map
-- amcl: Particle filter localization
+Launches SLAM Toolbox and Nav2 together for simultaneous mapping and navigation:
+- slam_toolbox: Builds the map and provides map->odom transform
 - planner_server: Global path planning (SmacPlanner2D)
 - controller_server: Local control (MPPI)
 - bt_navigator: Behavior tree execution
 - behavior_server: Recovery behaviors
 - velocity_smoother: Command smoothing
-- lifecycle_manager: Manages node lifecycle
+- lifecycle_manager: Manages all node lifecycles
+
+No map_server or amcl needed — slam_toolbox handles both the map and localization.
 """
 
 import os
@@ -18,7 +19,7 @@ from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, TimerAction
 from launch.substitutions import LaunchConfiguration
-from launch_ros.actions import Node
+from launch_ros.actions import Node, LifecycleNode
 
 
 def generate_launch_description():
@@ -27,23 +28,19 @@ def generate_launch_description():
 
     # Launch arguments
     use_sim_time = LaunchConfiguration('use_sim_time')
-    map_yaml = LaunchConfiguration('map')
     autostart = LaunchConfiguration('autostart')
 
     # Config file paths
+    slam_config = os.path.join(pkg_dir, 'config', 'slam_toolbox.yaml')
     planner_config = os.path.join(pkg_dir, 'config', 'planner.yaml')
     controller_config = os.path.join(pkg_dir, 'config', 'controller.yaml')
-    costmap_config = os.path.join(pkg_dir, 'config', 'costmap.yaml')
-    amcl_config = os.path.join(pkg_dir, 'config', 'amcl.yaml')
+    costmap_config = os.path.join(pkg_dir, 'config', 'costmap_mapfree.yaml')
     bt_config = os.path.join(pkg_dir, 'config', 'bt_navigator.yaml')
     behavior_config = os.path.join(pkg_dir, 'config', 'behavior.yaml')
     smoother_config = os.path.join(pkg_dir, 'config', 'velocity_smoother.yaml')
 
     # BT file paths
     bt_dir = os.path.join(pkg_dir, 'behavior_trees')
-
-    # Default map path
-    default_map = os.path.join(os.path.expanduser('~'), '.llmy', 'maps', 'home.yaml')
 
     return LaunchDescription([
         # Declare launch arguments
@@ -53,38 +50,19 @@ def generate_launch_description():
             description='Use simulation time'
         ),
         DeclareLaunchArgument(
-            'map',
-            default_value=default_map,
-            description='Path to map YAML file'
-        ),
-        DeclareLaunchArgument(
             'autostart',
             default_value='true',
             description='Automatically start lifecycle nodes'
         ),
 
-        # Map Server
-        Node(
-            package='nav2_map_server',
-            executable='map_server',
-            name='map_server',
+        # SLAM Toolbox - provides map topic and map->odom transform
+        LifecycleNode(
+            package='slam_toolbox',
+            executable='async_slam_toolbox_node',
+            name='slam_toolbox',
             output='screen',
             parameters=[
-                {'use_sim_time': use_sim_time},
-                {'yaml_filename': map_yaml},
-                {'topic_name': 'map'},
-                {'frame_id': 'map'},
-            ]
-        ),
-
-        # AMCL - Localization
-        Node(
-            package='nav2_amcl',
-            executable='amcl',
-            name='amcl',
-            output='screen',
-            parameters=[
-                amcl_config,
+                slam_config,
                 {'use_sim_time': use_sim_time},
             ]
         ),
@@ -164,22 +142,21 @@ def generate_launch_description():
             ]
         ),
 
-        # Lifecycle Manager - delayed start to allow nodes to register
+        # Lifecycle Manager - manages all nodes together
         TimerAction(
             period=3.0,
             actions=[
                 Node(
                     package='nav2_lifecycle_manager',
                     executable='lifecycle_manager',
-                    name='lifecycle_manager_navigation',
+                    name='lifecycle_manager_slam_nav',
                     output='screen',
                     parameters=[
                         {'use_sim_time': use_sim_time},
                         {'autostart': autostart},
                         {'bond_timeout': 20.0},
                         {'node_names': [
-                            'map_server',
-                            'amcl',
+                            'slam_toolbox',
                             'planner_server',
                             'controller_server',
                             'bt_navigator',

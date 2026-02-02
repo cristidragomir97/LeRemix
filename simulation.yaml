@@ -68,14 +68,18 @@ components:
         folder: rosboard
     entrypoint: ros2 run rosboard rosboard_node
 
-  - name: slam
+  - name: slam_nav
     runs_on: localhost
     source:
       - ros/src/llmy_description
-      - ros/src/llmy_slam
-    entrypoint: ros2 launch llmy_slam online_mapping_launch.py 
-    
+      - ros/src/llmy_nav
+    entrypoint: ros2 launch llmy_nav slam_nav.launch.py use_sim_time:=true
 
+  - name: moveit
+    runs_on: localhost
+    source:
+      - ros/src/llmy_description
+      - ros/src/llmy_control
+      - ros/src/llmy_moveit
+    entrypoint: ros2 launch llmy_moveit moveit.launch.py use_sim_time:=true launch_rviz:=false
 
-    
-  

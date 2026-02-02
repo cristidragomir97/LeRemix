@@ -16,6 +16,11 @@ def generate_launch_description():
         'config',
         'ros2_control_bridge.yaml'
     ])
+    twist_mux_cfg = PathJoinSubstitution([
+        FindPackageShare('llmy_control'),
+        'config',
+        'twist_mux.yaml'
+    ])
 
     # Robot description (use_sim:=false to exclude Gazebo hardware)
     robot_description_content = Command([
@@ -89,8 +94,23 @@ def generate_launch_description():
         ]
     )
 
-    spawner_head_controller = TimerAction(
+    # Load arm_trajectory_controller in inactive state (for MoveIt)
+    # Use: ros2 control switch_controller --activate arm_trajectory_controller --deactivate arm_controller
+    spawner_arm_trajectory_controller = TimerAction(
         period=11.0,
+        actions=[
+            Node(
+                package='controller_manager',
+                executable='spawner',
+                arguments=['arm_trajectory_controller', '--inactive',
+                           '--controller-manager', '/controller_manager'],
+                output='screen'
+            )
+        ]
+    )
+
+    spawner_head_controller = TimerAction(
+        period=13.0,
         actions=[
             Node(
                 package='controller_manager',
@@ -101,14 +121,28 @@ def generate_launch_description():
         ]
     )
 
+    # Twist mux - multiplexes velocity commands from xbox, nav, mcp
+    twist_mux = Node(
+        package='twist_mux',
+        executable='twist_mux',
+        name='twist_mux',
+        output='screen',
+        parameters=[twist_mux_cfg, {'use_sim_time': False}],
+        remappings=[
+            ('cmd_vel_out', '/diff_drive_controller/cmd_vel'),
+        ]
+    )
+
     return LaunchDescription([
         # Core control nodes
         robot_state_publisher,
         controller_manager,
+        twist_mux,
 
         # Controller spawners
         spawner_joint_state_broadcaster,
         spawner_diff_drive_controller,
         spawner_arm_controller,
+        spawner_arm_trajectory_controller,
         spawner_head_controller,
     ])

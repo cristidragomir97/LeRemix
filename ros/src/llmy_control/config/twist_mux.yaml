@@ -1,0 +1,22 @@
+# Twist multiplexer configuration
+# Prioritizes velocity commands from multiple sources.
+# Higher priority wins when multiple sources publish simultaneously.
+# Output: /diff_drive_controller/cmd_vel (TwistStamped)
+
+twist_mux:
+  ros__parameters:
+    use_stamped: true
+
+    topics:
+      xbox:
+        topic: cmd_vel_xbox
+        timeout: 0.5
+        priority: 50
+      mcp:
+        topic: cmd_vel_mcp
+        timeout: 0.5
+        priority: 30
+      nav:
+        topic: cmd_vel_nav
+        timeout: 0.5
+        priority: 10

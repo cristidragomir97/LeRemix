@@ -296,7 +296,7 @@ def publish_topic(
 
 @mcp.tool
 def publish_twist(
-    topic: Annotated[str, Field(description="Topic name for velocity command")] = "/cmd_vel",
+    topic: Annotated[str, Field(description="Topic name for velocity command")] = "/cmd_vel_mcp",
     linear_x: Annotated[float, Field(description="Forward/backward velocity (m/s)")] = 0.0,
     linear_y: Annotated[float, Field(description="Left/right velocity (m/s)")] = 0.0,
     linear_z: Annotated[float, Field(description="Up/down velocity (m/s)")] = 0.0,
@@ -318,7 +318,7 @@ def publish_twist(
 
 @mcp.tool
 def publish_twist_stamped(
-    topic: Annotated[str, Field(description="Topic name for velocity command")] = "/diff_drive_controller/cmd_vel",
+    topic: Annotated[str, Field(description="Topic name for velocity command")] = "/cmd_vel_mcp",
     linear_x: Annotated[float, Field(description="Forward/backward velocity (m/s)")] = 0.0,
     linear_y: Annotated[float, Field(description="Left/right velocity (m/s)")] = 0.0,
     angular_z: Annotated[float, Field(description="Yaw velocity (rad/s)")] = 0.0,

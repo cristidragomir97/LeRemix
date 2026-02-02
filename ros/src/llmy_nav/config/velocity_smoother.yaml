@@ -3,6 +3,7 @@
 
 velocity_smoother:
   ros__parameters:
+    enable_stamped_cmd_vel: true
     use_sim_time: false
     smoothing_frequency: 20.0
     scale_velocities: false

@@ -1034,11 +1034,12 @@
   <child link="arm_base_rotation_servo_1"/>
 </joint>
 
-<joint name="1" type="continuous">
+<joint name="1" type="revolute">
   <origin xyz="0.0328 0.01025 0.0346" rpy="0 0 0"/>
   <parent link="arm_base_rotation_servo_1"/>
   <child link="arm_base_rotation_link_1"/>
   <axis xyz="0.0 -0.0 -1.0"/>
+  <limit lower="-1.57" upper="1.57" effort="3.0" velocity="5.0"/>
 </joint>
 
 <joint name="Rigid 46" type="fixed">
@@ -1053,18 +1054,20 @@
   <child link="arm_shoulder_servo_1"/>
 </joint>
 
-<joint name="2" type="continuous">
+<joint name="2" type="revolute">
   <origin xyz="-0.01025 -0.0346 0.0328" rpy="0 0 0"/>
   <parent link="arm_shoulder_servo_1"/>
   <child link="arm_shoulder_link_1"/>
   <axis xyz="-0.0 -1.0 -0.0"/>
+  <limit lower="-0.22" upper="3.14" effort="3.0" velocity="5.0"/>
 </joint>
 
-<joint name="3" type="continuous">
+<joint name="3" type="revolute">
   <origin xyz="0.028935 -0.0346 0.018538" rpy="0 0 0"/>
   <parent link="arm_elbow_servo_1"/>
   <child link="arm_elbow_link_1"/>
   <axis xyz="-0.0 -1.0 0.0"/>
+  <limit lower="-2.84" upper="0.0" effort="3.0" velocity="5.0"/>
 </joint>
 
 <joint name="Rigid 52" type="fixed">
@@ -1073,11 +1076,12 @@
   <child link="arm_wrist_tilt_servo_1"/>
 </joint>
 
-<joint name="4" type="continuous">
+<joint name="4" type="revolute">
   <origin xyz="0.025395 -0.0346 -0.023152" rpy="0 0 0"/>
   <parent link="arm_wrist_tilt_servo_1"/>
   <child link="arm_wrist_link_1"/>
   <axis xyz="-0.0 -1.0 0.0"/>
+  <limit lower="0.02" upper="3.32" effort="3.0" velocity="5.0"/>
 </joint>
 
 <joint name="arm_wrist_roll_solid" type="fixed">
@@ -1086,11 +1090,12 @@
   <child link="arm_wrist_roll_servo_1"/>
 </joint>
 
-<joint name="5" type="continuous">
+<joint name="5" type="revolute">
   <origin xyz="-0.001872 0.029 -0.010459" rpy="0 0 0"/>
   <parent link="arm_wrist_roll_servo_1"/>
   <child link="arm_gripper_1"/>
   <axis xyz="0.903146 -0.0 -0.429334"/>
+  <limit lower="-1.04" upper="3.14" effort="3.0" velocity="5.0"/>
 </joint>
 
 <joint name="Rigid 56" type="fixed">
@@ -1099,11 +1104,12 @@
   <child link="arm_gripper_servo_1"/>
 </joint>
 
-<joint name="6" type="continuous">
+<joint name="6" type="revolute">
   <origin xyz="-0.004861 0.034521 -0.034099" rpy="0 0 0"/>
   <parent link="arm_gripper_servo_1"/>
   <child link="arm_jaw_1"/>
   <axis xyz="-0.428777 0.050948 -0.901973"/>
+  <limit lower="0.0" upper="2.14" effort="3.0" velocity="5.0"/>
 </joint>
 
 <joint name="Rigid 165" type="fixed">

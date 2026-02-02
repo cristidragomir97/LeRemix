@@ -30,26 +30,32 @@
         <joint name="1">
             <command_interface name="position"/>
             <state_interface name="position"/>
+            <state_interface name="velocity"/>
         </joint>
         <joint name="2">
             <command_interface name="position"/>
             <state_interface name="position"/>
+            <state_interface name="velocity"/>
         </joint>
         <joint name="3">
             <command_interface name="position"/>
             <state_interface name="position"/>
+            <state_interface name="velocity"/>
         </joint>
         <joint name="4">
             <command_interface name="position"/>
             <state_interface name="position"/>
+            <state_interface name="velocity"/>
         </joint>
         <joint name="5">
             <command_interface name="position"/>
             <state_interface name="position"/>
+            <state_interface name="velocity"/>
         </joint>
         <joint name="6">
             <command_interface name="position"/>
             <state_interface name="position"/>
+            <state_interface name="velocity"/>
         </joint>
 
         <!-- Head/camera joints -->

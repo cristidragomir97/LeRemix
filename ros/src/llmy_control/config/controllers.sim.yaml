@@ -12,6 +12,9 @@ controller_manager:
     arm_controller:
       type: position_controllers/JointGroupPositionController
 
+    arm_trajectory_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+
     head_controller:
       type: position_controllers/JointGroupPositionController
 
@@ -66,6 +69,21 @@ arm_controller:
     state_interfaces:
       - position
     open_loop_control: true
+
+arm_trajectory_controller:
+  ros__parameters:
+    joints: ["1", "2", "3", "4", "5", "6"]
+
+    command_interfaces:
+      - position
+
+    state_interfaces:
+      - position
+      - velocity
+
+    open_loop_control: true
+    allow_partial_joints_goal: false
+    allow_integration_in_goal_trajectories: true
 
 head_controller:
   ros__parameters:
