@@ -193,8 +193,10 @@ graph TB
 - [**llmy_bringup**](ros/src/llmy_bringup/) - Hardware bringup launching camera, IMU, micro-ROS agent, and ros2_control
 
 **Navigation & SLAM:**
-- [**llmy_nav**](ros/src/llmy_nav/) - Nav2 configuration and navigation mode management
-- [**llmy_slam**](ros/src/llmy_slam/) - SLAM integration using slam_toolbox with custom launch files
+- [**llmy_nav**](ros/src/llmy_nav/) - Nav2 configuration and navigation mode management (mapping, navigation, mapfree, slam_nav)
+
+**Manipulation:**
+- [**llmy_moveit**](ros/src/llmy_moveit/) - MoveIt 2 configuration for the 6-DOF arm (OMPL planning, KDL kinematics)
 
 **Sensor & Vision:**
 - [**llmy_camera**](ros/src/llmy_camera/) - RGB-D camera integration with depth-to-laser conversion

@@ -10,6 +10,9 @@
 | **llmy_teleop_xbox** | Xbox controller interface | Python | `/cmd_vel`, `/joy` | `ros2 launch llmy_teleop_xbox teleop_xbox.launch.py` |
 | **llmy_control** | Controller configurations | YAML | N/A (config files) | Loaded by control_plugin |
 | **llmy_camera** | RGB-D camera & vision | Python | `/head_camera/*`, `/scan`, `/wrist_camera/*` | `ros2 launch llmy_camera camera.launch.py` |
+| **llmy_nav** | Navigation & SLAM modes | Python/YAML | `/cmd_vel_nav`, `/map`, `/plan` | `ros2 launch llmy_nav slam_nav.launch.py` |
+| **llmy_moveit** | MoveIt 2 arm planning | YAML/Python | `/move_group/*`, `/planning_scene` | `ros2 launch llmy_moveit moveit.launch.py` |
+| **llmy_mcp** | MCP bridge for LLMs | Python | `/cmd_vel_mcp`, dynamic topics | `ros2 run llmy_mcp mcp_server` |
 | **llmy_imu** | IMU sensor & fusion | Python | `/imu/data`, `/imu/fused` | `ros2 launch llmy_imu imu.launch.py` |
 
 ### 📦 Detailed Package Information
@@ -186,6 +189,110 @@ ros2 launch llmy_teleop_xbox teleop_xbox.launch.py device:=/dev/input/js1
 
 
 
+
+#### **🗺️ llmy_nav - Navigation & SLAM**
+
+**What it does:** Provides multiple navigation modes for the robot — full map-based navigation with AMCL, map-free reactive navigation, SLAM-only mapping, and combined SLAM + Nav2 for simultaneous mapping and navigation. Includes a mode manager for switching between modes at runtime.
+
+**Navigation modes:**
+- **mapping** — Builds a map using slam_toolbox (no autonomous navigation)
+- **navigation** — Full Nav2 with a pre-built map (map_server + AMCL)
+- **mapfree** — Reactive local navigation without any map
+- **slam_nav** — SLAM + Nav2 combined for simultaneous mapping and autonomous navigation
+
+**How to run:**
+```bash
+# SLAM + Navigation (recommended for exploration)
+ros2 launch llmy_nav slam_nav.launch.py
+
+# Map-based navigation (requires a saved map)
+ros2 launch llmy_nav navigation.launch.py map:=/path/to/map.yaml
+
+# Build a map only
+ros2 launch llmy_nav mapping.launch.py
+
+# Reactive navigation without a map
+ros2 launch llmy_nav mapfree.launch.py
+```
+
+**Key topics:**
+- `/cmd_vel_nav` — Navigation velocity output (via velocity_smoother)
+- `/map` — Occupancy grid map
+- `/plan` — Global path plan
+- `/local_costmap/costmap` — Local obstacle map
+- `/global_costmap/costmap` — Global planning map
+
+**Configuration:** Config files in `config/` include controller (MPPI), planner (SmacPlanner2D), costmaps, SLAM toolbox, AMCL, behavior trees, and velocity smoother parameters.
+
+---
+
+#### **🦾 llmy_moveit - Arm Motion Planning**
+
+**What it does:** Provides MoveIt 2 configuration for the SO-ARM101 6-DOF arm + gripper. Enables collision-free trajectory planning, inverse kinematics, and integration with the `arm_trajectory_controller` for precise arm manipulation.
+
+**Nodes launched:**
+- `move_group` — MoveIt 2 planning and execution server
+- `rviz2_moveit` — (Optional) RViz with MoveIt plugin for interactive planning
+
+**How to run:**
+```bash
+# Launch MoveIt (hardware)
+ros2 launch llmy_moveit moveit.launch.py
+
+# Launch MoveIt (simulation)
+ros2 launch llmy_moveit moveit.launch.py use_sim_time:=true
+
+# Without RViz
+ros2 launch llmy_moveit moveit.launch.py launch_rviz:=false
+```
+
+**Planning groups:**
+- `arm` — Joints 1-5 (chain from base to gripper), KDL kinematics, OMPL planners (RRTConnect, RRT, PRM)
+- `gripper` — Joint 6
+
+**Named poses:** `home`, `open`, `closed`
+
+**Controller switching:** MoveIt uses `arm_trajectory_controller`. Switch from direct position control:
+```bash
+ros2 control switch_controller --activate arm_trajectory_controller --deactivate arm_controller
+```
+
+**Configuration:** SRDF, kinematics (KDL), joint limits, OMPL planners, and MoveIt controller mappings in `config/`.
+
+---
+
+#### **🤖 llmy_mcp - MCP Bridge for LLMs**
+
+**What it does:** Dynamic Model Context Protocol (MCP) server that bridges ROS 2 to Large Language Models. Automatically discovers all ROS 2 topics and services at runtime, enabling LLMs to read sensor data, publish commands, and call services through natural language.
+
+**Nodes launched:**
+- `llmy_mcp_bridge` — ROS 2 node running inside the MCP server process
+
+**How to run:**
+```bash
+# Default (stdio transport, for local MCP clients like Claude Desktop)
+ros2 run llmy_mcp mcp_server
+
+# HTTP server (SSE transport, for remote access)
+ros2 run llmy_mcp mcp_server --transport sse --host 0.0.0.0 --port 8765
+
+# With custom config
+ros2 run llmy_mcp mcp_server --config config/mcp_server.yaml
+```
+
+**MCP tools exposed:**
+- `list_topics` / `list_services` — Discover available ROS 2 interfaces
+- `subscribe_topic` / `read_topic` — Read sensor data from any topic
+- `publish_topic` / `publish_twist_stamped` — Send commands to the robot
+- `call_service` — Call any ROS 2 service
+
+**Key topics:**
+- `/cmd_vel_mcp` — Default velocity command output (TwistStamped)
+- Reads from any topic dynamically (auto-subscribes on demand)
+
+**Configuration:** `config/mcp_server.yaml` controls topic/service filtering, QoS settings, auto-subscriptions, and message cache size.
+
+---
 
 #### **📷 llmy_camera - Vision System**
 

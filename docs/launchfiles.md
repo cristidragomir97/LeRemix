@@ -124,6 +124,65 @@ This document provides an overview of all launch files in the LLMy ROS 2 workspa
 
 **Nodes**: joy_node, teleop_xbox (with controller command topics configured)
 
+## Navigation & SLAM Launch Files
+
+### llmy_nav/launch/slam_nav.launch.py
+**Description**: Combined SLAM + Navigation launch — builds the map while navigating autonomously. slam_toolbox provides the map and map→odom transform, replacing both map_server and AMCL.
+
+**Parameters**:
+- `use_sim_time` (bool, default: `false`) - Use simulation time
+- `autostart` (bool, default: `true`) - Automatically start lifecycle nodes
+
+**Nodes**: slam_toolbox (async), planner_server (SmacPlanner2D), controller_server (MPPI), bt_navigator, behavior_server, velocity_smoother, lifecycle_manager_slam_nav
+
+**Remappings**: controller output → `cmd_vel_raw`, smoother output → `cmd_vel_nav`
+
+### llmy_nav/launch/navigation.launch.py
+**Description**: Full Nav2 navigation with a pre-built map. Requires a saved map file.
+
+**Parameters**:
+- `use_sim_time` (bool, default: `false`) - Use simulation time
+- `autostart` (bool, default: `true`) - Automatically start lifecycle nodes
+- `map` (string) - Path to map YAML file
+
+**Nodes**: map_server, amcl, planner_server, controller_server, bt_navigator, behavior_server, velocity_smoother, lifecycle_manager_navigation
+
+### llmy_nav/launch/mapping.launch.py
+**Description**: SLAM-only mode for building maps. No autonomous navigation — just map building while teleoperating.
+
+**Parameters**:
+- `use_sim_time` (bool, default: `false`) - Use simulation time
+- `autostart` (bool, default: `true`) - Automatically start lifecycle nodes
+
+**Nodes**: slam_toolbox (async), lifecycle_manager_slam
+
+### llmy_nav/launch/mapfree.launch.py
+**Description**: Reactive navigation without any map. Publishes an identity map→odom transform and runs local obstacle avoidance only.
+
+**Parameters**:
+- `use_sim_time` (bool, default: `false`) - Use simulation time
+- `autostart` (bool, default: `true`) - Automatically start lifecycle nodes
+
+**Nodes**: static_transform_publisher (map→odom), planner_server, controller_server, bt_navigator, behavior_server, velocity_smoother, lifecycle_manager_mapfree
+
+### llmy_nav/launch/mode_manager.launch.py
+**Description**: Orchestrates switching between navigation modes at runtime.
+
+**Nodes**: mode_manager
+
+## MoveIt Launch Files
+
+### llmy_moveit/launch/moveit.launch.py
+**Description**: MoveIt 2 motion planning for the 6-DOF arm. Launches move_group with OMPL planners and KDL kinematics. Expects the control stack to already be running.
+
+**Parameters**:
+- `use_sim_time` (bool, default: `false`) - Use simulation time
+- `launch_rviz` (bool, default: `true`) - Launch RViz with MoveIt plugin
+
+**Nodes**: move_group, rviz2_moveit (conditional)
+
+**Note**: Requires `arm_trajectory_controller` to be loaded (spawned inactive by control_stack). Activate with: `ros2 control switch_controller --activate arm_trajectory_controller --deactivate arm_controller`
+
 ## Simulation Launch Files
 
 ### llmy_gazebo/launch/sim.launch.py
