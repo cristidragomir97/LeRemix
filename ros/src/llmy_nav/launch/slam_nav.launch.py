@@ -31,7 +31,7 @@ def generate_launch_description():
     autostart = LaunchConfiguration('autostart')
 
     # Config file paths
-    slam_config = os.path.join(pkg_dir, 'config', 'slam_toolbox.yaml')
+    slam_config = os.path.join(pkg_dir, 'config', 'online_mapping.yaml')
     planner_config = os.path.join(pkg_dir, 'config', 'planner.yaml')
     controller_config = os.path.join(pkg_dir, 'config', 'controller.yaml')
     costmap_config = os.path.join(pkg_dir, 'config', 'costmap_mapfree.yaml')
@@ -60,6 +60,7 @@ def generate_launch_description():
             package='slam_toolbox',
             executable='async_slam_toolbox_node',
             name='slam_toolbox',
+            namespace='',
             output='screen',
             parameters=[
                 slam_config,

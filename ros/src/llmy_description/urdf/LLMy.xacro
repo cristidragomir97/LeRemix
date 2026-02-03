@@ -622,9 +622,9 @@
     <material name="silver"/>
   </visual>
   <collision>
-    <origin xyz="-0.059994 0.089655 -0.017248" rpy="0 0 0"/>
+    <origin xyz="0.0 -0.0125 0.0" rpy="1.5708 0 0"/>
     <geometry>
-      <mesh filename="file://$(find llmy_description)/meshes/wheel_right_1.stl" scale="0.001 0.001 0.001"/>
+      <cylinder radius="0.039" length="0.025"/>
     </geometry>
   </collision>
 </link>
@@ -643,9 +643,9 @@
     <material name="silver"/>
   </visual>
   <collision>
-    <origin xyz="-0.059995 -0.089655 -0.017248" rpy="0 0 0"/>
+    <origin xyz="0.0 0.0125 0.0" rpy="1.5708 0 0"/>
     <geometry>
-      <mesh filename="file://$(find llmy_description)/meshes/wheel_left_1.stl" scale="0.001 0.001 0.001"/>
+      <cylinder radius="0.039" length="0.025"/>
     </geometry>
   </collision>
 </link>

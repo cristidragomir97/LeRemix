@@ -1,14 +1,12 @@
 ros_distro: jazzy
 ros_domain_id: 0
-registry: docker.io/dragomirxyz
+registry: localhost:5000
 # ros_apt_mirror: http://apt.core/ros2 
 image_prefix: llmy_sim_cuda
 base_image_override: nvidia/cuda:12.6.1-base-ubuntu24.04
 
 
 rmw_implementation: zenoh
-
-  # Optional Zenoh config
 zenoh:
   router_image: eclipse/zenoh:latest
   router_port: 7447
@@ -32,7 +30,7 @@ components:
     source:
       - ros/src/llmy_description
       - ros/src/llmy_rviz
-    entrypoint: ros2 launch llmy_rviz rviz.launch.py
+    entrypoint: ros2 launch llmy_rviz rviz.launch.py use_sim_time:=true
 
   - name: simulation
     gui: true
@@ -44,7 +42,7 @@ components:
       - ros/src/llmy_control
       - ros/src/llmy_gazebo
     runs_on: localhost
-    entrypoint: ros2 launch llmy_gazebo gazebo.launch.py
+    entrypoint: ros2 launch llmy_gazebo gazebo.launch.py 
 
   - name: xbox
     runs_on: localhost
@@ -52,13 +50,15 @@ components:
     source:
       - ros/src/llmy_description
       - ros/src/llmy_teleop_xbox
-    entrypoint: ros2 launch llmy_teleop_xbox teleop_xbox.launch.py
+    entrypoint: ros2 launch llmy_teleop_xbox teleop_xbox.launch.py use_sim_time:=true
     devices:
       - /dev/input:/dev/input
 
   - name: rosboard
     runs_on: localhost
     apt_packages: []
+    ports: 
+      - "8888:8888"
     pip_packages:
       - tornado
       - simplejpeg

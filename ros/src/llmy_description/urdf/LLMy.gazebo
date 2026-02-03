@@ -373,22 +373,6 @@
   <self_collide>true</self_collide>
 </gazebo>
 
-<gazebo reference="left_caster_1">
-  <material>${body_color}</material>
-  <mu1>0.2</mu1>
-  <mu2>0.2</mu2>
-  <self_collide>true</self_collide>
-</gazebo>
-
-<gazebo reference="right_caster_1">
-  <material>Gazebo/Black</material>
-  <mu1>0.01</mu1>
-  <mu2>0.01</mu2>
-  <self_collide>false</self_collide>
-  <kp>100000.0</kp>
-  <kd>1.0</kd>
-</gazebo>
-
 <!-- Sensors -->
 <gazebo reference="lidar_1">
   <material>Gazebo/Blue</material>
@@ -503,7 +487,7 @@
     <visualize>true</visualize>
     <update_rate>30</update_rate>
     <topic>scan</topic>
-    <gz_frame_id>lidar_1</gz_frame_id>
+    <gz_frame_id>lidar_frame</gz_frame_id>
     <pose>0 0 0.02 0 0 3.14159265359</pose>
     <lidar>
       <scan>

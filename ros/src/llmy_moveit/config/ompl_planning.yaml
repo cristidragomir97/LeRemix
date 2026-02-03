@@ -12,13 +12,7 @@ response_adapters:
   - default_planning_response_adapters/ValidateSolution
   - default_planning_response_adapters/DisplayMotionPath
 
-arm:
-  default_planner_config: RRTConnect
-  planner_configs:
-    - RRTConnect
-    - RRT
-    - PRM
-
+planner_configs:
   RRTConnect:
     type: geometric::RRTConnect
     range: 0.0
@@ -31,3 +25,10 @@ arm:
   PRM:
     type: geometric::PRM
     max_nearest_neighbors: 10
+
+arm:
+  default_planner_config: RRTConnect
+  planner_configs:
+    - RRTConnect
+    - RRT
+    - PRM

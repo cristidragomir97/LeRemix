@@ -7,7 +7,7 @@ planner_server:
     planner_plugins: ["GridBased"]
 
     GridBased:
-      plugin: "nav2_smac_planner/SmacPlanner2D"
+      plugin: "nav2_smac_planner::SmacPlanner2D"
       tolerance: 0.5                      # Goal tolerance in meters
       downsample_costmap: false           # Don't downsample for small robot
       downsampling_factor: 1

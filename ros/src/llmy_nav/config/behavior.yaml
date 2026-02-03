@@ -16,12 +16,12 @@ behavior_server:
     behavior_plugins: ["spin", "backup", "wait"]
 
     spin:
-      plugin: "nav2_behaviors/Spin"
+      plugin: "nav2_behaviors::Spin"
       simulate_ahead_time: 2.0
 
     backup:
-      plugin: "nav2_behaviors/BackUp"
+      plugin: "nav2_behaviors::BackUp"
       simulate_ahead_time: 2.0
 
     wait:
-      plugin: "nav2_behaviors/Wait"
+      plugin: "nav2_behaviors::Wait"

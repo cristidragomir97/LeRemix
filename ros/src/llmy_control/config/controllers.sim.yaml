@@ -26,8 +26,9 @@ diff_drive_controller:
     right_wheel_names: ['right_wheel_joint']
 
     # Robot geometry (measured from URDF)
+    # Robot geometry
     wheel_separation: 0.20111  # Distance between left and right wheels (m)
-    wheel_radius: 0.039      # Wheel radius (m)
+    wheel_radius: 0.039        # Wheel radius (m)
 
     # Wheel separation multiplier for calibration
     wheel_separation_multiplier: 1.0
@@ -41,8 +42,8 @@ diff_drive_controller:
     pose_covariance_diagonal: [0.001, 0.001, 0.001, 0.001, 0.001, 0.01]
     twist_covariance_diagonal: [0.001, 0.001, 0.001, 0.001, 0.001, 0.01]
 
-    # TF publishing - disabled because EKF publishes the filtered odom->base_link transform
-    enable_odom_tf: false
+    # TF publishing - enabled in sim (no EKF in simulation stack)
+    enable_odom_tf: true
     publish_rate: 50.0
 
     # Command timeout

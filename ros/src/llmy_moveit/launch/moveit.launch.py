@@ -73,6 +73,7 @@ def generate_launch_description():
             'pipeline_names': ['ompl'],
         },
         'ompl': ompl_planning_yaml,
+        'moveit_simple_controller_manager': moveit_controllers_yaml,
     }
 
     # Move Group node
@@ -84,7 +85,6 @@ def generate_launch_description():
             robot_description,
             robot_description_semantic,
             moveit_config,
-            moveit_controllers_yaml,
             {'use_sim_time': use_sim_time},
             {'trajectory_execution.allowed_execution_duration_scaling': 2.0},
             {'trajectory_execution.allowed_goal_duration_margin': 1.0},

@@ -6,13 +6,16 @@ from launch_ros.actions import Node
 def generate_launch_description():
     joy_dev = LaunchConfiguration('joy_dev')
     start_switch = LaunchConfiguration('switch_controllers')
+    use_sim_time = LaunchConfiguration('use_sim_time')
 
     return LaunchDescription([
         DeclareLaunchArgument('joy_dev', default_value='0'),
         DeclareLaunchArgument('switch_controllers', default_value='true'),
+        DeclareLaunchArgument('use_sim_time', default_value='false'),
 
         Node(package='joy', executable='joy_node', name='joy',
-             parameters=[{'device_id': joy_dev, 'deadzone': 0.15, 'autorepeat_rate': 25.0}],
+             parameters=[{'device_id': joy_dev, 'deadzone': 0.15, 'autorepeat_rate': 25.0,
+                          'use_sim_time': use_sim_time}],
              output='screen'),
 
         Node(package='llmy_teleop_xbox', executable='teleop_xbox', name='teleop_xbox',
@@ -25,6 +28,7 @@ def generate_launch_description():
                  'linear_scale':1.0,  # Reduced for better control
                  'angular_scale': 1.0,  # Reduced for smoother rotation
                  'acceleration_limit': 5.0,  # Reduced for more realistic acceleration
+                 'use_sim_time': use_sim_time,
              }],
              output='screen'),
     ])
