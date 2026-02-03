@@ -70,10 +70,17 @@ components:
 
   - name: slam_nav
     runs_on: localhost
+    apt_packages:
+      - ros-jazzy-robot-localization
+      - libboost-thread1.83-dev
     source:
       - ros/src/llmy_description
       - ros/src/llmy_nav
-    entrypoint: ros2 launch llmy_nav slam_nav.launch.py use_sim_time:=true
+    repositories:
+      - url: https://github.com/robo-friends/m-explore-ros2
+        version: main
+        folder: m-explore-ros2
+    entrypoint: ros2 launch llmy_nav slam_nav.launch.py use_sim_time:=true explore:=true
 
   - name: moveit
     runs_on: localhost

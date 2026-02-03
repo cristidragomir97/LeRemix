@@ -36,6 +36,9 @@
   <!-- SLAM -->
   <depend>slam_toolbox</depend>
 
+  <!-- Sensor fusion -->
+  <depend>robot_localization</depend>
+
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
 

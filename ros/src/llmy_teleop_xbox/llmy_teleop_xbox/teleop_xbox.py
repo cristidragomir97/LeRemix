@@ -309,6 +309,13 @@ class XboxTeleop(Node):
             vel_diff_lateral = max_delta if vel_diff_lateral > 0 else -max_delta
         self.current_vel_lateral += vel_diff_lateral
         
+        # Only publish when there's actual input (non-zero velocity)
+        # This allows twist_mux to fall through to lower priority topics (e.g. nav)
+        if (abs(self.current_vel_linear) < 0.001 and
+            abs(self.current_vel_lateral) < 0.001 and
+            abs(self.current_vel_angular) < 0.001):
+            return
+
         # Publish smoothed twist
         tw = TwistStamped()
         tw.header.stamp = self.get_clock().now().to_msg()

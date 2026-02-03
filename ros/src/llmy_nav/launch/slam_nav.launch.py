@@ -17,9 +17,14 @@ No map_server or amcl needed — slam_toolbox handles both the map and localizat
 import os
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, TimerAction
+from launch.actions import DeclareLaunchArgument, EmitEvent, RegisterEventHandler, TimerAction
+from launch.conditions import IfCondition
+from launch.events import matches_action
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node, LifecycleNode
+from launch_ros.events.lifecycle import ChangeState
+from launch_ros.event_handlers import OnStateTransition
+from lifecycle_msgs.msg import Transition
 
 
 def generate_launch_description():
@@ -29,8 +34,11 @@ def generate_launch_description():
     # Launch arguments
     use_sim_time = LaunchConfiguration('use_sim_time')
     autostart = LaunchConfiguration('autostart')
+    explore = LaunchConfiguration('explore')
 
     # Config file paths
+    explore_config = os.path.join(pkg_dir, 'config', 'explore.yaml')
+    ekf_config = os.path.join(pkg_dir, 'config', 'ekf.sim.yaml')
     slam_config = os.path.join(pkg_dir, 'config', 'online_mapping.yaml')
     planner_config = os.path.join(pkg_dir, 'config', 'planner.yaml')
     controller_config = os.path.join(pkg_dir, 'config', 'controller.yaml')
@@ -41,6 +49,43 @@ def generate_launch_description():
 
     # BT file paths
     bt_dir = os.path.join(pkg_dir, 'behavior_trees')
+
+    # SLAM Toolbox lifecycle node (self-managed, not via lifecycle_manager)
+    slam_node = LifecycleNode(
+        package='slam_toolbox',
+        executable='async_slam_toolbox_node',
+        name='slam_toolbox',
+        namespace='',
+        output='screen',
+        parameters=[
+            slam_config,
+            {'use_sim_time': use_sim_time},
+        ]
+    )
+
+    # Auto-configure slam_toolbox on startup
+    configure_slam = EmitEvent(
+        event=ChangeState(
+            lifecycle_node_matcher=matches_action(slam_node),
+            transition_id=Transition.TRANSITION_CONFIGURE,
+        )
+    )
+
+    # Auto-activate slam_toolbox after configuration
+    activate_slam = RegisterEventHandler(
+        OnStateTransition(
+            target_lifecycle_node=slam_node,
+            goal_state='inactive',
+            entities=[
+                EmitEvent(
+                    event=ChangeState(
+                        lifecycle_node_matcher=matches_action(slam_node),
+                        transition_id=Transition.TRANSITION_ACTIVATE,
+                    )
+                ),
+            ],
+        )
+    )
 
     return LaunchDescription([
         # Declare launch arguments
@@ -54,19 +99,31 @@ def generate_launch_description():
             default_value='true',
             description='Automatically start lifecycle nodes'
         ),
+        DeclareLaunchArgument(
+            'explore',
+            default_value='false',
+            description='Enable autonomous frontier exploration'
+        ),
 
-        # SLAM Toolbox - provides map topic and map->odom transform
-        LifecycleNode(
-            package='slam_toolbox',
-            executable='async_slam_toolbox_node',
-            name='slam_toolbox',
-            namespace='',
+        # EKF node for sensor fusion (wheel odom + IMU)
+        Node(
+            package='robot_localization',
+            executable='ekf_node',
+            name='ekf_filter_node',
             output='screen',
             parameters=[
-                slam_config,
+                ekf_config,
                 {'use_sim_time': use_sim_time},
+            ],
+            remappings=[
+                ('odometry/filtered', '/odometry/filtered'),
             ]
         ),
+
+        # SLAM Toolbox - self-managed lifecycle (configure + activate)
+        slam_node,
+        configure_slam,
+        activate_slam,
 
         # Planner Server
         Node(
@@ -144,8 +201,9 @@ def generate_launch_description():
         ),
 
         # Lifecycle Manager - manages all nodes together
+        # Delayed to allow EKF to start publishing odom->base_footprint TF
         TimerAction(
-            period=3.0,
+            period=10.0,
             actions=[
                 Node(
                     package='nav2_lifecycle_manager',
@@ -155,9 +213,8 @@ def generate_launch_description():
                     parameters=[
                         {'use_sim_time': use_sim_time},
                         {'autostart': autostart},
-                        {'bond_timeout': 20.0},
+                        {'bond_timeout': 30.0},
                         {'node_names': [
-                            'slam_toolbox',
                             'planner_server',
                             'controller_server',
                             'bt_navigator',
@@ -165,6 +222,24 @@ def generate_launch_description():
                             'velocity_smoother',
                         ]},
                     ]
+                ),
+            ]
+        ),
+
+        # Autonomous frontier exploration (optional)
+        TimerAction(
+            period=20.0,
+            actions=[
+                Node(
+                    condition=IfCondition(explore),
+                    package='explore_lite',
+                    executable='explore',
+                    name='explore_node',
+                    output='screen',
+                    parameters=[
+                        explore_config,
+                        {'use_sim_time': use_sim_time},
+                    ],
                 ),
             ]
         ),
