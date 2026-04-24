@@ -88,7 +88,7 @@ arm_trajectory_controller:
 
 head_controller:
   ros__parameters:
-    joints: ["pan", "tilt"]
+    joints: ["tilt"]
     command_interfaces:
       - position
     state_interfaces:

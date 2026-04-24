@@ -1,6 +1,9 @@
 <?xml version="1.0"?>
 <robot name="LLMy" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
+    <!-- Force sim off so LLMy.xacro doesn't include the Gazebo ros2_control block. -->
+    <xacro:arg name="use_sim" default="false"/>
+
     <!-- Base model from description (without sim ros2_control) -->
     <xacro:include filename="$(find llmy_description)/urdf/LLMy.xacro"/>
 
@@ -58,11 +61,7 @@
             <state_interface name="velocity"/>
         </joint>
 
-        <!-- Head/camera joints -->
-        <joint name="pan">
-            <command_interface name="position"/>
-            <state_interface name="position"/>
-        </joint>
+        <!-- Head/camera joint (canvas design: tilt only, no pan) -->
         <joint name="tilt">
             <command_interface name="position"/>
             <state_interface name="position"/>

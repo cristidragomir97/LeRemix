@@ -155,13 +155,6 @@ def generate_launch_description():
         output='screen'
     )
 
-    # Arm Trajectory Controller (inactive, for MoveIt)
-    load_arm_trajectory_controller = ExecuteProcess(
-        cmd=['ros2', 'control', 'load_controller', '--set-state', 'inactive',
-             'arm_trajectory_controller'],
-        output='screen'
-    )
-
     # Head Controller
     load_head_controller = ExecuteProcess(
         cmd=['ros2', 'control', 'load_controller', '--set-state', 'active',
@@ -177,31 +170,26 @@ def generate_launch_description():
         )
     )
 
-    load_diff_drive_controller_event = RegisterEventHandler(
-        event_handler=OnProcessExit(
-            target_action=load_joint_state_broadcaster,
-            on_exit=[load_diff_drive_controller],
-        )
-    )
-
+    # Load arm + head controllers immediately after joint_state_broadcaster
+    # to minimize gravity sag before position control is active
     load_arm_controller_event = RegisterEventHandler(
         event_handler=OnProcessExit(
-            target_action=load_diff_drive_controller,
+            target_action=load_joint_state_broadcaster,
             on_exit=[load_arm_controller],
-        )
-    )
-
-    load_arm_trajectory_controller_event = RegisterEventHandler(
-        event_handler=OnProcessExit(
-            target_action=load_arm_controller,
-            on_exit=[load_arm_trajectory_controller],
         )
     )
 
     load_head_controller_event = RegisterEventHandler(
         event_handler=OnProcessExit(
-            target_action=load_arm_trajectory_controller,
+            target_action=load_arm_controller,
             on_exit=[load_head_controller],
+        )
+    )
+
+    load_diff_drive_controller_event = RegisterEventHandler(
+        event_handler=OnProcessExit(
+            target_action=load_head_controller,
+            on_exit=[load_diff_drive_controller],
         )
     )
 
@@ -219,6 +207,5 @@ def generate_launch_description():
         load_joint_state_broadcaster_event,
         load_diff_drive_controller_event,
         load_arm_controller_event,
-        load_arm_trajectory_controller_event,
         load_head_controller_event,
     ])

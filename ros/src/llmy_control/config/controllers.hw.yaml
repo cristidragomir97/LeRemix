@@ -48,7 +48,7 @@ arm_trajectory_controller:
 
 head_controller:
   ros__parameters:
-    joints: ["pan", "tilt"]
+    joints: ["tilt"]
 
     command_interfaces:
       - position
@@ -66,8 +66,8 @@ diff_drive_controller:
     right_wheel_names: ['right_wheel_joint']
 
     # Robot geometry
-    wheel_separation: 0.20111  # Distance between left and right wheels (m)
-    wheel_radius: 0.039        # Wheel radius (m)
+    wheel_separation: 0.20381  # Distance between left and right wheels (m)
+    wheel_radius: 0.03725        # Wheel radius (m)
 
     # Wheel separation multiplier for calibration
     wheel_separation_multiplier: 1.0
@@ -87,13 +87,13 @@ diff_drive_controller:
 
     # Velocity limits
     linear.x.has_velocity_limits: true
-    linear.x.max_velocity: 1.0
-    linear.x.min_velocity: -1.0
+    linear.x.max_velocity: 0.5
+    linear.x.min_velocity: -0.5
     linear.x.has_acceleration_limits: true
-    linear.x.max_acceleration: 2.0
+    linear.x.max_acceleration: 0.5
 
     angular.z.has_velocity_limits: true
-    angular.z.max_velocity: 2.0
-    angular.z.min_velocity: -2.0
+    angular.z.max_velocity: 1.5
+    angular.z.min_velocity: -1.5
     angular.z.has_acceleration_limits: true
-    angular.z.max_acceleration: 3.0
+    angular.z.max_acceleration: 1.5

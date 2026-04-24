@@ -1,6 +1,6 @@
 ros_distro: jazzy
 ros_domain_id: 0
-registry: localhost:5000
+registry: dragomirxyz
 # ros_apt_mirror: http://apt.core/ros2 
 image_prefix: llmy_sim_cuda
 base_image_override: nvidia/cuda:12.6.1-base-ubuntu24.04
@@ -18,19 +18,11 @@ hosts:
     user: cdr 
     arch: amd64
     manager: true
+    build_on_device: true
     mount_root: /home/cdr/robocore-deploy
 
 components:
 
-  - name: rviz
-    gui: true
-    apt_packages:
-      - ros-jazzy-rviz2
-    runs_on: localhost
-    source:
-      - ros/src/llmy_description
-      - ros/src/llmy_rviz
-    entrypoint: ros2 launch llmy_rviz rviz.launch.py use_sim_time:=true
 
   - name: simulation
     gui: true
@@ -68,25 +60,25 @@ components:
         folder: rosboard
     entrypoint: ros2 run rosboard rosboard_node
 
-  - name: slam_nav
-    runs_on: localhost
-    apt_packages:
-      - ros-jazzy-robot-localization
-      - libboost-thread1.83-dev
-    source:
-      - ros/src/llmy_description
-      - ros/src/llmy_nav
-    repositories:
-      - url: https://github.com/robo-friends/m-explore-ros2
-        version: main
-        folder: m-explore-ros2
-    entrypoint: ros2 launch llmy_nav slam_nav.launch.py use_sim_time:=true explore:=true
+#  - name: slam_nav
+#    runs_on: localhost
+#    apt_packages:
+#      - ros-jazzy-robot-localization
+#      - libboost-thread1.83-dev
+#    source:
+#      - ros/src/llmy_description
+#      - ros/src/llmy_nav
+#    repositories:
+#      - url: https://github.com/robo-friends/m-explore-ros2
+#        version: main
+#        folder: m-explore-ros2
+#    entrypoint: ros2 launch llmy_nav slam_nav.launch.py use_sim_time:=true explore:=true
 
-  - name: moveit
-    runs_on: localhost
-    source:
-      - ros/src/llmy_description
-      - ros/src/llmy_control
-      - ros/src/llmy_moveit
-    entrypoint: ros2 launch llmy_moveit moveit.launch.py use_sim_time:=true launch_rviz:=false
+#  - name: moveit
+#    runs_on: localhost
+#    source:
+#      - ros/src/llmy_description
+#      - ros/src/llmy_control
+#      - ros/src/llmy_moveit
+#    entrypoint: ros2 launch llmy_moveit moveit.launch.py use_sim_time:=true launch_rviz:=false
 

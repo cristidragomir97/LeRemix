@@ -9,7 +9,7 @@ import sys
 from st3215 import ST3215
 
 
-def check_motor_states(port="/dev/ttyUSB0"):
+def check_motor_states(port="/dev/ttyACM1"):
     """Check the mode and status of all motors"""
     
     try:

@@ -35,87 +35,46 @@
 
     <!-- Arm Joints -->
     <joint name="1">
-      <command_interface name="position">
-        <param name="min">-1.57</param>
-        <param name="max">1.57</param>
-      </command_interface>
-      <state_interface name="position">
-        <param name="initial_value">0.0</param>
-      </state_interface>
+      <command_interface name="position"/>
+      <state_interface name="position"/>
       <state_interface name="velocity"/>
     </joint>
 
     <joint name="2">
-      <command_interface name="position">
-        <param name="min">-0.22</param>
-        <param name="max">3.14</param>
-      </command_interface>
-      <state_interface name="position">
-        <param name="initial_value">0.0</param>
-      </state_interface>
+      <command_interface name="position"/>
+      <state_interface name="position"/>
       <state_interface name="velocity"/>
     </joint>
 
     <joint name="3">
-      <command_interface name="position">
-        <param name="min">-2.84</param>
-        <param name="max">0.0</param>
-      </command_interface>
-      <state_interface name="position">
-        <param name="initial_value">0.0</param>
-      </state_interface>
+      <command_interface name="position"/>
+      <state_interface name="position"/>
       <state_interface name="velocity"/>
     </joint>
 
     <joint name="4">
-      <command_interface name="position">
-        <param name="min">0.02</param>
-        <param name="max">3.32</param>
-      </command_interface>
-      <state_interface name="position">
-        <param name="initial_value">1.57</param>
-      </state_interface>
+      <command_interface name="position"/>
+      <state_interface name="position"/>
       <state_interface name="velocity"/>
     </joint>
 
     <joint name="5">
-      <command_interface name="position">
-        <param name="min">-1.04</param>
-        <param name="max">3.14</param>
-      </command_interface>
-      <state_interface name="position">
-        <param name="initial_value">0.0</param>
-      </state_interface>
+      <command_interface name="position"/>
+      <state_interface name="position"/>
       <state_interface name="velocity"/>
     </joint>
 
     <joint name="6">
-      <command_interface name="position">
-        <param name="min">0.0</param>
-        <param name="max">2.14</param>
-      </command_interface>
-      <state_interface name="position">
-        <param name="initial_value">1.0</param>
-      </state_interface>
+      <command_interface name="position"/>
+      <state_interface name="position"/>
       <state_interface name="velocity"/>
     </joint>
 
-    <!-- Head Joints -->
-    <joint name="pan">
-      <command_interface name="position"/>
-      <state_interface name="position">
-        <param name="initial_value">0.0</param>
-      </state_interface>
-    </joint>
+    <!-- Head Joints (camera tilt only) -->
 
     <joint name="tilt">
-      <command_interface name="position">
-        <param name="min">-1.57</param>
-        <param name="max">0.86</param>
-      </command_interface>
-      <state_interface name="position">
-        <param name="initial_value">0.0</param>
-      </state_interface>
+      <command_interface name="position"/>
+      <state_interface name="position"/>
     </joint>
 
   </ros2_control>

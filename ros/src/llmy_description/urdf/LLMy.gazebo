@@ -1,8 +1,6 @@
 <?xml version="1.0" ?>
 <robot name="llmy_root" xmlns:xacro="http://www.ros.org/wiki/xacro" xmlns:gz="http://gazebosim.org/schema">
 
-<xacro:property name="body_color" value="Gazebo/DarkGrey" />
-
 <!-- ros2_control plugin for Gazebo -->
 <gazebo>
   <plugin filename="gz_ros2_control-system" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
@@ -10,506 +8,748 @@
   </plugin>
 </gazebo>
 
-<!-- Base link -->
-<gazebo reference="base_link">
-  <material>${body_color}</material>
-  <mu1>0.2</mu1>
-  <mu2>0.2</mu2>
-  <self_collide>false</self_collide>
-  <gravity>true</gravity>
-</gazebo>
+  <!-- Per-link Gazebo materials, matching URDF <material> definitions. -->
 
-<gazebo reference="arm_base_rotation_servo_1">
-  <material>${body_color}</material>
-  <mu1>0.2</mu1>
-  <mu2>0.2</mu2>
-  <self_collide>true</self_collide>
-</gazebo>
+  <gazebo reference="base_link">
+    <material>Gazebo/DarkGrey</material>
+    <visual>
+      <material>
+        <ambient>0.180 0.180 0.200 1.0</ambient>
+        <diffuse>0.180 0.180 0.200 1.0</diffuse>
+        <specular>0.1 0.1 0.1 1.0</specular>
+      </material>
+    </visual>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <self_collide>true</self_collide>
+  </gazebo>
 
-<gazebo reference="arm_base_rotation_link_1">
-  <material>${body_color}</material>
-  <mu1>0.2</mu1>
-  <mu2>0.2</mu2>
-  <self_collide>true</self_collide>
-</gazebo>
+  <gazebo reference="right_motor_mount_1">
+    <material>Gazebo/DarkGreen</material>
+    <visual>
+      <material>
+        <ambient>0.102 0.345 0.176 1.0</ambient>
+        <diffuse>0.102 0.345 0.176 1.0</diffuse>
+        <specular>0.1 0.1 0.1 1.0</specular>
+      </material>
+    </visual>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <self_collide>true</self_collide>
+  </gazebo>
 
-<gazebo reference="arm_base_rotation_link_cover_1">
-  <material>${body_color}</material>
-  <mu1>0.2</mu1>
-  <mu2>0.2</mu2>
-  <self_collide>true</self_collide>
-</gazebo>
+  <gazebo reference="right_motor_1">
+    <material>Gazebo/Grey</material>
+    <visual>
+      <material>
+        <ambient>0.550 0.550 0.550 1.0</ambient>
+        <diffuse>0.550 0.550 0.550 1.0</diffuse>
+        <specular>0.1 0.1 0.1 1.0</specular>
+      </material>
+    </visual>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <self_collide>true</self_collide>
+  </gazebo>
 
-<gazebo reference="arm_shoulder_servo_1">
-  <material>${body_color}</material>
-  <mu1>0.2</mu1>
-  <mu2>0.2</mu2>
-  <self_collide>true</self_collide>
-</gazebo>
+  <gazebo reference="wheel_right_1">
+    <material>Gazebo/FlatBlack</material>
+    <visual>
+      <material>
+        <ambient>0.098 0.098 0.098 1.0</ambient>
+        <diffuse>0.098 0.098 0.098 1.0</diffuse>
+        <specular>0.1 0.1 0.1 1.0</specular>
+      </material>
+    </visual>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <self_collide>true</self_collide>
+  </gazebo>
 
-<gazebo reference="arm_shoulder_link_1">
-  <material>${body_color}</material>
-  <mu1>0.2</mu1>
-  <mu2>0.2</mu2>
-  <self_collide>true</self_collide>
-</gazebo>
+  <gazebo reference="left_motor_mount_1">
+    <material>Gazebo/DarkGreen</material>
+    <visual>
+      <material>
+        <ambient>0.102 0.345 0.176 1.0</ambient>
+        <diffuse>0.102 0.345 0.176 1.0</diffuse>
+        <specular>0.1 0.1 0.1 1.0</specular>
+      </material>
+    </visual>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <self_collide>true</self_collide>
+  </gazebo>
 
-<gazebo reference="arm_elbow_link_1">
-  <material>${body_color}</material>
-  <mu1>0.2</mu1>
-  <mu2>0.2</mu2>
-  <self_collide>true</self_collide>
-</gazebo>
+  <gazebo reference="left_motor_1">
+    <material>Gazebo/Grey</material>
+    <visual>
+      <material>
+        <ambient>0.550 0.550 0.550 1.0</ambient>
+        <diffuse>0.550 0.550 0.550 1.0</diffuse>
+        <specular>0.1 0.1 0.1 1.0</specular>
+      </material>
+    </visual>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <self_collide>true</self_collide>
+  </gazebo>
 
-<gazebo reference="arm_wrist_tilt_servo_1">
-  <material>${body_color}</material>
-  <mu1>0.2</mu1>
-  <mu2>0.2</mu2>
-  <self_collide>true</self_collide>
-</gazebo>
+  <gazebo reference="wheel_left_1">
+    <material>Gazebo/FlatBlack</material>
+    <visual>
+      <material>
+        <ambient>0.098 0.098 0.098 1.0</ambient>
+        <diffuse>0.098 0.098 0.098 1.0</diffuse>
+        <specular>0.1 0.1 0.1 1.0</specular>
+      </material>
+    </visual>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <self_collide>true</self_collide>
+  </gazebo>
 
-<gazebo reference="arm_wrist_link_1">
-  <material>${body_color}</material>
-  <mu1>0.2</mu1>
-  <mu2>0.2</mu2>
-  <self_collide>true</self_collide>
-</gazebo>
+  <gazebo reference="right_caster_1">
+    <material>Gazebo/SkyBlue</material>
+    <visual>
+      <material>
+        <ambient>0.792 0.820 0.933 1.0</ambient>
+        <diffuse>0.792 0.820 0.933 1.0</diffuse>
+        <specular>0.1 0.1 0.1 1.0</specular>
+      </material>
+    </visual>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <self_collide>true</self_collide>
+  </gazebo>
 
-<gazebo reference="arm_wrist_roll_servo_1">
-  <material>${body_color}</material>
-  <mu1>0.2</mu1>
-  <mu2>0.2</mu2>
-  <self_collide>true</self_collide>
-</gazebo>
+  <gazebo reference="left_caster_1">
+    <material>Gazebo/SkyBlue</material>
+    <visual>
+      <material>
+        <ambient>0.792 0.820 0.933 1.0</ambient>
+        <diffuse>0.792 0.820 0.933 1.0</diffuse>
+        <specular>0.1 0.1 0.1 1.0</specular>
+      </material>
+    </visual>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <self_collide>true</self_collide>
+  </gazebo>
 
-<gazebo reference="arm_gripper_1">
-  <material>${body_color}</material>
-  <mu1>0.2</mu1>
-  <mu2>0.2</mu2>
-  <self_collide>true</self_collide>
-</gazebo>
+  <gazebo reference="right_baseus_mount_v1_1">
+    <material>Gazebo/DarkGreen</material>
+    <visual>
+      <material>
+        <ambient>0.102 0.345 0.176 1.0</ambient>
+        <diffuse>0.102 0.345 0.176 1.0</diffuse>
+        <specular>0.1 0.1 0.1 1.0</specular>
+      </material>
+    </visual>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <self_collide>true</self_collide>
+  </gazebo>
 
-<gazebo reference="arm_gripper_servo_1">
-  <material>${body_color}</material>
-  <mu1>0.2</mu1>
-  <mu2>0.2</mu2>
-  <self_collide>true</self_collide>
-</gazebo>
+  <gazebo reference="left_baseus_mount_v1_1">
+    <material>Gazebo/DarkGreen</material>
+    <visual>
+      <material>
+        <ambient>0.102 0.345 0.176 1.0</ambient>
+        <diffuse>0.102 0.345 0.176 1.0</diffuse>
+        <specular>0.1 0.1 0.1 1.0</specular>
+      </material>
+    </visual>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <self_collide>true</self_collide>
+  </gazebo>
 
-<gazebo reference="arm_jaw_1">
-  <material>${body_color}</material>
-  <mu1>0.2</mu1>
-  <mu2>0.2</mu2>
-  <self_collide>true</self_collide>
-</gazebo>
+  <gazebo reference="llmy_lidar_base_v1_1">
+    <material>Gazebo/DarkGreen</material>
+    <visual>
+      <material>
+        <ambient>0.102 0.345 0.176 1.0</ambient>
+        <diffuse>0.102 0.345 0.176 1.0</diffuse>
+        <specular>0.1 0.1 0.1 1.0</specular>
+      </material>
+    </visual>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <self_collide>true</self_collide>
+  </gazebo>
 
-<gazebo reference="head_camera_1">
-  <material>${body_color}</material>
-  <mu1>0.2</mu1>
-  <mu2>0.2</mu2>
-  <self_collide>true</self_collide>
-</gazebo>
+  <gazebo reference="lidar_1">
+    <material>Gazebo/DarkGrey</material>
+    <visual>
+      <material>
+        <ambient>0.200 0.200 0.200 1.0</ambient>
+        <diffuse>0.200 0.200 0.200 1.0</diffuse>
+        <specular>0.1 0.1 0.1 1.0</specular>
+      </material>
+    </visual>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <self_collide>true</self_collide>
+  </gazebo>
 
-<gazebo reference="pan_link_1">
-  <material>${body_color}</material>
-  <mu1>0.2</mu1>
-  <mu2>0.2</mu2>
-  <self_collide>true</self_collide>
-</gazebo>
+  <gazebo reference="frame_short_right">
+    <material>Gazebo/Silver</material>
+    <visual>
+      <material>
+        <ambient>0.850 0.870 0.900 1.0</ambient>
+        <diffuse>0.850 0.870 0.900 1.0</diffuse>
+        <specular>0.1 0.1 0.1 1.0</specular>
+      </material>
+    </visual>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <self_collide>true</self_collide>
+  </gazebo>
 
-<gazebo reference="tilt_servo_1">
-  <material>${body_color}</material>
-  <mu1>0.2</mu1>
-  <mu2>0.2</mu2>
-  <self_collide>true</self_collide>
-</gazebo>
+  <gazebo reference="frame_short_left">
+    <material>Gazebo/Silver</material>
+    <visual>
+      <material>
+        <ambient>0.850 0.870 0.900 1.0</ambient>
+        <diffuse>0.850 0.870 0.900 1.0</diffuse>
+        <specular>0.1 0.1 0.1 1.0</specular>
+      </material>
+    </visual>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <self_collide>true</self_collide>
+  </gazebo>
 
-<gazebo reference="tilt_link_cover_1">
-  <material>${body_color}</material>
-  <mu1>0.2</mu1>
-  <mu2>0.2</mu2>
-  <self_collide>true</self_collide>
-</gazebo>
+  <gazebo reference="frame_tall_bl">
+    <material>Gazebo/Silver</material>
+    <visual>
+      <material>
+        <ambient>0.850 0.870 0.900 1.0</ambient>
+        <diffuse>0.850 0.870 0.900 1.0</diffuse>
+        <specular>0.1 0.1 0.1 1.0</specular>
+      </material>
+    </visual>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <self_collide>true</self_collide>
+  </gazebo>
 
-<gazebo reference="realsense_support_v1_1">
-  <material>${body_color}</material>
-  <mu1>0.2</mu1>
-  <mu2>0.2</mu2>
-  <self_collide>true</self_collide>
-</gazebo>
+  <gazebo reference="frame_tall_br">
+    <material>Gazebo/Silver</material>
+    <visual>
+      <material>
+        <ambient>0.850 0.870 0.900 1.0</ambient>
+        <diffuse>0.850 0.870 0.900 1.0</diffuse>
+        <specular>0.1 0.1 0.1 1.0</specular>
+      </material>
+    </visual>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <self_collide>true</self_collide>
+  </gazebo>
 
-<gazebo reference="pan_servo__1__1">
-  <material>${body_color}</material>
-  <mu1>0.2</mu1>
-  <mu2>0.2</mu2>
-  <self_collide>true</self_collide>
-</gazebo>
+  <gazebo reference="frame_tall_fr">
+    <material>Gazebo/Silver</material>
+    <visual>
+      <material>
+        <ambient>0.850 0.870 0.900 1.0</ambient>
+        <diffuse>0.850 0.870 0.900 1.0</diffuse>
+        <specular>0.1 0.1 0.1 1.0</specular>
+      </material>
+    </visual>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <self_collide>true</self_collide>
+  </gazebo>
 
-<gazebo reference="wrist_camera_mount_1">
-  <material>${body_color}</material>
-  <mu1>0.2</mu1>
-  <mu2>0.2</mu2>
-  <self_collide>true</self_collide>
-</gazebo>
+  <gazebo reference="frame_tall_fl">
+    <material>Gazebo/Silver</material>
+    <visual>
+      <material>
+        <ambient>0.850 0.870 0.900 1.0</ambient>
+        <diffuse>0.850 0.870 0.900 1.0</diffuse>
+        <specular>0.1 0.1 0.1 1.0</specular>
+      </material>
+    </visual>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <self_collide>true</self_collide>
+  </gazebo>
 
-<gazebo reference="wrist_camera_v1_1">
-  <material>${body_color}</material>
-  <mu1>0.2</mu1>
-  <mu2>0.2</mu2>
-  <self_collide>true</self_collide>
-</gazebo>
+  <gazebo reference="frame_corner_bl">
+    <material>Gazebo/DarkGreen</material>
+    <visual>
+      <material>
+        <ambient>0.102 0.345 0.176 1.0</ambient>
+        <diffuse>0.102 0.345 0.176 1.0</diffuse>
+        <specular>0.1 0.1 0.1 1.0</specular>
+      </material>
+    </visual>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <self_collide>true</self_collide>
+  </gazebo>
 
-<gazebo reference="lidar_1">
-  <material>${body_color}</material>
-  <mu1>0.2</mu1>
-  <mu2>0.2</mu2>
-  <self_collide>true</self_collide>
-</gazebo>
+  <gazebo reference="frame_corner_br">
+    <material>Gazebo/DarkGreen</material>
+    <visual>
+      <material>
+        <ambient>0.102 0.345 0.176 1.0</ambient>
+        <diffuse>0.102 0.345 0.176 1.0</diffuse>
+        <specular>0.1 0.1 0.1 1.0</specular>
+      </material>
+    </visual>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <self_collide>true</self_collide>
+  </gazebo>
 
-<gazebo reference="llmy_lidar_base_v1_1">
-  <material>${body_color}</material>
-  <mu1>0.2</mu1>
-  <mu2>0.2</mu2>
-  <self_collide>true</self_collide>
-</gazebo>
+  <gazebo reference="frame_corner_fr">
+    <material>Gazebo/DarkGreen</material>
+    <visual>
+      <material>
+        <ambient>0.102 0.345 0.176 1.0</ambient>
+        <diffuse>0.102 0.345 0.176 1.0</diffuse>
+        <specular>0.1 0.1 0.1 1.0</specular>
+      </material>
+    </visual>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <self_collide>true</self_collide>
+  </gazebo>
 
-<gazebo reference="left_motor_1">
-  <material>${body_color}</material>
-  <mu1>0.2</mu1>
-  <mu2>0.2</mu2>
-  <self_collide>true</self_collide>
-</gazebo>
+  <gazebo reference="frame_corner_fl">
+    <material>Gazebo/DarkGreen</material>
+    <visual>
+      <material>
+        <ambient>0.102 0.345 0.176 1.0</ambient>
+        <diffuse>0.102 0.345 0.176 1.0</diffuse>
+        <specular>0.1 0.1 0.1 1.0</specular>
+      </material>
+    </visual>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <self_collide>true</self_collide>
+  </gazebo>
 
-<gazebo reference="left_motor_mount_1">
-  <material>${body_color}</material>
-  <mu1>0.2</mu1>
-  <mu2>0.2</mu2>
-  <self_collide>true</self_collide>
-</gazebo>
+  <gazebo reference="frame_top_left">
+    <material>Gazebo/Silver</material>
+    <visual>
+      <material>
+        <ambient>0.850 0.870 0.900 1.0</ambient>
+        <diffuse>0.850 0.870 0.900 1.0</diffuse>
+        <specular>0.1 0.1 0.1 1.0</specular>
+      </material>
+    </visual>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <self_collide>true</self_collide>
+  </gazebo>
 
-<gazebo reference="right_motor_1">
-  <material>${body_color}</material>
-  <mu1>0.2</mu1>
-  <mu2>0.2</mu2>
-  <self_collide>true</self_collide>
-</gazebo>
+  <gazebo reference="frame_top_right">
+    <material>Gazebo/Silver</material>
+    <visual>
+      <material>
+        <ambient>0.850 0.870 0.900 1.0</ambient>
+        <diffuse>0.850 0.870 0.900 1.0</diffuse>
+        <specular>0.1 0.1 0.1 1.0</specular>
+      </material>
+    </visual>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <self_collide>true</self_collide>
+  </gazebo>
 
-<gazebo reference="right_motor_mount_1">
-  <material>${body_color}</material>
-  <mu1>0.2</mu1>
-  <mu2>0.2</mu2>
-  <self_collide>true</self_collide>
-</gazebo>
+  <gazebo reference="frame_top_front">
+    <material>Gazebo/Silver</material>
+    <visual>
+      <material>
+        <ambient>0.850 0.870 0.900 1.0</ambient>
+        <diffuse>0.850 0.870 0.900 1.0</diffuse>
+        <specular>0.1 0.1 0.1 1.0</specular>
+      </material>
+    </visual>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <self_collide>true</self_collide>
+  </gazebo>
 
-<gazebo reference="llmy_base_backpack_v1_1">
-  <material>${body_color}</material>
-  <mu1>0.2</mu1>
-  <mu2>0.2</mu2>
-  <self_collide>true</self_collide>
-</gazebo>
+  <gazebo reference="frame_top_back">
+    <material>Gazebo/Silver</material>
+    <visual>
+      <material>
+        <ambient>0.850 0.870 0.900 1.0</ambient>
+        <diffuse>0.850 0.870 0.900 1.0</diffuse>
+        <specular>0.1 0.1 0.1 1.0</specular>
+      </material>
+    </visual>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <self_collide>true</self_collide>
+  </gazebo>
 
-<!-- Wheel friction for differential drive -->
-<gazebo reference="wheel_right_1">
-  <material>Gazebo/Black</material>
-  <mu1>1.2</mu1>
-  <mu2>1.2</mu2>
-  <self_collide>false</self_collide>
-  <kp>100000.0</kp>
-  <kd>1000.0</kd>
-</gazebo>
+  <gazebo reference="modular_floor">
+    <material>Gazebo/DarkGrey</material>
+    <visual>
+      <material>
+        <ambient>0.200 0.200 0.200 1.0</ambient>
+        <diffuse>0.200 0.200 0.200 1.0</diffuse>
+        <specular>0.1 0.1 0.1 1.0</specular>
+      </material>
+    </visual>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <self_collide>true</self_collide>
+  </gazebo>
 
-<gazebo reference="wheel_left_1">
-  <material>Gazebo/Black</material>
-  <mu1>1.2</mu1>
-  <mu2>1.2</mu2>
-  <self_collide>false</self_collide>
-  <kp>100000.0</kp>
-  <kd>1000.0</kd>
-</gazebo>
+  <gazebo reference="arm_deck">
+    <material>Gazebo/DarkGrey</material>
+    <visual>
+      <material>
+        <ambient>0.200 0.200 0.200 1.0</ambient>
+        <diffuse>0.200 0.200 0.200 1.0</diffuse>
+        <specular>0.1 0.1 0.1 1.0</specular>
+      </material>
+    </visual>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <self_collide>true</self_collide>
+  </gazebo>
 
-<!-- Motors -->
-<gazebo reference="left_motor_1">
-  <material>Gazebo/White</material>
-  <mu1>0.2</mu1>
-  <mu2>0.2</mu2>
-  <self_collide>false</self_collide>
-</gazebo>
+  <gazebo reference="electronics_holder_left">
+    <material>Gazebo/DarkGreen</material>
+    <visual>
+      <material>
+        <ambient>0.102 0.345 0.176 1.0</ambient>
+        <diffuse>0.102 0.345 0.176 1.0</diffuse>
+        <specular>0.1 0.1 0.1 1.0</specular>
+      </material>
+    </visual>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <self_collide>true</self_collide>
+  </gazebo>
 
-<gazebo reference="right_motor_1">
-  <material>Gazebo/White</material>
-  <mu1>0.2</mu1>
-  <mu2>0.2</mu2>
-  <self_collide>false</self_collide>
-</gazebo>
+  <gazebo reference="electronics_holder_right">
+    <material>Gazebo/DarkGreen</material>
+    <visual>
+      <material>
+        <ambient>0.102 0.345 0.176 1.0</ambient>
+        <diffuse>0.102 0.345 0.176 1.0</diffuse>
+        <specular>0.1 0.1 0.1 1.0</specular>
+      </material>
+    </visual>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <self_collide>true</self_collide>
+  </gazebo>
 
-<!-- Casters - low friction for smooth movement -->
-<gazebo reference="left_caster_1">
-  <material>Gazebo/Black</material>
-  <mu1>0.01</mu1>
-  <mu2>0.01</mu2>
-  <self_collide>false</self_collide>
-  <kp>100000.0</kp>
-  <kd>1.0</kd>
-</gazebo>
+  <gazebo reference="electronics_pcb">
+    <material>Gazebo/Grey</material>
+    <visual>
+      <material>
+        <ambient>0.550 0.550 0.550 1.0</ambient>
+        <diffuse>0.550 0.550 0.550 1.0</diffuse>
+        <specular>0.1 0.1 0.1 1.0</specular>
+      </material>
+    </visual>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <self_collide>true</self_collide>
+  </gazebo>
 
-<gazebo reference="right_caster_1">
-  <material>Gazebo/Black</material>
-  <mu1>0.01</mu1>
-  <mu2>0.01</mu2>
-  <self_collide>false</self_collide>
-  <kp>100000.0</kp>
-  <kd>1.0</kd>
-</gazebo>
+  <gazebo reference="imu_1">
+    <material>Gazebo/Grey</material>
+    <visual>
+      <material>
+        <ambient>0.550 0.550 0.550 1.0</ambient>
+        <diffuse>0.550 0.550 0.550 1.0</diffuse>
+        <specular>0.1 0.1 0.1 1.0</specular>
+      </material>
+    </visual>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <self_collide>true</self_collide>
+  </gazebo>
 
-<gazebo reference="llmy_second_floor_v1_1">
-  <material>${body_color}</material>
-  <mu1>0.2</mu1>
-  <mu2>0.2</mu2>
-  <self_collide>true</self_collide>
-</gazebo>
+  <gazebo reference="support_v1_1">
+    <material>Gazebo/DarkGreen</material>
+    <visual>
+      <material>
+        <ambient>0.102 0.345 0.176 1.0</ambient>
+        <diffuse>0.102 0.345 0.176 1.0</diffuse>
+        <specular>0.1 0.1 0.1 1.0</specular>
+      </material>
+    </visual>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <self_collide>true</self_collide>
+  </gazebo>
 
-<gazebo reference="llmy_second_backpack_v1_1">
-  <material>${body_color}</material>
-  <mu1>0.2</mu1>
-  <mu2>0.2</mu2>
-  <self_collide>true</self_collide>
-</gazebo>
+  <gazebo reference="tilt_servo_1">
+    <material>Gazebo/Grey</material>
+    <visual>
+      <material>
+        <ambient>0.620 0.630 0.660 1.0</ambient>
+        <diffuse>0.620 0.630 0.660 1.0</diffuse>
+        <specular>0.1 0.1 0.1 1.0</specular>
+      </material>
+    </visual>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <self_collide>true</self_collide>
+  </gazebo>
 
-<gazebo reference="imu_holder_v1_1">
-  <material>${body_color}</material>
-  <mu1>0.2</mu1>
-  <mu2>0.2</mu2>
-  <self_collide>true</self_collide>
-</gazebo>
+  <gazebo reference="realsense_support_v1_1">
+    <material>Gazebo/Grey</material>
+    <visual>
+      <material>
+        <ambient>0.550 0.550 0.550 1.0</ambient>
+        <diffuse>0.550 0.550 0.550 1.0</diffuse>
+        <specular>0.1 0.1 0.1 1.0</specular>
+      </material>
+    </visual>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <self_collide>true</self_collide>
+  </gazebo>
 
-<gazebo reference="imu_1">
-  <material>${body_color}</material>
-  <mu1>0.2</mu1>
-  <mu2>0.2</mu2>
-  <self_collide>true</self_collide>
-</gazebo>
+  <gazebo reference="head_camera_1">
+    <material>Gazebo/Silver</material>
+    <visual>
+      <material>
+        <ambient>0.850 0.870 0.900 1.0</ambient>
+        <diffuse>0.850 0.870 0.900 1.0</diffuse>
+        <specular>0.1 0.1 0.1 1.0</specular>
+      </material>
+    </visual>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <self_collide>true</self_collide>
+  </gazebo>
 
-<gazebo reference="llmy_front_thingy_v1__1__1">
-  <material>${body_color}</material>
-  <mu1>0.2</mu1>
-  <mu2>0.2</mu2>
-  <self_collide>true</self_collide>
-</gazebo>
+  <gazebo reference="wrist_camera_mount_1">
+    <material>Gazebo/DarkGreen</material>
+    <visual>
+      <material>
+        <ambient>0.102 0.345 0.176 1.0</ambient>
+        <diffuse>0.102 0.345 0.176 1.0</diffuse>
+        <specular>0.1 0.1 0.1 1.0</specular>
+      </material>
+    </visual>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <self_collide>true</self_collide>
+  </gazebo>
 
-<gazebo reference="llmy_front_thingy_v1_1">
-  <material>${body_color}</material>
-  <mu1>0.2</mu1>
-  <mu2>0.2</mu2>
-  <self_collide>true</self_collide>
-</gazebo>
+  <gazebo reference="wrist_camera_v1_1">
+    <material>Gazebo/DarkGrey</material>
+    <visual>
+      <material>
+        <ambient>0.180 0.180 0.200 1.0</ambient>
+        <diffuse>0.180 0.180 0.200 1.0</diffuse>
+        <specular>0.1 0.1 0.1 1.0</specular>
+      </material>
+    </visual>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <self_collide>true</self_collide>
+  </gazebo>
 
-<gazebo reference="arm_base_1">
-  <material>${body_color}</material>
-  <mu1>0.2</mu1>
-  <mu2>0.2</mu2>
-  <self_collide>true</self_collide>
-</gazebo>
+  <gazebo reference="arm_base_1">
+    <material>Gazebo/DarkGrey</material>
+    <visual>
+      <material>
+        <ambient>0.200 0.200 0.200 1.0</ambient>
+        <diffuse>0.200 0.200 0.200 1.0</diffuse>
+        <specular>0.1 0.1 0.1 1.0</specular>
+      </material>
+    </visual>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <self_collide>false</self_collide>
+  </gazebo>
 
-<gazebo reference="llmy_last_floor_v1_1">
-  <material>${body_color}</material>
-  <mu1>0.2</mu1>
-  <mu2>0.2</mu2>
-  <self_collide>true</self_collide>
-</gazebo>
+  <gazebo reference="arm_base_rotation_servo_1">
+    <material>Gazebo/Grey</material>
+    <visual>
+      <material>
+        <ambient>0.620 0.630 0.660 1.0</ambient>
+        <diffuse>0.620 0.630 0.660 1.0</diffuse>
+        <specular>0.1 0.1 0.1 1.0</specular>
+      </material>
+    </visual>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <self_collide>false</self_collide>
+  </gazebo>
 
-<gazebo reference="arm_elbow_servo_1">
-  <material>${body_color}</material>
-  <mu1>0.2</mu1>
-  <mu2>0.2</mu2>
-  <self_collide>true</self_collide>
-</gazebo>
+  <gazebo reference="arm_base_rotation_link_1">
+    <material>Gazebo/DarkGrey</material>
+    <visual>
+      <material>
+        <ambient>0.200 0.200 0.200 1.0</ambient>
+        <diffuse>0.200 0.200 0.200 1.0</diffuse>
+        <specular>0.1 0.1 0.1 1.0</specular>
+      </material>
+    </visual>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <self_collide>false</self_collide>
+  </gazebo>
 
-<gazebo reference="support_v1_1">
-  <material>${body_color}</material>
-  <mu1>0.2</mu1>
-  <mu2>0.2</mu2>
-  <self_collide>true</self_collide>
-</gazebo>
+  <gazebo reference="arm_base_rotation_link_cover_1">
+    <material>Gazebo/DarkGreen</material>
+    <visual>
+      <material>
+        <ambient>0.102 0.345 0.176 1.0</ambient>
+        <diffuse>0.102 0.345 0.176 1.0</diffuse>
+        <specular>0.1 0.1 0.1 1.0</specular>
+      </material>
+    </visual>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <self_collide>false</self_collide>
+  </gazebo>
 
-<gazebo reference="just_the_tower_v1__1__1">
-  <material>${body_color}</material>
-  <mu1>0.2</mu1>
-  <mu2>0.2</mu2>
-  <self_collide>true</self_collide>
-</gazebo>
+  <gazebo reference="arm_shoulder_servo_1">
+    <material>Gazebo/Grey</material>
+    <visual>
+      <material>
+        <ambient>0.620 0.630 0.660 1.0</ambient>
+        <diffuse>0.620 0.630 0.660 1.0</diffuse>
+        <specular>0.1 0.1 0.1 1.0</specular>
+      </material>
+    </visual>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <self_collide>false</self_collide>
+  </gazebo>
 
-<gazebo reference="jetson_v1_1">
-  <material>${body_color}</material>
-  <mu1>0.2</mu1>
-  <mu2>0.2</mu2>
-  <self_collide>true</self_collide>
-</gazebo>
+  <gazebo reference="arm_shoulder_link_1">
+    <material>Gazebo/DarkGrey</material>
+    <visual>
+      <material>
+        <ambient>0.200 0.200 0.200 1.0</ambient>
+        <diffuse>0.200 0.200 0.200 1.0</diffuse>
+        <specular>0.1 0.1 0.1 1.0</specular>
+      </material>
+    </visual>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <self_collide>false</self_collide>
+  </gazebo>
 
-<gazebo reference="orin_1">
-  <material>${body_color}</material>
-  <mu1>0.2</mu1>
-  <mu2>0.2</mu2>
-  <self_collide>true</self_collide>
-</gazebo>
+  <gazebo reference="arm_elbow_servo_1">
+    <material>Gazebo/Grey</material>
+    <visual>
+      <material>
+        <ambient>0.620 0.630 0.660 1.0</ambient>
+        <diffuse>0.620 0.630 0.660 1.0</diffuse>
+        <specular>0.1 0.1 0.1 1.0</specular>
+      </material>
+    </visual>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <self_collide>false</self_collide>
+  </gazebo>
 
-<gazebo reference="baseus_pack_v1_1">
-  <material>${body_color}</material>
-  <mu1>0.2</mu1>
-  <mu2>0.2</mu2>
-  <self_collide>true</self_collide>
-</gazebo>
+  <gazebo reference="arm_elbow_link_1">
+    <material>Gazebo/DarkGrey</material>
+    <visual>
+      <material>
+        <ambient>0.200 0.200 0.200 1.0</ambient>
+        <diffuse>0.200 0.200 0.200 1.0</diffuse>
+        <specular>0.1 0.1 0.1 1.0</specular>
+      </material>
+    </visual>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <self_collide>false</self_collide>
+  </gazebo>
 
-<gazebo reference="left_baseus_mount_v1_1">
-  <material>${body_color}</material>
-  <mu1>0.2</mu1>
-  <mu2>0.2</mu2>
-  <self_collide>true</self_collide>
-</gazebo>
+  <gazebo reference="arm_wrist_tilt_servo_1">
+    <material>Gazebo/Grey</material>
+    <visual>
+      <material>
+        <ambient>0.620 0.630 0.660 1.0</ambient>
+        <diffuse>0.620 0.630 0.660 1.0</diffuse>
+        <specular>0.1 0.1 0.1 1.0</specular>
+      </material>
+    </visual>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <self_collide>false</self_collide>
+  </gazebo>
 
-<gazebo reference="right_baseus_mount_v1_1">
-  <material>${body_color}</material>
-  <mu1>0.2</mu1>
-  <mu2>0.2</mu2>
-  <self_collide>true</self_collide>
-</gazebo>
+  <gazebo reference="arm_wrist_link_1">
+    <material>Gazebo/DarkGrey</material>
+    <visual>
+      <material>
+        <ambient>0.200 0.200 0.200 1.0</ambient>
+        <diffuse>0.200 0.200 0.200 1.0</diffuse>
+        <specular>0.1 0.1 0.1 1.0</specular>
+      </material>
+    </visual>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <self_collide>false</self_collide>
+  </gazebo>
 
-<!-- Sensors -->
-<gazebo reference="lidar_1">
-  <material>Gazebo/Blue</material>
-</gazebo>
+  <gazebo reference="arm_wrist_roll_servo_1">
+    <material>Gazebo/Grey</material>
+    <visual>
+      <material>
+        <ambient>0.620 0.630 0.660 1.0</ambient>
+        <diffuse>0.620 0.630 0.660 1.0</diffuse>
+        <specular>0.1 0.1 0.1 1.0</specular>
+      </material>
+    </visual>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <self_collide>false</self_collide>
+  </gazebo>
 
-<gazebo reference="head_camera_1">
-  <material>Gazebo/Blue</material>
-</gazebo>
+  <gazebo reference="arm_gripper_1">
+    <material>Gazebo/DarkGrey</material>
+    <visual>
+      <material>
+        <ambient>0.200 0.200 0.200 1.0</ambient>
+        <diffuse>0.200 0.200 0.200 1.0</diffuse>
+        <specular>0.1 0.1 0.1 1.0</specular>
+      </material>
+    </visual>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <self_collide>false</self_collide>
+  </gazebo>
 
-<gazebo reference="wrist_camera_v1_1">
-  <material>Gazebo/Blue</material>
-</gazebo>
+  <gazebo reference="arm_gripper_servo_1">
+    <material>Gazebo/Grey</material>
+    <visual>
+      <material>
+        <ambient>0.620 0.630 0.660 1.0</ambient>
+        <diffuse>0.620 0.630 0.660 1.0</diffuse>
+        <specular>0.1 0.1 0.1 1.0</specular>
+      </material>
+    </visual>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <self_collide>false</self_collide>
+  </gazebo>
 
-<!-- Head RGB Camera -->
-<gazebo reference="head_camera_1">
-  <sensor type="camera" name="head_rgb_camera">
-    <update_rate>30</update_rate>
-    <topic>head_camera/rgb</topic>
-    <gz_frame_id>head_camera_1</gz_frame_id>
-    <pose>0 0 0 0 0 0</pose>
-    <camera name="head_rgb">
-      <horizontal_fov>1.0472</horizontal_fov>
-      <image>
-        <width>640</width>
-        <height>480</height>
-        <format>R8G8B8</format>
-      </image>
-      <clip>
-        <near>0.05</near>
-        <far>20.0</far>
-      </clip>
-    </camera>
-  </sensor>
-</gazebo>
-
-<!-- Head Depth Camera -->
-<gazebo reference="head_camera_1">
-  <sensor type="depth_camera" name="head_rgbd_camera">
-    <update_rate>30</update_rate>
-    <topic>head_camera/depth</topic>
-    <gz_frame_id>head_camera_1</gz_frame_id>
-    <pose>0 0 0 0 0 0</pose>
-    <camera name="head_rgbd">
-      <horizontal_fov>1.0472</horizontal_fov>
-      <image>
-        <width>640</width>
-        <height>480</height>
-        <format>R8G8B8</format>
-      </image>
-      <clip>
-        <near>0.05</near>
-        <far>10.0</far>
-      </clip>
-    </camera>
-  </sensor>
-</gazebo>
-
-<!-- Wrist RGB Camera -->
-<gazebo reference="wrist_camera_v1_1">
-  <sensor type="camera" name="wrist_rgb_camera">
-    <update_rate>30</update_rate>
-    <topic>wrist_camera/rgb</topic>
-    <gz_frame_id>wrist_camera_v1_1</gz_frame_id>
-    <pose>0 0 0 3.14159 0 0</pose>
-    <camera name="wrist_rgb">
-      <horizontal_fov>1.0472</horizontal_fov>
-      <image>
-        <width>640</width>
-        <height>480</height>
-        <format>R8G8B8</format>
-      </image>
-      <clip>
-        <near>0.05</near>
-        <far>20.0</far>
-      </clip>
-    </camera>
-  </sensor>
-</gazebo>
-
-<!-- IMU Sensor -->
-<gazebo reference="imu_1">
-  <sensor type="imu" name="imu">
-    <always_on>true</always_on>
-    <update_rate>200</update_rate>
-    <topic>sensors/imu</topic>
-    <gz_frame_id>imu_1</gz_frame_id>
-    <pose>0 0 0 0 0 0</pose>
-    <imu>
-      <noise>
-        <type>gaussian</type>
-        <rate>
-          <mean>0.0</mean>
-          <stddev>0.02</stddev>
-          <bias_mean>0.0001</bias_mean>
-          <bias_stddev>0.0001</bias_stddev>
-        </rate>
-        <accel>
-          <mean>0.0</mean>
-          <stddev>0.1</stddev>
-          <bias_mean>0.01</bias_mean>
-          <bias_stddev>0.01</bias_stddev>
-        </accel>
-      </noise>
-    </imu>
-  </sensor>
-</gazebo>
-
-<!-- Lidar Sensor -->
-<gazebo reference="lidar_1">
-  <sensor name="lidar" type="gpu_lidar">
-    <always_on>true</always_on>
-    <visualize>true</visualize>
-    <update_rate>30</update_rate>
-    <topic>scan</topic>
-    <gz_frame_id>lidar_frame</gz_frame_id>
-    <pose>0 0 0.02 0 0 3.14159265359</pose>
-    <lidar>
-      <scan>
-        <horizontal>
-          <samples>128</samples>
-          <resolution>1.000000</resolution>
-          <min_angle>0</min_angle>
-          <max_angle>6.28319</max_angle>
-        </horizontal>
-      </scan>
-      <range>
-        <min>0.120000</min>
-        <max>10</max>
-        <resolution>0.015000</resolution>
-      </range>
-      <noise>
-        <type>gaussian</type>
-        <mean>0.0</mean>
-        <stddev>0.01</stddev>
-      </noise>
-    </lidar>
-  </sensor>
-</gazebo>
+  <gazebo reference="arm_jaw_1">
+    <material>Gazebo/DarkGrey</material>
+    <visual>
+      <material>
+        <ambient>0.200 0.200 0.200 1.0</ambient>
+        <diffuse>0.200 0.200 0.200 1.0</diffuse>
+        <specular>0.1 0.1 0.1 1.0</specular>
+      </material>
+    </visual>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <self_collide>true</self_collide>
+  </gazebo>
 
 </robot>

@@ -3,6 +3,7 @@ from launch.actions import DeclareLaunchArgument, TimerAction
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution, Command
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
+from launch_ros.parameter_descriptions import ParameterValue
 
 def generate_launch_description():
     # Get package share directories
@@ -23,15 +24,19 @@ def generate_launch_description():
     ])
 
     # Robot description (use_sim:=false to exclude Gazebo hardware)
-    robot_description_content = Command([
-        'xacro ',
-        PathJoinSubstitution([
-            FindPackageShare('llmy_control'),
-            'urdf',
-            'LLMy.hardware.xacro'
+    # Wrap with ParameterValue(value_type=str) so launch doesn't try to parse the URDF as YAML.
+    robot_description_content = ParameterValue(
+        Command([
+            'xacro ',
+            PathJoinSubstitution([
+                FindPackageShare('llmy_control'),
+                'urdf',
+                'LLMy.hardware.xacro'
+            ]),
+            ' use_sim:=false'
         ]),
-        ' use_sim:=false'
-    ])
+        value_type=str
+    )
 
     # Robot state publisher - publishes robot_description topic
     robot_state_publisher = Node(

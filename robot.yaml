@@ -1,17 +1,18 @@
 ros_distro: jazzy
 ros_domain_id: 0
-registry: qwiki.lan:5000/llmy
-ros_apt_mirror: http://qwiki.lan/ros2
-image_prefix: llmy
+registry: dragomirxyz
+# ros_apt_mirror: http://apt.core/ros2 
+image_prefix: llmy_sim_cuda
+base_image_override: nvidia/cuda:12.6.1-base-ubuntu24.04
 
 hosts:
   - name: odin
-    ip: 192.168.99.184
-    dds_ip: 192.168.99.184
+    ip: 127.0.0.1
     user: cdr 
-    arch: arm64
+    arch: amd64
     manager: true
-    mount_root: /home/cdr/.rc
+    build_on_device: true
+    mount_root: /home/cdr/robocore-deploy
 
 
 
@@ -54,15 +55,20 @@ components:
 
   - name: motion
     source:
+    - ros/src/llmy_description
     - ros/src/llmy_control
     - ros/src/llmy_control_plugin
-    - ros/src/llmy_servo_manager
+    - ros/src/st3215_manager
+    - ros/src/ddsm210_manager
     runs_on: odin
     pip_packages:
       - st3215
-    entrypoint: ros2 launch llmy_control motion.launch.py servo_port:=/dev/ttyTHS1
+      - pyserial
+    entrypoint: ros2 launch llmy_control motion.launch.py
     devices:
-      - /dev/ttyTHS1:/dev/ttyTHS1
+      - /dev/ttyACM2:/dev/ttyACM2
+      - /dev/ttyACM4:/dev/ttyACM4
+      - /dev/ttyACM3:/dev/ttyACM3
     optimisations:
       - shm: 1024m
       - mount_shm: true
@@ -71,11 +77,11 @@ components:
 
   - name: imu
     source:
-    - ros/src/llmy_imu_bno055
+    - ros/src/llmy_imu
     runs_on: odin
     pip_packages:
       - smbus2
-    entrypoint: ros2 launch llmy_imu_bno055 imu.launch.py
+    entrypoint: ros2 launch llmy_imu imu.launch.py
     devices:
       - /dev/i2c-7:/dev/i2c-7
 
@@ -83,12 +89,12 @@ components:
   - name: lidar
     runs_on: odin
     devices: 
-      - /dev/ttyUSB0:/dev/ttyUSB0
+      - /dev/ttyACM3:/dev/ttyACM3
     repositories:
       - url: https://github.com/Slamtec/rplidar_ros
         version: ros2
         folder: rplidar_ros
-    entrypoint: ros2 launch rplidar_ros rplidar_c1_launch.py serial_port:=/dev/ttyUSB0
+    entrypoint: ros2 launch rplidar_ros rplidar_c1_launch.py serial_port:=/dev/ttyACM3
 
   - name: rosboard
     runs_on: odin

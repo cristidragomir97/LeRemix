@@ -44,10 +44,7 @@ ros2_control:
         command_interfaces: [position]
         state_interfaces: [position]
 
-      # Head joints — position command, position state
-      - name: pan
-        command_interfaces: [position]
-        state_interfaces: [position]
+      # Head joint — position command, position state (canvas design: tilt only, no pan)
       - name: tilt
         command_interfaces: [position]
         state_interfaces: [position]

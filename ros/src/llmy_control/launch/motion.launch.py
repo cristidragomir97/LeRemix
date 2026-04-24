@@ -20,38 +20,44 @@ def generate_launch_description():
         description='Enable control stack (controllers, robot state publisher)'
     )
 
-    servo_port_arg = DeclareLaunchArgument(
-        'servo_port',
-        default_value='/dev/ttyACM0',
-        description='Serial port for servo manager'
-    )
+    use_st3215_arg = DeclareLaunchArgument(
+        'use_st3215',
+        default_value='true',
+        description='Enable ST3215 servo manager (arm/camera)')
 
-    servo_baud_arg = DeclareLaunchArgument(
-        'servo_baud',
-        default_value='1000000',
-        description='Baudrate for servo manager'
-    )
+    use_ddsm210_arg = DeclareLaunchArgument(
+        'use_ddsm210',
+        default_value='true',
+        description='Enable DDSM210 motor manager (wheels)')
 
     # Launch configurations
     use_base_systems = LaunchConfiguration('use_base_systems')
     use_control_stack = LaunchConfiguration('use_control_stack')
-    servo_port = LaunchConfiguration('servo_port')
-    servo_baud = LaunchConfiguration('servo_baud')
+    use_st3215 = LaunchConfiguration('use_st3215')
+    use_ddsm210 = LaunchConfiguration('use_ddsm210')
 
-    # Include base systems (servo manager)
-    servo_manager_launch = IncludeLaunchDescription(
+    # ST3215 servo manager (arm + camera motors)
+    st3215_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             PathJoinSubstitution([
-                FindPackageShare('llmy_servo_manager'),
+                FindPackageShare('st3215_manager'),
                 'launch',
                 'servo_manager.launch.py'
             ])
         ),
-        launch_arguments={
-            'servo_port': servo_port,
-            'servo_baud': servo_baud
-        }.items(),
-        condition=IfCondition(use_base_systems)
+        condition=IfCondition(use_st3215)
+    )
+
+    # DDSM210 motor manager (wheel motors)
+    ddsm210_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            PathJoinSubstitution([
+                FindPackageShare('ddsm210_manager'),
+                'launch',
+                'ddsm210.launch.py'
+            ])
+        ),
+        condition=IfCondition(use_ddsm210)
     )
 
     # Include control stack (robot_state_publisher, controller_manager, spawners)
@@ -70,10 +76,13 @@ def generate_launch_description():
         # Launch arguments
         use_base_systems_arg,
         use_control_stack_arg,
-        servo_port_arg,
-        servo_baud_arg,
+        use_st3215_arg,
+        use_ddsm210_arg,
 
-        # Launch includes and nodes
-        servo_manager_launch,
+        # Motor managers
+        st3215_launch,
+        ddsm210_launch,
+
+        # Control stack (robot_state_publisher, controllers)
         control_stack_launch,
     ])

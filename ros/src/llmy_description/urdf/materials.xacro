@@ -1,8 +1,54 @@
 <?xml version="1.0" ?>
-<robot name="llmy_root" xmlns:xacro="http://www.ros.org/wiki/xacro" >
+<robot name="llmy_canvas" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-<material name="silver">
-  <color rgba="0.700 0.700 0.700 1.000"/>
-</material>
+  <!-- EPX 150 - Air Baked composite (structural arm links, decks, lidar housing). -->
+  <material name="epx_darkgrey">
+    <color rgba="0.200 0.200 0.200 1.0"/>
+  </material>
+
+  <!-- PA 12 - Nylon - PA 603-CF (carbon-filled nylon, e.g. base_link, wrist camera body). -->
+  <material name="nylon_darkgrey">
+    <color rgba="0.180 0.180 0.200 1.0"/>
+  </material>
+
+  <!-- Steel - Satin (SO-101 servo housings, camera tilt servo). -->
+  <material name="steel_satin">
+    <color rgba="0.620 0.630 0.660 1.0"/>
+  </material>
+
+  <!-- Aluminum - Polished (2020 extrusions, head camera body). -->
+  <material name="aluminum_polished">
+    <color rgba="0.850 0.870 0.900 1.0"/>
+  </material>
+
+  <!-- Paint - Metallic Green (3-way corners, mounts, camera holder, waist cover). -->
+  <material name="metallic_green">
+    <color rgba="0.102 0.345 0.176 1.0"/>
+  </material>
+
+  <!-- Pure green (battery mounts, RGB 0,128,0). -->
+  <material name="pure_green">
+    <color rgba="0.000 0.502 0.000 1.0"/>
+  </material>
+
+  <!-- Near-black wheel tires (RGB 25,25,25). -->
+  <material name="wheel_black">
+    <color rgba="0.098 0.098 0.098 1.0"/>
+  </material>
+
+  <!-- Light blue casters (RGB 202,209,238). -->
+  <material name="caster_blue">
+    <color rgba="0.792 0.820 0.933 1.0"/>
+  </material>
+
+  <!-- Generic placeholder for Fusion "Generic" material (PCB, wheel hubs, etc.). -->
+  <material name="generic_grey">
+    <color rgba="0.550 0.550 0.550 1.0"/>
+  </material>
+
+  <!-- Legacy name retained for compatibility. -->
+  <material name="silver">
+    <color rgba="0.700 0.700 0.700 1.0"/>
+  </material>
 
 </robot>

@@ -1,0 +1,8 @@
+imu_node:
+  ros__parameters:
+    publish_rate: 100.0
+    frame_id: "imu_link"
+    i2c_bus: 10
+    imu_addr: 107       # 0x6B (LSM6DSOX)
+    mag_addr: 48         # 0x30 (MMC5983MA)
+    use_mag: true

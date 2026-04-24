@@ -29,13 +29,12 @@ class XboxTeleop(Node):
 
         # Separate arm and head joints with limits
         self.arm_joints = ['1','2','3','4','5','6']
-        self.head_joints = ['pan', 'tilt']
+        self.head_joints = ['tilt']
         self.jidx_arm = {name: i for i, name in enumerate(self.arm_joints)}
         self.jidx_head = {name: i for i, name in enumerate(self.head_joints)}
 
         self.head_limits = {
-            'pan': (-3.14, 3.14),    # full rotation
-            'tilt': (-1.57, 0.86)     # tilt limits
+            'tilt': (-1.57, 0.86)
         }
 
         # Load params
@@ -254,16 +253,7 @@ class XboxTeleop(Node):
         elif events.get('dpad_right_long_press_active', False):
             self.add_to_head_joint("tilt", inc, "D-pad right long press")
 
-        # D-pad up/down for camera pan
-        if events.get('dpad_up_press', False):
-            self.add_to_head_joint("pan", inc, "D-pad up press")
-        elif events.get('dpad_up_long_press_active', False):
-            self.add_to_head_joint("pan", inc, "D-pad up long press")
-
-        if events.get('dpad_down_press', False):
-            self.add_to_head_joint("pan", -inc, "D-pad down press")
-        elif events.get('dpad_down_long_press_active', False):
-            self.add_to_head_joint("pan", -inc, "D-pad down long press")
+        # D-pad up/down unused (canvas design has no pan joint)
 
     def publish_arm(self):
         # Only publish arm commands after initialization
