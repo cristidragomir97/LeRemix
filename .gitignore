@@ -15,8 +15,7 @@ ros/install/
 ros/log/
 
 # Ignore non-llmy packages in src
-ros/src/*/
-!ros/src/llmy_*/
+
 
 # macOS files
 .DS_Store

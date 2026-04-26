@@ -1,0 +1,31 @@
+# DDSM210 Motor Manager — default config for LLMy differential drive
+#
+# Each motor gets its own serial port to avoid UART TX line conflicts.
+# If using a bus board with AND gates, you can use a single port for all motors.
+
+ddsm210_node:
+  ros__parameters:
+    # One port per motor, or a single port shared by all.
+    # Single port (bus board with AND gates):
+    #   ports: ["/dev/ttyUSB0"]
+    # Separate ports (direct wiring):
+    ports: ["/dev/ttyACM3", "/dev/ttyACM4"]
+    baud: 115200
+
+    command_rate: 50.0
+    telemetry_rate: 50.0
+
+    joint_states_topic: "/motor_manager/joint_states"
+    command_topic: "/motor_manager/base_cmd"
+    total_joints: 0       # auto-calculate from state_indices
+
+    mode: "velocity"      # "velocity" or "position"
+    accel_time: 20        # acceleration per 1 RPM in 0.1ms units (20 = 2 ms/RPM)
+    max_rpm: 100          # hard cap on commanded RPM (hardware max is 210)
+
+    motor_ids: [1, 2]
+    joint_names: ["right_wheel_joint", "left_wheel_joint"]
+    direction: [1, -1]    # left wheel physically inverted
+    command_indices: [0, 1]
+    state_indices: [0, 1]
+    speed_scale: 1.0

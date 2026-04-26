@@ -1,0 +1,55 @@
+servo_manager_node:
+  ros__parameters:
+    port: "/dev/ttyACM1"
+    baud: 1000000
+    ticks_per_rev: 4096
+    telemetry_rate: 50.0
+    joint_states_topic: "/motor_manager/joint_states"
+
+    # Total number of joints in the JointState message.
+    # Each motor's state_index must be < total_joints.
+    # Set to 0 to auto-calculate from the highest state_index.
+    total_joints: 0
+
+    brake_method: "torque_disable"
+    velocity_ramp_time: 0.1
+    brake_acceleration: 100
+
+    motor_telemetry_enable: true
+    motor_telemetry_rate: 50.0
+    test_on_startup: false
+
+    # Motor groups — add/remove entries here, no code changes needed.
+    group_names: ["arm", "camera"]
+
+    # Robot arm (position mode)
+    arm:
+      enable: true
+      mode: "position"
+      topic: "/motor_manager/arm_cmd"
+      motor_ids: [1, 2, 3, 4, 5, 6]
+      joint_names: ["1", "2", "3", "4", "5", "6"]
+      direction: [1, 1, 1, 1, 1, 1]
+      command_indices: [0, 1, 2, 3, 4, 5]   # read from these positions in incoming msg
+      state_indices: [2, 3, 4, 5, 6, 7]     # write to these positions in JointState msg
+      speed_scale: 0.5
+      accel: [20, 20, 15, 15, 25, 25]
+      unwrap_position: false
+      position_speed: 200
+      position_accel: 200
+
+    # Camera tilt (position mode)
+    camera:
+      enable: false
+      mode: "position"
+      topic: "/motor_manager/camera_cmd"
+      motor_ids: [11]
+      joint_names: ["tilt"]
+      direction: [1]
+      command_indices: [0]
+      state_indices: [8]
+      speed_scale: 1.0
+      accel: [15]
+      unwrap_position: false
+      position_speed: 100
+      position_accel: 150

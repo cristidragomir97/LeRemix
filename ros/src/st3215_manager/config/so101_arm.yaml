@@ -1,0 +1,45 @@
+# SO-101 Robot Arm — 6-DOF arm using ST3215 servos
+#
+# Default wiring (Feetech bus):
+#   ID 1: shoulder_pan
+#   ID 2: shoulder_lift
+#   ID 3: elbow
+#   ID 4: wrist_pitch
+#   ID 5: wrist_roll
+#   ID 6: gripper
+#
+# Adjust motor_ids, joint_names, and indices to match your setup.
+
+servo_manager_node:
+  ros__parameters:
+    port: "/dev/ttyUSB0"
+    baud: 1000000
+    ticks_per_rev: 4096
+    telemetry_rate: 50.0
+    joint_states_topic: "/joint_states"
+    total_joints: 6
+
+    brake_method: "torque_disable"
+    velocity_ramp_time: 0.1
+    brake_acceleration: 100
+
+    motor_telemetry_enable: false
+    motor_telemetry_rate: 10.0
+    test_on_startup: false
+
+    group_names: ["arm"]
+
+    arm:
+      enable: true
+      mode: "position"
+      topic: "/arm_cmd"
+      motor_ids: [1, 2, 3, 4, 5, 6]
+      joint_names: ["shoulder_pan", "shoulder_lift", "elbow", "wrist_pitch", "wrist_roll", "gripper"]
+      direction: [1, 1, 1, 1, 1, 1]
+      command_indices: [0, 1, 2, 3, 4, 5]
+      state_indices: [0, 1, 2, 3, 4, 5]
+      speed_scale: 0.5
+      accel: [20, 20, 15, 15, 25, 25]
+      unwrap_position: false
+      position_speed: 200
+      position_accel: 200
