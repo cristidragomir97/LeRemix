@@ -2,20 +2,15 @@ ros_distro: jazzy
 ros_domain_id: 0
 registry: dragomirxyz
 # ros_apt_mirror: http://apt.core/ros2 
-image_prefix: llmy_sim_cuda
-base_image_override: nvidia/cuda:12.6.1-base-ubuntu24.04
+image_prefix: llmy-dev-robot
 
 hosts:
   - name: odin
-    ip: 127.0.0.1
+    ip: odin.local
     user: cdr 
     arch: amd64
     manager: true
-    build_on_device: true
     mount_root: /home/cdr/robocore-deploy
-
-
-
 
 rmw_implementation: zenoh
 
@@ -23,7 +18,6 @@ rmw_implementation: zenoh
 zenoh:
   router_image: eclipse/zenoh:1.7.1
   router_port: 7447
-
 
 common_packages:
   - name: llmy_description
